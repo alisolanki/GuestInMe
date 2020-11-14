@@ -1,9 +1,12 @@
 import 'package:GuestInMe/Event/event_page.dart';
+import 'package:GuestInMe/models/event_model.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
-  final String title;
-  EventCard(this.title);
+  final EventModel eventModel;
+  final String placeName;
+  EventCard({@required this.eventModel, @required this.placeName});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -13,7 +16,10 @@ class EventCard extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => EventPage("$title"),
+              builder: (_) => EventPage(
+                eventModel: eventModel,
+                placeName: placeName,
+              ),
             ),
           );
         },
@@ -27,6 +33,10 @@ class EventCard extends StatelessWidget {
                   top: Radius.circular(20.0),
                 ),
                 color: Colors.lightBlue,
+                image: DecorationImage(
+                  image: NetworkImage("${eventModel.image}"),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Container(
@@ -45,36 +55,38 @@ class EventCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      "Sat 7, Nov | 17:00 - 01:30",
+                      "${eventModel.date} | ${eventModel.time}",
                       style: TextStyle(
                         color: Colors.blueGrey,
                         fontSize: 8.0,
                       ),
                     ),
                     Text(
-                      "$title",
+                      "${eventModel.eventName}",
                       style: TextStyle(
                         color: Colors.purple,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Row(
                       children: [
                         Icon(
                           Icons.location_on,
                           color: const Color(0xFFBC6FF1),
+                          size: 14.0,
                         ),
                         Text(
-                          "Place",
+                          "$placeName",
                           style: TextStyle(
                             color: const Color(0xFFBC6FF1),
                             fontWeight: FontWeight.w500,
                             fontSize: 12.0,
                           ),
-                        )
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

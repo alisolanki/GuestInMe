@@ -1,7 +1,13 @@
 import 'package:GuestInMe/Home/widgets/event_card.dart';
+import 'package:GuestInMe/models/event_model.dart';
+import 'package:GuestInMe/models/place_model.dart';
+import 'package:GuestInMe/providers/event_provider.dart';
+import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './widgets/selection_card.dart';
+import './widgets/place_card.dart';
 
 class DiamondPage extends StatefulWidget {
   @override
@@ -9,12 +15,23 @@ class DiamondPage extends StatefulWidget {
 }
 
 class _DiamondPageState extends State<DiamondPage> {
+  bool _init = true;
   var size = Size(0.0, 0.0);
+
+  List<PlaceModel> _places = [];
+  List<EventModel> _events = [];
 
   @override
   void didChangeDependencies() {
-    size = MediaQuery.of(context).size;
     super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+    if (_init) {
+      Provider.of<PlaceProvider>(context).fetchPlaces();
+      Provider.of<EventProvider>(context).fetchNewEvents();
+    }
+    _places = Provider.of<PlaceProvider>(context).places;
+    _events = Provider.of<EventProvider>(context).newEventModels;
+    _init = false;
   }
 
   Widget heading(String _title) {
@@ -79,40 +96,65 @@ class _DiamondPageState extends State<DiamondPage> {
             [
               Container(
                 height: 180.0,
-                child: ListView.builder(
-                  itemCount: 3,
+                child: ListView(
                   scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return SelectionCard("Clubs");
-                  },
+                  children: [
+                    SelectionCard("Clubs"),
+                    SelectionCard("Bars"),
+                  ],
                 ),
               ),
-              heading("This week's events"),
+              heading("New events"),
               Container(
                 height: 270.0,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return EventCard("Event Name");
+                  itemCount: _events.length,
+                  itemBuilder: (_, i) {
+                    return EventCard(
+                      eventModel: _events[i],
+                      placeName: _events[i].placeName,
+                    );
                   },
                 ),
               ),
-              heading("Popular parties"),
-              Container(
-                height: 270.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return EventCard("Event Name");
-                  },
-                ),
-              ),
-              SizedBox(height: 50.0),
+              heading("Popular places"),
             ],
           ),
-        )
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext _, int i) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: PlaceCard(placeModel: _places[i]),
+              );
+            },
+            childCount: _places == null ? 0 : _places.length,
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.purple,
+                    ),
+                    onPressed: () {
+                      print("popular places");
+                    },
+                  ),
+                  backgroundColor: Colors.white10,
+                ),
+              ),
+              SizedBox(height: 80)
+            ],
+          ),
+        ),
       ],
     );
   }

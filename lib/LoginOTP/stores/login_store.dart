@@ -10,7 +10,7 @@ import '../../Home/homepage.dart';
 import '../pages/login_page.dart';
 import '../pages/otp_page.dart';
 // import '../../providers/advertisement.dart';
-// import '../../auth/auth-api.dart' as auth;
+import '../../auth/auth.dart' as auth;
 import 'package:http/http.dart' as http;
 
 part 'login_store.g.dart';
@@ -181,6 +181,7 @@ abstract class LoginStoreBase with Store {
         //     });
         //   },
         // );
+        auth.getTk();
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (_) => HomePage()),
             (Route<dynamic> route) => false);

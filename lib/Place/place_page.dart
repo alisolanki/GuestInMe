@@ -1,10 +1,14 @@
-import 'package:GuestInMe/Home/widgets/event_card.dart';
+import 'package:GuestInMe/models/place_model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+
+import 'package:GuestInMe/Event/widgets/star_widget.dart';
+import 'package:GuestInMe/Home/widgets/event_card.dart';
 
 class PlacePage extends StatefulWidget {
-  final String title;
-  PlacePage({this.title});
+  final PlaceModel placeModel;
+  PlacePage({@required this.placeModel});
   @override
   _PlacePageState createState() => _PlacePageState();
 }
@@ -54,15 +58,17 @@ class _PlacePageState extends State<PlacePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     "Directions",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           onTap: () {
-            print("directions");
+            MapsLauncher.launchQuery('${widget.placeModel.location}');
           },
         ),
       ),
@@ -72,23 +78,20 @@ class _PlacePageState extends State<PlacePage> {
             SliverAppBar(
               expandedHeight: size.width,
               leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                ),
                 onPressed: () => Navigator.of(context).pop(),
               ),
               backgroundColor: Colors.black,
               flexibleSpace: CarouselSlider(
-                items: [
-                  Image(
-                    image: AssetImage('assets/images/logo_white.png'),
+                items: widget.placeModel.images.map((link) {
+                  return Image(
+                    image: NetworkImage("$link"),
                     fit: BoxFit.cover,
-                    semanticLabel: "${widget.title} flyer",
-                  ),
-                  Image(
-                    image: AssetImage('assets/images/logo_white.png'),
-                    fit: BoxFit.cover,
-                    semanticLabel: "${widget.title} flyer",
-                  ),
-                ],
+                    semanticLabel: "${widget.placeModel.placeName}",
+                  );
+                }).toList(),
                 options: CarouselOptions(
                   autoPlay: true,
                   height: size.width,
@@ -102,17 +105,21 @@ class _PlacePageState extends State<PlacePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      leading: Image(
-                        image: AssetImage('assets/logofilled.png'),
+                      leading: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage('${widget.placeModel.logo}'),
+                        backgroundColor: Colors.black87,
+                        radius: 28.0,
                       ),
                       title: Text(
-                        "${widget.title}",
+                        "${widget.placeModel.placeName}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      subtitle: StarWidget(stars: widget.placeModel.stars),
                       enabled: false,
                     ),
                   ),
@@ -132,15 +139,45 @@ class _PlacePageState extends State<PlacePage> {
             SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext _, int i) {
-                  return EventCard("Event");
+                  return EventCard(
+                    eventModel: widget.placeModel.event[i],
+                    placeName: widget.placeModel.placeName,
+                  );
                 },
-                childCount: 3,
+                childCount: widget?.placeModel?.event?.length ?? 0,
               ),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 crossAxisSpacing: 0.0,
                 childAspectRatio: 2 / 3,
                 mainAxisSpacing: 0.0,
                 maxCrossAxisExtent: 270,
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Info:",
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    margin: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      color: Colors.black54,
+                    ),
+                    child: Text(
+                      "${widget.placeModel.description}",
+                    ),
+                  ),
+                ],
               ),
             ),
             SliverList(
@@ -162,15 +199,23 @@ class _PlacePageState extends State<PlacePage> {
             SliverGrid(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext _, int i) {
-                  return EventCard("Event");
+                  return EventCard(
+                    eventModel: widget.placeModel.event[i],
+                    placeName: widget.placeModel.placeName,
+                  );
                 },
-                childCount: 3,
+                childCount: widget?.placeModel?.event?.length ?? 0,
               ),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 crossAxisSpacing: 0.0,
                 childAspectRatio: 2 / 3,
                 mainAxisSpacing: 0.0,
                 maxCrossAxisExtent: 270,
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [SizedBox(height: 100)],
               ),
             ),
           ],

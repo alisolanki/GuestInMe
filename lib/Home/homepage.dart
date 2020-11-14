@@ -1,7 +1,11 @@
+import 'package:GuestInMe/LoginOTP/stores/login_store.dart';
 import 'package:GuestInMe/Profile/profile_page.dart';
+import 'package:GuestInMe/providers/event_provider.dart';
+import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:provider/provider.dart';
 
 import '../assets/guest_in_me_icons.dart';
 import '../Home/diamond_page.dart';
@@ -13,20 +17,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var size = Size(0.0, 0.0);
   var _selected = 1;
 
   @override
   void didChangeDependencies() {
-    size = MediaQuery.of(context).size;
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF16161D),
-      bottomNavigationBar: CurvedNavigationBar(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PlaceProvider()),
+        ChangeNotifierProvider(create: (_) => EventProvider()),
+        Provider.value(value: LoginStore()),
+      ],
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        home: Scaffold(
+          backgroundColor: const Color(0xFF16161D),
+          bottomNavigationBar: child,
+          body: SafeArea(
+            child: _selected == 1
+                ? DiamondPage()
+                : _selected == 0
+                    ? SearchPage()
+                    : ProfilePage(),
+          ),
+        ),
+      ),
+      child: CurvedNavigationBar(
         index: 1,
         backgroundColor: const Color(0xFF16161D),
         items: <Widget>[
@@ -45,9 +66,6 @@ class _HomePageState extends State<HomePage> {
         },
         color: const Color(0xFFFFFFFF),
       ),
-      body: _selected == 1
-          ? DiamondPage()
-          : _selected == 0 ? SearchPage() : ProfilePage(),
     );
   }
 }

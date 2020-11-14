@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
           builder: (_) => LoaderHUD(
             inAsyncCall: loginStore.isLoginLoading,
             child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: const Color(0xFF16161D),
               key: loginStore.loginScaffoldKey,
               body: SafeArea(
                 child: SingleChildScrollView(
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Text(
                                         'GuestInMe',
                                         style: TextStyle(
-                                          color: MyColors.primaryColor,
+                                          color: const Color(0xFFBC6FF1),
                                           fontSize: 48,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Text(
                                         'Clubs, Bars and Events',
                                         style: TextStyle(
-                                          color: MyColors.primaryColor,
+                                          color: const Color(0xFFBC6FF1),
                                           fontSize: 18,
                                         ),
                                         textAlign: TextAlign.center,
@@ -112,18 +112,20 @@ class _LoginPageState extends State<LoginPage> {
                                       TextSpan(
                                         text: 'We will send you a ',
                                         style: TextStyle(
-                                            color: MyColors.primaryColor),
+                                          color: const Color(0xFFBC6FF1),
+                                        ),
                                       ),
                                       TextSpan(
                                         text: 'One Time Password (OTP) ',
                                         style: TextStyle(
-                                            color: MyColors.primaryColor,
+                                            color: const Color(0xFFBC6FF1),
                                             fontWeight: FontWeight.bold),
                                       ),
                                       TextSpan(
                                         text: 'on this mobile number',
                                         style: TextStyle(
-                                            color: MyColors.primaryColor),
+                                          color: const Color(0xFFBC6FF1),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -141,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: const BorderRadius.all(
-                                      Radius.circular(4),
+                                      Radius.circular(16.0),
                                     ),
                                   ),
                                   controller: phoneController,
@@ -150,6 +152,9 @@ class _LoginPageState extends State<LoginPage> {
                                   keyboardType: TextInputType.phone,
                                   maxLines: 1,
                                   placeholder: '+91...',
+                                  placeholderStyle: TextStyle(
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ),
                               Container(

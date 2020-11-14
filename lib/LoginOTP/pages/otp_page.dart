@@ -82,7 +82,7 @@ class _OtpPageState extends State<OtpPage> {
           builder: (_) => LoaderHUD(
             inAsyncCall: loginStore.isOtpLoading,
             child: Scaffold(
-              backgroundColor: Colors.white,
+              backgroundColor: const Color(0xFF16161D),
               key: loginStore.otpScaffoldKey,
               appBar: AppBar(
                 leading: _counter < 1
@@ -105,8 +105,7 @@ class _OtpPageState extends State<OtpPage> {
                       )
                     : Container(),
                 elevation: 0,
-                backgroundColor: Colors.white,
-                brightness: Brightness.light,
+                backgroundColor: const Color(0xFF16161D),
               ),
               body: SafeArea(
                 child: Column(
@@ -122,14 +121,17 @@ class _OtpPageState extends State<OtpPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    child: Text(
-                                        'Enter 6 digits verification code sent to your number',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 26,
-                                            fontWeight: FontWeight.w500))),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  child: Text(
+                                    'Enter 6 digits verification code sent to your number',
+                                    style: TextStyle(
+                                      color: const Color(0xFFBC6FF1),
+                                      fontSize: 26,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
                                 Container(
                                   constraints:
                                       const BoxConstraints(maxWidth: 500),
