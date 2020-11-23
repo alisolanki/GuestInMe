@@ -14,14 +14,16 @@ class NewEventsPage extends StatefulWidget {
 class _NewEventsPageState extends State<NewEventsPage> {
   var _init = true;
   Map<String, List<EventModel>> _datewiseEvents = {};
+  Map<String, List<EventModel>> _datewiseExtracted = {};
 
   @override
   void didChangeDependencies() {
     if (_init) {
       Provider.of<EventProvider>(context).fetchDatewiseEvents();
+      _datewiseEvents = Provider.of<EventProvider>(context).datewiseEvents;
+      _datewiseExtracted = _datewiseEvents;
     }
     _init = false;
-    _datewiseEvents = Provider.of<EventProvider>(context).datewiseEvents;
     super.didChangeDependencies();
   }
 
@@ -39,13 +41,11 @@ class _NewEventsPageState extends State<NewEventsPage> {
                       firstDate: DateTime(2019),
                       lastDate: DateTime(2022))
                   .then((value) {
-                value.month < 10 && value.day < 10
-                    ? print("${value.year}0${value.month}0${value.day}")
-                    : value.day < 10
-                        ? print("${value.year}${value.month}0${value.day}")
-                        : value.month < 10
-                            ? print("${value.year}0${value.month}${value.day}")
-                            : print("${value.year}${value.month}${value.day}");
+                if (value != null) {
+                  setState(() {
+                    _dateIs(value);
+                  });
+                }
               }),
             )
           ],
@@ -53,30 +53,73 @@ class _NewEventsPageState extends State<NewEventsPage> {
           backgroundColor: const Color(0xFF892CDC),
         ),
         body: ListView.builder(
-          itemCount: _datewiseEvents.length,
+          itemCount: _datewiseExtracted.length,
           itemBuilder: (_, i) {
-            String key = _datewiseEvents.keys.elementAt(i);
+            String key = _datewiseExtracted.keys
+                .elementAt(_datewiseExtracted.length - i - 1);
             return Column(
               children: [
-                Text(key),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "${key.substring(6, 8)}/${key.substring(4, 6)}/${key.substring(0, 4)}",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Divider(),
                 Container(
+                  margin: const EdgeInsets.all(16.0),
                   height: 270.0,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: _datewiseEvents[key]?.length,
+                    itemCount: _datewiseExtracted[key]?.length,
                     itemBuilder: (_, j) {
                       return EventCard(
-                        eventModel: _datewiseEvents[key][j],
-                        placeName: _datewiseEvents[key][j].placeName,
+                        eventModel: _datewiseExtracted[key][j],
+                        placeName: _datewiseExtracted[key][j].placeName,
                       );
                     },
                   ),
                 ),
+                Divider(),
               ],
             );
           },
         ),
       ),
     );
+  }
+
+  void _dateIs(DateTime value) {
+    String _datePicked = "";
+    _datewiseExtracted = _datewiseEvents;
+    if (value.month < 10 && value.day < 10) {
+      _datePicked = "${value.year}0${value.month}0${value.day}";
+      print("Date: $_datePicked");
+      _datewiseEvents[_datePicked] != null
+          ? _datewiseExtracted = {_datePicked: _datewiseEvents[_datePicked]}
+          : null;
+    } else if (value.day < 10) {
+      _datePicked = "${value.year}${value.month}0${value.day}";
+      print("Date: $_datePicked");
+      _datewiseEvents[_datePicked] != null
+          ? _datewiseExtracted = {_datePicked: _datewiseEvents[_datePicked]}
+          : null;
+    } else if (value.month < 10) {
+      _datePicked = "${value.year}0${value.month}${value.day}";
+      print("Date: $_datePicked");
+      _datewiseEvents[_datePicked] != null
+          ? _datewiseExtracted = {_datePicked: _datewiseEvents[_datePicked]}
+          : null;
+    } else {
+      _datePicked = "${value.year}${value.month}${value.day}";
+      print("Date: $_datePicked");
+      _datewiseEvents[_datePicked] != null
+          ? _datewiseExtracted = {_datePicked: _datewiseEvents[_datePicked]}
+          : null;
+    }
   }
 }

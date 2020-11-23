@@ -1,5 +1,6 @@
 import 'package:GuestInMe/Home/widgets/event_card.dart';
 import 'package:GuestInMe/New_Events/new_events_page.dart';
+import 'package:GuestInMe/Popular_places/popular_places_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/providers/event_provider.dart';
@@ -50,16 +51,21 @@ class _DiamondPageState extends State<DiamondPage> {
             ),
           ),
           IconButton(
-            icon: Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.purple,
-            ),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => NewEventsPage(),
+              icon: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.purple,
               ),
-            ),
-          )
+              onPressed: () => _title == "New events"
+                  ? Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => NewEventsPage(),
+                      ),
+                    )
+                  : Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PopularPlacesPage(),
+                      ),
+                    ))
         ],
       ),
     );
@@ -135,7 +141,7 @@ class _DiamondPageState extends State<DiamondPage> {
                 child: PlaceCard(placeModel: _places[i]),
               );
             },
-            childCount: _places == null ? 0 : _places.length,
+            childCount: _places == null ? 0 : 1,
           ),
         ),
         SliverList(

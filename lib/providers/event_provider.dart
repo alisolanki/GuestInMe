@@ -7,7 +7,8 @@ import '../auth/auth.dart' as auth;
 
 class EventProvider extends ChangeNotifier {
   List<EventModel> _newEventModels = [];
-  Map<String, List<EventModel>> _datewiseEventsMap = {};
+  Map<String, List<EventModel>> _datewiseEventsMap =
+      Map<String, List<EventModel>>();
 
   List<EventModel> get newEventModels {
     return _newEventModels;
@@ -66,7 +67,7 @@ class EventProvider extends ChangeNotifier {
           );
           _newEventModels.add(_eventModel);
         });
-      })?.then((_) {
+      }).then((_) {
         print("This is final: ${_newEventModels[0].eventName}");
         notifyListeners();
       }).catchError((e) {
@@ -129,13 +130,15 @@ class EventProvider extends ChangeNotifier {
               time: _eventDetail['time'].toString(),
               placeName: _eventDetail['placename'].toString(),
             );
-            _datewiseEventsMap[_date] = [];
+            if (_datewiseEventsMap[_date] == null) {
+              _datewiseEventsMap[_date] = [];
+            }
             _datewiseEventsMap[_date].add(_eventModel);
           });
         });
-      })?.then((_) {
+      }).then((_) {
         print(
-            "This is final length of datewise data: ${_datewiseEventsMap.length}");
+            "This is final length of datewise data: ${_datewiseEventsMap['20201106'].length}");
         notifyListeners();
       }).catchError((e) {
         print(e);
