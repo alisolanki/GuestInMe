@@ -1,4 +1,5 @@
 import 'package:GuestInMe/Home/widgets/event_card.dart';
+import 'package:GuestInMe/New_Events/new_events_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/providers/event_provider.dart';
@@ -53,7 +54,11 @@ class _DiamondPageState extends State<DiamondPage> {
               Icons.arrow_forward_ios,
               color: Colors.purple,
             ),
-            onPressed: () => {},
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => NewEventsPage(),
+              ),
+            ),
           )
         ],
       ),

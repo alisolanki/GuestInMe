@@ -14,12 +14,20 @@ class _ProfilePageState extends State<ProfilePage> {
   var _user = FirebaseAuth.instance.currentUser;
   var _value = 1;
 
+  String _userEmail;
+  String _userNumber;
+  String _userGender;
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() {
     size = MediaQuery.of(context).size;
     super.didChangeDependencies();
+  }
+
+  formSave() {
+    _formKey.currentState.save();
   }
 
   @override
@@ -136,6 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           onPressed: () => {
                             setState(() {
                               _editing = !_editing;
+                              if (!_editing) {
+                                formSave();
+                              }
                               print("editing: $_editing");
                             }),
                           },
@@ -176,6 +187,11 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         keyboardType:
             _type == "email" ? TextInputType.emailAddress : TextInputType.name,
+        onSaved: (_input) => _type == "email"
+            ? _userEmail = _input
+            : _type == "number"
+                ? _userNumber = _input
+                : _userGender = _input,
       ),
     );
   }
