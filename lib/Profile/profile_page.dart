@@ -1,7 +1,11 @@
 import 'package:GuestInMe/Settings/settings_page.dart';
+import 'package:GuestInMe/models/user_model.dart';
+import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../New_Events/new_events_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -9,24 +13,32 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  var _init = true;
+  var _loading = false;
   var size = Size(0.0, 0.0);
   var _editing = false;
   var _user = FirebaseAuth.instance.currentUser;
-  var _value = 1;
+  UserModel _userModel;
+  String _value;
 
+  String _userName;
+  String _userGender = "Gender";
   String _userEmail;
-  String _userNumber;
-  String _userGender;
+  String _userDOB;
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() {
-    size = MediaQuery.of(context).size;
     super.didChangeDependencies();
+    size = MediaQuery.of(context).size;
+    if (_init) {
+      _userModel = Provider.of<UserProvider>(context).userModel;
+    }
+    _init = false;
   }
 
-  formSave() {
+  void formSave() {
     _formKey.currentState.save();
   }
 
@@ -71,129 +83,256 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
             ),
-            Positioned(
-              top: 150 + size.width * 0.3,
-              height: size.height,
-              width: size.width * 0.8,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    formField("Name", "name"),
-                    _editing
-                        ? Padding(
+            _loading
+                ? Center(child: CircularProgressIndicator())
+                : Positioned(
+                    top: 150 + size.width * 0.3,
+                    width: size.width * 0.8,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //editing
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 50.0),
+                            child: CircleAvatar(
+                              child: IconButton(
+                                icon: Icon(
+                                  _editing ? Icons.check : Icons.edit,
+                                  color: Colors.white70,
+                                ),
+                                onPressed: () => {
+                                  if (_editing)
+                                    {
+                                      if (_formKey.currentState.validate())
+                                        {
+                                          setState(() {
+                                            _editing = !_editing;
+                                            print("editing: $_editing");
+                                          }),
+                                          formSave(),
+                                          _saveUserDetails(),
+                                        }
+                                    }
+                                  else
+                                    {
+                                      setState(() {
+                                        _editing = !_editing;
+                                        print("editing: $_editing");
+                                      })
+                                    }
+                                },
+                              ),
+                              backgroundColor: const Color(0xAAC97CFF),
+                            ),
+                          ),
+                          //name field
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Name: ${_userModel?.name}",
+                                  hintStyle: TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                  fillColor: _editing
+                                      ? const Color(0x00C97CFF)
+                                      : Colors.white70,
+                                  filled: true,
+                                  focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  enabled: _editing,
+                                ),
+                                cursorColor: Colors.white,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                keyboardType: TextInputType.name,
+                                validator: (value) => value.isEmpty
+                                    ? "Enter Your Name"
+                                    : (RegExp('[a-zA-Z]').hasMatch(value)
+                                        ? null
+                                        : "Enter a Valid Name"),
+                                onSaved: (_input) {
+                                  setState(() {
+                                    _userName = _input;
+                                  });
+                                }),
+                          ),
+                          //gender field
+                          Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: DropdownButton(
                               value: _value,
-                              items: [
-                                DropdownMenuItem(
-                                  child: Text("  Male"),
-                                  value: 1,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("  Female"),
-                                  value: 2,
-                                ),
-                                DropdownMenuItem(
-                                  child: Text("  Other"),
-                                  value: 3,
-                                ),
-                              ],
+                              items: _editing
+                                  ? [
+                                      DropdownMenuItem(
+                                        child: Text("  Male"),
+                                        value: "male",
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("  Female"),
+                                        value: "female",
+                                      ),
+                                      DropdownMenuItem(
+                                        child: Text("  Other"),
+                                        value: "other",
+                                      ),
+                                    ]
+                                  : null,
                               isExpanded: true,
+                              disabledHint: Text(_userModel?.gender),
                               onChanged: (value) {
                                 setState(() {
                                   _value = value;
+                                  _userGender = _value;
                                 });
                               },
                             ),
-                          )
-                        : formField("Gender", "gender"),
-                    formField("${_user.phoneNumber}", "number"),
-                    formField("Email", "email"),
-                    _editing
-                        ? Container(
-                            margin: const EdgeInsets.all(8.0),
-                            height: 300,
-                            child: CupertinoDatePicker(
-                              onDateTimeChanged: (DateTime _selected) => {
-                                //TODO: Save DOB
-                              },
-                              mode: CupertinoDatePickerMode.date,
-                              maximumDate: DateTime.now(),
-                              minimumDate: DateTime(1920),
-                              initialDateTime: DateTime(2001),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                const Radius.circular(40.0),
-                              ),
-                              color: const Color(0xAAC97CFF),
-                            ),
-                          )
-                        : formField("Date of Birth", "dob"),
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 50.0),
-                      child: CircleAvatar(
-                        child: IconButton(
-                          icon: Icon(
-                            _editing ? Icons.check : Icons.edit,
-                            color: Colors.white70,
                           ),
-                          onPressed: () => {
-                            setState(() {
-                              _editing = !_editing;
-                              if (!_editing) {
-                                formSave();
-                              }
-                              print("editing: $_editing");
-                            }),
-                          },
-                        ),
-                        backgroundColor: const Color(0xAAC97CFF),
+                          //phone number field
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                hintText: "${_user.phoneNumber}",
+                                hintStyle: TextStyle(
+                                  color: Colors.white70,
+                                ),
+                                fillColor: Colors.white70,
+                                filled: true,
+                                focusedBorder: InputBorder.none,
+                                disabledBorder: InputBorder.none,
+                                enabled: false,
+                              ),
+                              cursorColor: Colors.white,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              onSaved: (_input) => null,
+                            ),
+                          ),
+                          //email field
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Email: ${_userModel?.email}",
+                                  hintMaxLines: 2,
+                                  hintStyle: TextStyle(
+                                    color: Colors.white70,
+                                  ),
+                                  fillColor: _editing
+                                      ? const Color(0x00C97CFF)
+                                      : Colors.white70,
+                                  filled: true,
+                                  focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  enabled: _editing,
+                                ),
+                                cursorColor: Colors.white,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (email) =>
+                                    RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                            .hasMatch(email)
+                                        ? null
+                                        : "Enter a valid email",
+                                onSaved: (_input) {
+                                  setState(() {
+                                    _userEmail = _input;
+                                  });
+                                }),
+                          ),
+                          _editing
+                              ? Container(
+                                  margin: const EdgeInsets.all(8.0),
+                                  height: 300,
+                                  child: CupertinoDatePicker(
+                                    onDateTimeChanged: (DateTime _selected) => {
+                                      setState(() {
+                                        _userDOB = convertDate(_selected);
+                                      }),
+                                    },
+                                    mode: CupertinoDatePickerMode.date,
+                                    maximumDate: DateTime.now(),
+                                    minimumDate: DateTime(1920),
+                                    initialDateTime: DateTime(
+                                      int.parse(_userModel.dateOfBirth
+                                          .substring(0, 4)),
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      const Radius.circular(40.0),
+                                    ),
+                                    color: const Color(0xAAC97CFF),
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          "Date of Birth: ${_userModel?.dateOfBirth.substring(6, 8)}/${_userModel?.dateOfBirth.substring(4, 6)}/${_userModel?.dateOfBirth.substring(0, 4)}",
+                                      hintStyle: TextStyle(
+                                        color: Colors.white70,
+                                      ),
+                                      fillColor: Colors.white70,
+                                      filled: true,
+                                      focusedBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                      enabled: false,
+                                    ),
+                                    cursorColor: Colors.white,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    keyboardType: TextInputType.name,
+                                    onSaved: (_input) => null,
+                                  ),
+                                ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ],
         ),
       ),
     );
   }
 
-  Widget formField(String _hint, String _type) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: "$_hint",
-          hintStyle: TextStyle(
-            color: Colors.white70,
-          ),
-          fillColor: _editing && _type != "number"
-              ? const Color(0x00C97CFF)
-              : Colors.white70,
-          filled: true,
-          focusedBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          enabled: _type == "number" ? false : _editing,
-        ),
-        cursorColor: Colors.white,
-        style: TextStyle(
-          color: Colors.white,
-        ),
-        keyboardType:
-            _type == "email" ? TextInputType.emailAddress : TextInputType.name,
-        onSaved: (_input) => _type == "email"
-            ? _userEmail = _input
-            : _type == "number"
-                ? _userNumber = _input
-                : _userGender = _input,
-      ),
+  void _saveUserDetails() {
+    print(
+        "Name: $_userName, Gender: $_userGender, Email: $_userEmail, DOB: $_userDOB");
+    var _sendUser = UserModel(
+      name: _userName,
+      gender: _userGender,
+      phoneNumber: _user.phoneNumber,
+      email: _userEmail,
+      frequency: "infinite",
+      place: "Mumbai",
+      dateOfBirth: _userDOB,
     );
+    UserProvider().putUser(_sendUser);
+  }
+
+  String convertDate(DateTime value) {
+    String _datePicked;
+    if (value.month < 10 && value.day < 10) {
+      _datePicked = "${value.year}0${value.month}0${value.day}";
+    } else if (value.day < 10) {
+      _datePicked = "${value.year}${value.month}0${value.day}";
+    } else if (value.month < 10) {
+      _datePicked = "${value.year}0${value.month}${value.day}";
+    } else {
+      _datePicked = "${value.year}${value.month}${value.day}";
+    }
+    print("Date: $_datePicked");
+    return _datePicked;
   }
 }
 

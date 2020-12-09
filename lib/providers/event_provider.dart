@@ -25,18 +25,14 @@ class EventProvider extends ChangeNotifier {
       print("_newEventModels.length: ${_newEventModels.length}");
       return http.get(newEventUrl).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
-        print("Data: $_extractedData");
         _extractedData.forEach((_event, _eventDetail) {
-          print("_eventdetail: $_eventDetail");
           List<PriceModel> prices = [];
           var _price = _eventDetail['price'] as Map<String, dynamic>;
           _price != null
               ? _price.forEach((_type, _typeDetail) {
-                  print("_typeDetail: $_typeDetail");
                   List<TypeModel> typeModelList = [];
                   _typeDetail != null
                       ? _typeDetail.forEach((_typeName, _typeSubDetail) {
-                          print("_typeSubDetail: $_typeSubDetail");
                           var typeModel = TypeModel(
                             typeName: _typeName.toString(),
                             description:
@@ -60,7 +56,7 @@ class EventProvider extends ChangeNotifier {
             dressCode: _eventDetail['dresscode'].toString(),
             eventName: _event.toString(),
             image: _eventDetail['image'].toString(),
-            lineup: _eventDetail['lineup'] as List<dynamic>,
+            lineup: _eventDetail['lineup'].toString(),
             prices: prices,
             time: _eventDetail['time'].toString(),
             placeName: _eventDetail['placename'].toString(),
@@ -92,16 +88,13 @@ class EventProvider extends ChangeNotifier {
 
         _extractedData.forEach((_date, _eventModel) {
           _eventModel.forEach((_event, _eventDetail) {
-            print("_eventdetail: $_eventDetail");
             List<PriceModel> prices = [];
             var _price = _eventDetail['price'] as Map<String, dynamic>;
             _price != null
                 ? _price.forEach((_type, _typeDetail) {
-                    print("_typeDetail: $_typeDetail");
                     List<TypeModel> typeModelList = [];
                     _typeDetail != null
                         ? _typeDetail.forEach((_typeName, _typeSubDetail) {
-                            print("_typeSubDetail: $_typeSubDetail");
                             var typeModel = TypeModel(
                               typeName: _typeName.toString(),
                               description:
@@ -125,7 +118,7 @@ class EventProvider extends ChangeNotifier {
               dressCode: _eventDetail['dresscode'].toString(),
               eventName: _event.toString(),
               image: _eventDetail['image'].toString(),
-              lineup: _eventDetail['lineup'] as List<dynamic>,
+              lineup: _eventDetail['lineup'].toString(),
               prices: prices,
               time: _eventDetail['time'].toString(),
               placeName: _eventDetail['placename'].toString(),

@@ -8,8 +8,8 @@ class EventModel {
       dressCode,
       ageLimit,
       time,
-      placeName;
-  final List<dynamic> lineup;
+      placeName,
+      lineup;
   final List<PriceModel> prices;
   EventModel({
     @required this.eventName,

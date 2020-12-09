@@ -77,12 +77,16 @@ class EventCard extends StatelessWidget {
                           color: const Color(0xFFBC6FF1),
                           size: 14.0,
                         ),
-                        Text(
-                          "$placeName",
-                          style: TextStyle(
-                            color: const Color(0xFFBC6FF1),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0,
+                        Container(
+                          width: 134.0,
+                          height: 15.0,
+                          child: Text(
+                            "$placeName",
+                            style: TextStyle(
+                              color: const Color(0xFFBC6FF1),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
+                            ),
                           ),
                         ),
                       ],

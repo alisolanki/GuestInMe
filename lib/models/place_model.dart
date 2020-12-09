@@ -10,7 +10,7 @@ class PlaceModel {
     @required this.placeName,
     @required this.description,
     @required this.location,
-    @required this.event,
+    this.event,
     @required this.images,
     @required this.menu,
     @required this.stars,

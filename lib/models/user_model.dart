@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
+
 class UserModel {
   //TODO: check for place, frequency datatype
-  final String phoneNumber, name, email, place, frequency;
-  final DateTime dateOfBirth;
+  final String phoneNumber, name, email, place, frequency, gender, dateOfBirth;
   UserModel({
-    this.phoneNumber,
-    this.name,
-    this.email,
-    this.frequency,
-    this.place,
-    this.dateOfBirth,
+    @required this.name,
+    @required this.gender,
+    @required this.phoneNumber,
+    @required this.email,
+    @required this.frequency,
+    @required this.place,
+    @required this.dateOfBirth,
   });
 }

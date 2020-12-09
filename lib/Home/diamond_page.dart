@@ -17,7 +17,8 @@ class DiamondPage extends StatefulWidget {
 }
 
 class _DiamondPageState extends State<DiamondPage> {
-  bool _init = true;
+  var _init = true;
+  var _loadingNewEvents = false;
   var size = Size(0.0, 0.0);
 
   List<PlaceModel> _places = [];
@@ -28,11 +29,9 @@ class _DiamondPageState extends State<DiamondPage> {
     super.didChangeDependencies();
     size = MediaQuery.of(context).size;
     if (_init) {
-      Provider.of<PlaceProvider>(context).fetchPlaces();
-      Provider.of<EventProvider>(context).fetchNewEvents();
+      _places = Provider.of<PlaceProvider>(context).places;
+      _events = Provider.of<EventProvider>(context).newEventModels;
     }
-    _places = Provider.of<PlaceProvider>(context).places;
-    _events = Provider.of<EventProvider>(context).newEventModels;
     _init = false;
   }
 
@@ -116,19 +115,23 @@ class _DiamondPageState extends State<DiamondPage> {
                 ),
               ),
               heading("New events"),
-              Container(
-                height: 270.0,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _events.length,
-                  itemBuilder: (_, i) {
-                    return EventCard(
-                      eventModel: _events[i],
-                      placeName: _events[i].placeName,
-                    );
-                  },
-                ),
-              ),
+              _loadingNewEvents
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container(
+                      height: 270.0,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _events.length,
+                        itemBuilder: (_, i) {
+                          return EventCard(
+                            eventModel: _events[i],
+                            placeName: _events[i].placeName,
+                          );
+                        },
+                      ),
+                    ),
               heading("Popular places"),
             ],
           ),
@@ -141,7 +144,7 @@ class _DiamondPageState extends State<DiamondPage> {
                 child: PlaceCard(placeModel: _places[i]),
               );
             },
-            childCount: _places == null ? 0 : 1,
+            childCount: _places.length == 0 ? 0 : 1,
           ),
         ),
         SliverList(
@@ -155,9 +158,11 @@ class _DiamondPageState extends State<DiamondPage> {
                       Icons.arrow_drop_down,
                       color: Colors.purple,
                     ),
-                    onPressed: () {
-                      print("popular places");
-                    },
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => PopularPlacesPage(),
+                      ),
+                    ),
                   ),
                   backgroundColor: Colors.white10,
                 ),

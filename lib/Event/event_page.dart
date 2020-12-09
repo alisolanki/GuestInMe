@@ -317,13 +317,7 @@ class _EventPageState extends State<EventPage> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (_, i) {
-                  return Container(
+                  Container(
                     margin: const EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 8.0,
@@ -339,13 +333,12 @@ class _EventPageState extends State<EventPage> {
                         Icons.account_circle,
                       ),
                       title: Text(
-                        "${widget.eventModel.lineup[i]}",
+                        "${widget.eventModel.lineup}",
                         style: TextStyle(fontSize: 18.0),
                       ),
                     ),
-                  );
-                },
-                childCount: widget.eventModel.lineup.length,
+                  ),
+                ],
               ),
             ),
             SliverList(

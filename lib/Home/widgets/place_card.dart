@@ -10,7 +10,7 @@ class PlaceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      width: 180.0,
+      width: 360.0,
       height: 270.0,
       child: InkWell(
         onTap: () {
