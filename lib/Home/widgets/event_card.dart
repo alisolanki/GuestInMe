@@ -32,7 +32,7 @@ class EventCard extends StatelessWidget {
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(20.0),
                 ),
-                color: Colors.lightBlue,
+                color: Colors.black,
                 image: DecorationImage(
                   image: NetworkImage("${eventModel.image}"),
                   fit: BoxFit.cover,

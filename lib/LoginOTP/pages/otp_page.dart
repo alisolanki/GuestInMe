@@ -53,12 +53,12 @@ class _OtpPageState extends State<OtpPage> {
         height: 40,
         width: 40,
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0),
+            border: Border.all(color: Colors.white, width: 0),
             borderRadius: const BorderRadius.all(Radius.circular(8))),
         child: Center(
           child: Text(
             text[position],
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.white),
           ),
         ),
       );
@@ -67,7 +67,7 @@ class _OtpPageState extends State<OtpPage> {
         height: 40,
         width: 40,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black, width: 0),
+          border: Border.all(color: Colors.white, width: 0),
           borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
       );

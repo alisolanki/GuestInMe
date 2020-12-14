@@ -1,26 +1,49 @@
+import 'package:flutter/material.dart';
+
 class RegistrationModel {
-  final String date;
-  final List<UserRegistrationModel> userRegistrationModel;
+  final List<DateModel> dateModels;
   RegistrationModel({
-    this.date,
-    this.userRegistrationModel,
+    @required this.dateModels,
   });
 }
 
-class UserRegistrationModel {
-  final String phoneNumber;
-  final List<EventRegistrationModel> eventRegistrationModel;
-  UserRegistrationModel({
-    this.phoneNumber,
-    this.eventRegistrationModel,
+class DateModel {
+  final String date;
+  final List<EventRegistrationModel> eventRegistrationModels;
+  DateModel({
+    @required this.date,
+    @required this.eventRegistrationModels,
   });
 }
 
 class EventRegistrationModel {
   final String eventName;
-  final Map<String, String> typePrice;
+  final List<UserRegistrationModel> userRegistrationModels;
   EventRegistrationModel({
-    this.eventName,
-    this.typePrice,
+    @required this.eventName,
+    @required this.userRegistrationModels,
+  });
+}
+
+class UserRegistrationModel {
+  final String phoneNumber, name;
+  final List<TypeRegistrationModel> typeRegistrationModels;
+  UserRegistrationModel({
+    @required this.phoneNumber,
+    @required this.name,
+    @required this.typeRegistrationModels,
+  });
+}
+
+class TypeRegistrationModel {
+  final String typeName;
+  final double typePrice;
+  final int code;
+  bool paid;
+  TypeRegistrationModel({
+    @required this.typeName,
+    @required this.typePrice,
+    @required this.code,
+    @required this.paid,
   });
 }

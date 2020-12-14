@@ -1,4 +1,5 @@
 import 'package:GuestInMe/LoginOTP/pages/login_page.dart';
+import 'package:GuestInMe/Settings/owner/entrance_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -111,6 +112,25 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           label: Text(
                             "Add Event",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 20.0),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30.0, left: 8.0),
+                        child: FlatButton.icon(
+                          onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => EntrancePage(),
+                            ),
+                          ),
+                          icon: Icon(
+                            Icons.admin_panel_settings,
+                            color: Colors.white,
+                          ),
+                          label: Text(
+                            "Entrance",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 20.0),
                           ),

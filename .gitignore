@@ -17,6 +17,7 @@
 
 #personal
 **/android/app/google-services.json
+**/android/app/Users/Ali Solanki/key.jks
 **/lib/auth/auth.dart
 
 # The .vscode folder contains launch configuration and tasks you configure in

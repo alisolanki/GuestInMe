@@ -328,7 +328,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
-                initialValue: "1 male, 1 female only",
+                initialValue: "Guestlist closes at 23:00",
                 decoration: InputDecoration(
                   hintText: "Description",
                 ),
@@ -363,7 +363,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
-                initialValue: "1 female only",
+                initialValue: "Guestlist closes at 23:00",
                 decoration: InputDecoration(
                   hintText: "Description",
                 ),
@@ -398,7 +398,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
-                initialValue: "1 male only",
+                initialValue: "Guestlist closes at 23:00",
                 decoration: InputDecoration(
                   hintText: "Description",
                 ),

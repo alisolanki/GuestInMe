@@ -119,7 +119,7 @@ class _SearchPageState extends State<SearchPage> {
                     children: [
                       heading("Events"),
                       SizedBox(
-                        height: 270.0,
+                        height: _eventsList.length == 0 ? 10.0 : 270.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: _eventsList.length,
@@ -133,7 +133,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       heading("Clubs"),
                       SizedBox(
-                        height: 270.0,
+                        height: _clubsList.length == 0 ? 10.0 : 270.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: _clubsList.length,
@@ -144,7 +144,7 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       heading("Bars"),
                       SizedBox(
-                        height: 270.0,
+                        height: _barsList.length == 0 ? 10.0 : 270.0,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: _barsList.length,

@@ -121,15 +121,40 @@ class _DiamondPageState extends State<DiamondPage> {
                     )
                   : Container(
                       height: 270.0,
-                      child: ListView.builder(
+                      child: ListView(
                         scrollDirection: Axis.horizontal,
-                        itemCount: _events.length,
-                        itemBuilder: (_, i) {
-                          return EventCard(
-                            eventModel: _events[i],
-                            placeName: _events[i].placeName,
-                          );
-                        },
+                        children: [
+                          ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _events.length,
+                            itemBuilder: (_, i) {
+                              return EventCard(
+                                eventModel: _events[i],
+                                placeName: _events[i].placeName,
+                              );
+                            },
+                          ),
+                          //more button
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_right,
+                                  color: Colors.purple,
+                                ),
+                                onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => NewEventsPage(),
+                                  ),
+                                ),
+                              ),
+                              backgroundColor: Colors.white10,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
               heading("Popular places"),
@@ -144,12 +169,13 @@ class _DiamondPageState extends State<DiamondPage> {
                 child: PlaceCard(placeModel: _places[i]),
               );
             },
-            childCount: _places.length == 0 ? 0 : 1,
+            childCount: _places.length == 0 ? 0 : 2,
           ),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              //more
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: CircleAvatar(

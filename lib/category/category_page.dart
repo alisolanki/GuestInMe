@@ -35,9 +35,11 @@ class _CategoryPageState extends State<CategoryPage> {
       ),
       body: SafeArea(
         child: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-          itemBuilder: (_, i) => PlaceCard(
-            placeModel: _placeModels[i],
+          itemBuilder: (_, i) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PlaceCard(
+              placeModel: _placeModels[i],
+            ),
           ),
           itemCount: _placeModels.length,
         ),

@@ -13,7 +13,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
   PlaceModel _placeModel;
 
   String _placeName, _category, _description, _location, _logo;
-  List<String> _menu, _images;
+  List<String> _menu = [], _images = [];
   double _stars;
 
   int _imageNum = 0;
@@ -47,111 +47,134 @@ class _AddPlacePageState extends State<AddPlacePage> {
       ),
       body: SingleChildScrollView(
         child: Form(
+            key: _formKey,
             child: Column(
-          children: [
-            _textField("Place Name"),
-            _textField("Description"),
-            _textField("Category"),
-            // Images
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(
-                  "Place images",
-                  style: TextStyle(fontSize: 16.0),
-                ),
+                _textField("Place Name"),
+                _textField("Description"),
+                _textField("Category"),
+                // Images
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          if (_images.length != 0) {
-                            _images.removeLast();
-                          }
-                          if (_imageNum > 0) {
-                            setState(() {
-                              _imageNum = _imageNum - 1;
-                            });
-                          }
-                        }),
                     Text(
-                      "$_imageNum",
+                      "Place images",
                       style: TextStyle(fontSize: 16.0),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () => setState(() {
-                        _imageNum = _imageNum + 1;
-                      }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              if (_images.length != 0) {
+                                _images.removeLast();
+                              }
+                              if (_imageNum > 0) {
+                                setState(() {
+                                  _imageNum = _imageNum - 1;
+                                });
+                              }
+                            }),
+                        Text(
+                          "$_imageNum",
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () => setState(() {
+                            _imageNum = _imageNum + 1;
+                          }),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            Divider(),
-            //Images list
-            ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: _imageNum,
-              itemBuilder: (context, _i) {
-                return _imageField(_i);
-              },
-            ),
-            _textField("Location"),
-            _textField("Logo"),
-            _textField("Stars"),
-            _textField("Price"),
-            // Menu
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  "Menu images",
-                  style: TextStyle(fontSize: 16.0),
+                Divider(),
+                //Images list
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _imageNum,
+                  itemBuilder: (context, _i) {
+                    return _imageField(_i);
+                  },
                 ),
+                _textField("Location"),
+                _textField("Logo"),
+                _textField("Stars"),
+                // Menu
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    IconButton(
-                        icon: Icon(Icons.remove),
-                        onPressed: () {
-                          if (_menu.length != 0) {
-                            _menu.removeLast();
-                          }
-                          if (_menuNum > 0) {
-                            setState(() {
-                              _menuNum = _menuNum - 1;
-                            });
-                          }
-                        }),
                     Text(
-                      "$_menuNum",
+                      "Menu images",
                       style: TextStyle(fontSize: 16.0),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: () => setState(() {
-                        _menuNum = _menuNum + 1;
-                      }),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              if (_menu.length != 0) {
+                                _menu.removeLast();
+                              }
+                              if (_menuNum > 0) {
+                                setState(() {
+                                  _menuNum = _menuNum - 1;
+                                });
+                              }
+                            }),
+                        Text(
+                          "$_menuNum",
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () => setState(() {
+                            _menuNum = _menuNum + 1;
+                          }),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                Divider(),
+                //Menu list
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _menuNum,
+                  itemBuilder: (context, _i) {
+                    return _menuField(_i);
+                  },
+                ),
+                //submit
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: RaisedButton.icon(
+                      icon: Icon(
+                        Icons.check,
+                        size: 20.0,
+                      ),
+                      label: Text(
+                        "Submit",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      color: Colors.purple[700],
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0),
+                      ),
+                      onPressed: () {
+                        formSave();
+                      }),
+                ),
               ],
-            ),
-            Divider(),
-            //Menu list
-            ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: _menuNum,
-              itemBuilder: (context, _i) {
-                return _menuField(_i);
-              },
-            ),
-          ],
-        )),
+            )),
       ),
     );
   }
@@ -163,6 +186,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
         child: TextFormField(
           initialValue: "https://i.imgur.com/NhOXuQY.jpg",
           decoration: InputDecoration(labelText: "Image Link"),
+          validator: (v) => v.isEmpty ? "Enter an image link" : null,
           onSaved: (_i) => setState(() {
             _images.add(_i);
           }),
@@ -178,6 +202,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
         child: TextFormField(
           initialValue: "https://i.imgur.com/NhOXuQY.jpg",
           decoration: InputDecoration(labelText: "Menu Link"),
+          validator: (v) => v.isEmpty ? "Enter an image link" : null,
           onSaved: (_i) => setState(() {
             _menu.add(_i);
           }),

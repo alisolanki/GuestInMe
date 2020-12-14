@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:GuestInMe/models/place_model.dart';
+import 'package:GuestInMe/models/registration_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:GuestInMe/models/event_model.dart';
@@ -54,25 +55,25 @@ class TransferData {
     //weekday
     switch (value.weekday) {
       case 1:
-        _month = "Mon";
+        _weekday = "Mon";
         break;
       case 2:
-        _month = "Tue";
+        _weekday = "Tue";
         break;
       case 3:
-        _month = "Wed";
+        _weekday = "Wed";
         break;
       case 4:
-        _month = "Thu";
+        _weekday = "Thu";
         break;
       case 5:
-        _month = "Fri";
+        _weekday = "Fri";
         break;
       case 6:
-        _month = "Sat";
+        _weekday = "Sat";
         break;
       case 7:
-        _month = "Sun";
+        _weekday = "Sun";
         break;
       default:
         break;
@@ -87,12 +88,12 @@ class TransferData {
     @required DateTime date,
     @required bool newEvent,
   }) async {
-    final String _date = convertDate(date);
+    final String _datePicked = convertDate(date);
     //urls
     var _eventPlaceUrl =
         "${auth.url}place/${eventModel.placeName}/events/${eventModel.eventName}.json?auth=${auth.token}";
     var _eventDatewiseUrl =
-        "${auth.url}datewiseEvents/$_date/${eventModel.eventName}.json?auth=${auth.token}";
+        "${auth.url}datewiseEvents/${eventModel.date}/${eventModel.eventName}.json?auth=${auth.token}";
     var _eventNewUrl =
         "${auth.url}newEvents/${eventModel.eventName}.json?auth=${auth.token}";
 
@@ -132,7 +133,7 @@ class TransferData {
 
     var _encodedBody = jsonEncode({
       'agelimit': eventModel.ageLimit,
-      'date': _date,
+      'date': _datePicked,
       'description': eventModel.description,
       'dresscode': eventModel.dressCode,
       'image': eventModel.image,
@@ -185,5 +186,91 @@ class TransferData {
       print(result.statusCode);
       print(result.body);
     });
+  }
+
+  Future<void> changeEntranceState({
+    @required String date,
+    @required String userName,
+    @required String userNumber,
+    @required String eventName,
+    @required TypeRegistrationModel typeModel,
+  }) async {
+    final _registrationUrl =
+        "${auth.url}registrations/$date.json?auth=${auth.token}";
+    var _encodedBody = json.encode({
+      '$eventName': {
+        '$userNumber': {
+          'bookings': {
+            '${typeModel.typeName}': {
+              'paid': "${typeModel.paid}",
+              'price': "${typeModel.typePrice}",
+              'code': "${typeModel.code}"
+            },
+          },
+          'name': '$userName',
+        }
+      }
+    });
+    await http.put(_registrationUrl,
+        body: _encodedBody,
+        headers: {"Accept": "application/json"}).then((result) {
+      print(result.statusCode);
+      print(result.body);
+    });
+  }
+
+  Future<RegistrationModel> getEntranceState() async {
+    final String _registrationUrl =
+        "${auth.url}registrations.json?auth=${auth.token}";
+    List<TypeRegistrationModel> _typeModels = [];
+    List<EventRegistrationModel> _eventModels = [];
+    List<UserRegistrationModel> _userModels = [];
+    List<DateModel> _dateModels = [];
+    RegistrationModel _registrationModel;
+
+    await http.get(_registrationUrl).then((res) {
+      var _extractedData = json.decode(res.body) as Map<String, dynamic>;
+      _extractedData.forEach((_date, _details) {
+        var _eventDetails = _details as Map<String, dynamic>;
+        _eventDetails.forEach((_eventName, _details1) {
+          var _userDetails = _details1 as Map<String, dynamic>;
+          _userDetails.forEach((_phoneNumber, _details2) {
+            var _type = _details2['bookings'] as Map<String, dynamic>;
+            _type.forEach((_typeName, _details3) {
+              _typeModels.add(
+                TypeRegistrationModel(
+                  typeName: _typeName,
+                  typePrice: double.parse(_details3['price'].toString()),
+                  code: int.parse(_details3['code'].toString()),
+                  paid: _details3['paid'].toString().toLowerCase() == "true",
+                ),
+              );
+            });
+            _userModels.add(
+              UserRegistrationModel(
+                phoneNumber: _phoneNumber,
+                name: _details2['name'] as String,
+                typeRegistrationModels: _typeModels,
+              ),
+            );
+          });
+          _eventModels.add(
+            EventRegistrationModel(
+              eventName: _eventName,
+              userRegistrationModels: _userModels,
+            ),
+          );
+        });
+        _dateModels.add(
+          DateModel(
+            date: _date,
+            eventRegistrationModels: _eventModels,
+          ),
+        );
+      });
+      _registrationModel = RegistrationModel(dateModels: _dateModels);
+      print("Fetched Registration Model");
+    });
+    return _registrationModel;
   }
 }

@@ -19,12 +19,12 @@ class _ProfilePageState extends State<ProfilePage> {
   var _editing = false;
   var _user = FirebaseAuth.instance.currentUser;
   UserModel _userModel;
-  String _value;
+  String _v;
 
-  String _userName;
+  String _userName = "";
   String _userGender = "Gender";
-  String _userEmail;
-  String _userDOB;
+  String _userEmail = "";
+  String _userDOB = "";
 
   final _formKey = GlobalKey<FormState>();
 
@@ -164,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: DropdownButton(
-                              value: _value,
+                              value: _v,
                               items: _editing
                                   ? [
                                       DropdownMenuItem(
@@ -185,8 +185,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               disabledHint: Text(_userModel?.gender),
                               onChanged: (value) {
                                 setState(() {
-                                  _value = value;
-                                  _userGender = _value;
+                                  _v = value;
+                                  _userGender = _v;
                                 });
                               },
                             ),
@@ -277,7 +277,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: TextFormField(
                                     decoration: InputDecoration(
                                       hintText:
-                                          "Date of Birth: ${_userModel?.dateOfBirth.substring(6, 8)}/${_userModel?.dateOfBirth.substring(4, 6)}/${_userModel?.dateOfBirth.substring(0, 4)}",
+                                          "Date of Birth: ${_userModel.dateOfBirth.substring(6, 8)}/${_userModel.dateOfBirth.substring(4, 6)}/${_userModel.dateOfBirth.substring(0, 4)}",
                                       hintStyle: TextStyle(
                                         color: Colors.white70,
                                       ),
