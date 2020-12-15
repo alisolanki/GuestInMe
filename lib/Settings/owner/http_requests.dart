@@ -142,20 +142,20 @@ class TransferData {
       'price': _jsonPrice,
       'time': eventModel.time,
     });
-    await http.put(_eventPlaceUrl,
+    await http.patch(_eventPlaceUrl,
         body: _encodedBody,
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
       print(result.body);
     });
-    await http.put(_eventDatewiseUrl,
+    await http.patch(_eventDatewiseUrl,
         body: _encodedBody,
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
       print(result.body);
     });
     if (newEvent) {
-      await http.put(_eventNewUrl,
+      await http.patch(_eventNewUrl,
           body: _encodedBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
@@ -190,28 +190,14 @@ class TransferData {
 
   Future<void> changeEntranceState({
     @required String date,
-    @required String userName,
     @required String userNumber,
     @required String eventName,
     @required TypeRegistrationModel typeModel,
   }) async {
-    final _registrationUrl =
-        "${auth.url}registrations/$date.json?auth=${auth.token}";
-    var _encodedBody = json.encode({
-      '$eventName': {
-        '$userNumber': {
-          'bookings': {
-            '${typeModel.typeName}': {
-              'paid': "${typeModel.paid}",
-              'price': "${typeModel.typePrice}",
-              'code': "${typeModel.code}"
-            },
-          },
-          'name': '$userName',
-        }
-      }
-    });
-    await http.put(_registrationUrl,
+    final _paidUrl =
+        "${auth.url}registrations/$date/$eventName/$userNumber/bookings/${typeModel.typeName}/paid.json?auth=${auth.token}";
+    var _encodedBody = json.encode("${typeModel.paid}");
+    await http.patch(_paidUrl,
         body: _encodedBody,
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
@@ -243,16 +229,17 @@ class TransferData {
                   typePrice: double.parse(_details3['price'].toString()),
                   code: int.parse(_details3['code'].toString()),
                   paid: _details3['paid'].toString().toLowerCase() == "true",
+                  userName: _details3['name'],
                 ),
               );
             });
             _userModels.add(
               UserRegistrationModel(
                 phoneNumber: _phoneNumber,
-                name: _details2['name'] as String,
                 typeRegistrationModels: _typeModels,
               ),
             );
+            _typeModels = [];
           });
           _eventModels.add(
             EventRegistrationModel(
@@ -260,6 +247,7 @@ class TransferData {
               userRegistrationModels: _userModels,
             ),
           );
+          _userModels = [];
         });
         _dateModels.add(
           DateModel(
@@ -267,6 +255,7 @@ class TransferData {
             eventRegistrationModels: _eventModels,
           ),
         );
+        _eventModels = [];
       });
       _registrationModel = RegistrationModel(dateModels: _dateModels);
       print("Fetched Registration Model");

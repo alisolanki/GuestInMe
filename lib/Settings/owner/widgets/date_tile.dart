@@ -39,7 +39,6 @@ class _DateTileState extends State<DateTile> {
                   ...widget._dateModel.eventRegistrationModels.map(
                     (e) {
                       return Container(
-                        key: ValueKey("${e.eventName}"),
                         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         padding: EdgeInsets.only(bottom: 10.0),
                         color: Colors.purple,

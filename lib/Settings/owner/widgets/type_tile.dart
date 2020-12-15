@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class TypeTile extends StatefulWidget {
-  final String _date, _eventName, _userName, _userNumber;
+  final String _date, _eventName, _userNumber;
   final List<TypeRegistrationModel> _typeRegistrationModels;
   TypeTile(
     this._typeRegistrationModels,
     this._date,
-    this._userName,
     this._userNumber,
     this._eventName,
   );
@@ -34,8 +33,7 @@ class _TypeTileState extends State<TypeTile> {
             color: Colors.deepPurpleAccent,
           ),
           child: ListTile(
-            title: Text("${widget._userName}"),
-            trailing: Text("${widget._userNumber}"),
+            title: Text("${widget._userNumber}"),
             dense: true,
             onTap: () {
               setState(() {
@@ -54,7 +52,8 @@ class _TypeTileState extends State<TypeTile> {
                       .map(
                         (_t) => ListTile(
                           leading: Text("${_t.typeName}"),
-                          subtitle: Text("Code: ${_t.code}"),
+                          subtitle:
+                              Text("Code: ${_t.code} Name:${_t.userName}"),
                           title: Text("Rs. ${_t.typePrice}"),
                           trailing: IconButton(
                             icon: Icon(
@@ -78,7 +77,6 @@ class _TypeTileState extends State<TypeTile> {
                                         TransferData()
                                             .changeEntranceState(
                                               date: widget._date,
-                                              userName: widget._userName,
                                               userNumber: widget._userNumber,
                                               eventName: widget._eventName,
                                               typeModel: _t,

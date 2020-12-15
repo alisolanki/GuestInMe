@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:GuestInMe/Event/ticket_generator.dart';
 import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/models/event_model.dart';
@@ -8,6 +10,7 @@ import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
@@ -65,6 +68,7 @@ class _EventPageState extends State<EventPage> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
+                  //date and time
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20.0, vertical: 8.0),
@@ -78,6 +82,7 @@ class _EventPageState extends State<EventPage> {
                       ),
                     ),
                   ),
+                  //eventName
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
@@ -91,6 +96,7 @@ class _EventPageState extends State<EventPage> {
                       ),
                     ),
                   ),
+                  //placeName
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -112,6 +118,7 @@ class _EventPageState extends State<EventPage> {
                       ],
                     ),
                   ),
+                  //dressCode and ageLimit
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -253,26 +260,38 @@ class _EventPageState extends State<EventPage> {
                             onTap: () {
                               showDialog(
                                 context: context,
-                                builder: (_) => CupertinoAlertDialog(
+                                builder: (ctx) => CupertinoAlertDialog(
                                   title: Text("Booking options"),
                                   content: Text("How do you want to pay?"),
                                   actions: [
                                     CupertinoDialogAction(
                                       child:
                                           Text("Get ticket and pay on entry"),
-                                      onPressed: () {
-                                        //TODO: make a ticket
-                                      },
-                                    ),
-                                    CupertinoDialogAction(
-                                      child: Text("Online payment"),
                                       onPressed: () =>
-                                          PaymentProvider().openCheckout(
-                                        type: widget
+                                          RegistrationHttp().sendRegistration(
+                                        ctx: ctx,
+                                        paid: false,
+                                        typeModel: widget
                                             .eventModel.prices[1].typeData[i],
+                                        code: Random().nextInt(9000) + 1000,
                                         eventModel: widget.eventModel,
                                         userModel: _userModel,
                                       ),
+                                    ),
+                                    CupertinoDialogAction(
+                                      child: Text("Online payment"),
+                                      onPressed: () {
+                                        final _code =
+                                            Random().nextInt(9000) + 1000;
+                                        PaymentProvider().openCheckout(
+                                          type: widget
+                                              .eventModel.prices[1].typeData[i],
+                                          eventModel: widget.eventModel,
+                                          userModel: _userModel,
+                                          code: _code,
+                                          ctx: ctx,
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -341,9 +360,7 @@ class _EventPageState extends State<EventPage> {
                             onTap: () {
                               widget.eventModel.prices[0].typeData[i].price ==
                                       "0"
-                                  ?
-                                  //TODO: Directly show the ticket
-                                  showDialog(
+                                  ? showDialog(
                                       context: context,
                                       builder: (ctx) => CupertinoAlertDialog(
                                         title: Text("Get ticket"),
@@ -352,22 +369,17 @@ class _EventPageState extends State<EventPage> {
                                         actions: [
                                           CupertinoDialogAction(
                                             child: Text("Yes"),
-                                            onPressed: () {
-                                              Navigator.pop(ctx);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      TicketGenerator(
-                                                    eventModel:
-                                                        widget.eventModel,
-                                                    paid: true,
-                                                    typeModel: widget.eventModel
-                                                        .prices[0].typeData[i],
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                            onPressed: () => RegistrationHttp()
+                                                .sendRegistration(
+                                              ctx: ctx,
+                                              paid: true,
+                                              typeModel: widget.eventModel
+                                                  .prices[0].typeData[i],
+                                              code:
+                                                  Random().nextInt(9000) + 1000,
+                                              eventModel: widget.eventModel,
+                                              userModel: _userModel,
+                                            ),
                                           ),
                                           CupertinoDialogAction(
                                             child: Text("No"),
@@ -386,32 +398,32 @@ class _EventPageState extends State<EventPage> {
                                           CupertinoDialogAction(
                                             child: Text(
                                                 "Get ticket and pay on entry"),
-                                            onPressed: () {
-                                              Navigator.pop(ctx);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      TicketGenerator(
-                                                    eventModel:
-                                                        widget.eventModel,
-                                                    paid: true,
-                                                    typeModel: widget.eventModel
-                                                        .prices[0].typeData[i],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                          CupertinoDialogAction(
-                                            child: Text("Online payment"),
-                                            onPressed: () =>
-                                                PaymentProvider().openCheckout(
-                                              type: widget.eventModel.prices[0]
-                                                  .typeData[i],
+                                            onPressed: () => RegistrationHttp()
+                                                .sendRegistration(
+                                              ctx: ctx,
+                                              paid: false,
+                                              typeModel: widget.eventModel
+                                                  .prices[0].typeData[i],
+                                              code:
+                                                  Random().nextInt(9000) + 1000,
                                               eventModel: widget.eventModel,
                                               userModel: _userModel,
                                             ),
+                                          ),
+                                          CupertinoDialogAction(
+                                            child: Text("Online payment"),
+                                            onPressed: () {
+                                              final _code =
+                                                  Random().nextInt(9000) + 1000;
+                                              PaymentProvider().openCheckout(
+                                                type: widget.eventModel
+                                                    .prices[0].typeData[i],
+                                                eventModel: widget.eventModel,
+                                                userModel: _userModel,
+                                                code: _code,
+                                                ctx: ctx,
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),

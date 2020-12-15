@@ -26,17 +26,16 @@ class EventRegistrationModel {
 }
 
 class UserRegistrationModel {
-  final String phoneNumber, name;
+  final String phoneNumber;
   final List<TypeRegistrationModel> typeRegistrationModels;
   UserRegistrationModel({
     @required this.phoneNumber,
-    @required this.name,
     @required this.typeRegistrationModels,
   });
 }
 
 class TypeRegistrationModel {
-  final String typeName;
+  final String typeName, userName;
   final double typePrice;
   final int code;
   bool paid;
@@ -45,5 +44,6 @@ class TypeRegistrationModel {
     @required this.typePrice,
     @required this.code,
     @required this.paid,
+    @required this.userName,
   });
 }

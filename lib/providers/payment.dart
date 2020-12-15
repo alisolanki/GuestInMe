@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:GuestInMe/Settings/owner/http_requests.dart';
+import 'package:GuestInMe/Event/ticket_generator.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,90 +11,53 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../auth/auth.dart' as auth;
 
-class PaymentProvider with ChangeNotifier {
-  Razorpay _razorpay = Razorpay();
-  User _user = FirebaseAuth.instance.currentUser;
-  TypeModel _typeModel;
-  EventModel _eventModel;
-  UserModel _userModel;
-
-  @override
-  void dispose() {
-    super.dispose();
-    _razorpay.clear();
-  }
-
-  void openCheckout({
-    @required TypeModel type,
+class RegistrationHttp {
+  Future<void> sendRegistration({
+    @required BuildContext ctx,
     @required EventModel eventModel,
     @required UserModel userModel,
+    @required TypeModel typeModel,
+    @required int code,
+    @required bool paid,
   }) async {
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    User _user = FirebaseAuth.instance.currentUser;
+    String _date = convertDatetoISO(eventModel.date);
 
-    var options = {
-      'key': auth.razorpaykey,
-      'amount': double.parse(type.price),
-      'name': 'GuestInMe: ${type.typeName}',
-      'description': 'By paying you accept all the Terms and Conditions',
-      'prefill': {'contact': _user.phoneNumber, 'email': userModel.email},
-    };
+    var _bookingsUrl =
+        "${auth.url}registrations/$_date/${eventModel.eventName}/${_user.phoneNumber}/bookings/${typeModel.typeName} :: $code.json?auth=${auth.token}";
 
+    var _bookingsBody = json.encode({
+      'code': '$code',
+      'price': '${typeModel.price}',
+      'paid': '$paid',
+      'name': '${userModel.name}'
+    });
+    print(_bookingsBody);
     try {
-      _typeModel = type;
-      _eventModel = eventModel;
-      _userModel = userModel;
-      _razorpay.open(options);
-    } catch (e) {
-      debugPrint(e);
-    }
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    String _date = convertDatetoISO(_eventModel.date);
-    var _registrationsUrl =
-        "${auth.url}registrations/$_date/${_eventModel.eventName}/${_user.phoneNumber}.json?auth=${auth.token}";
-    var _encodedBody = json.encode(
-      {
-        'name': "${_userModel.name}",
-        'bookings': {
-          '${_typeModel.typeName}': {
-            'price': '${_typeModel.price}',
-            'entered': 'false',
-          },
-        }
-      },
-    );
-    try {
-      http.put(_registrationsUrl,
-          body: _encodedBody,
+      await http.patch(_bookingsUrl,
+          body: _bookingsBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
         print(result.body);
-      }).then(
-        (_) => Fluttertoast.showToast(
-          msg: "SUCCESS id: " + response.paymentId,
-          timeInSecForIosWeb: 4,
+      });
+      Fluttertoast.showToast(
+        msg: "Ticket will be available in Profile -> My Tickets",
+        backgroundColor: Colors.amber,
+      );
+      Navigator.push(
+        ctx,
+        MaterialPageRoute(
+          builder: (_) => TicketGenerator(
+            eventModel: eventModel,
+            paid: paid,
+            typeModel: typeModel,
+            code: code,
+          ),
         ),
       );
     } catch (e) {
       throw (e);
     }
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    Fluttertoast.showToast(
-      msg: "ERROR: " + response.code.toString() + " - " + response.message,
-      timeInSecForIosWeb: 4,
-    );
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(
-      msg: "EXTERNAL_WALLET: " + response.walletName,
-      timeInSecForIosWeb: 4,
-    );
   }
 
   String convertDatetoISO(String value) {
@@ -147,5 +110,77 @@ class PaymentProvider with ChangeNotifier {
     }
     print("Date: $_year$_monthISO$_day");
     return "$_year$_monthISO$_day";
+  }
+}
+
+class PaymentProvider with ChangeNotifier {
+  Razorpay _razorpay = Razorpay();
+  User _user = FirebaseAuth.instance.currentUser;
+  BuildContext _ctx;
+  TypeModel _typeModel;
+  EventModel _eventModel;
+  UserModel _userModel;
+  int _code;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
+
+  Future<void> openCheckout({
+    @required BuildContext ctx,
+    @required TypeModel type,
+    @required EventModel eventModel,
+    @required UserModel userModel,
+    @required int code,
+  }) async {
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+
+    var options = {
+      'key': auth.razorpaykey,
+      'amount': double.parse(type.price),
+      'name': 'GuestInMe: ${type.typeName}',
+      'description': 'By paying you accept all the Terms and Conditions',
+      'prefill': {'contact': _user.phoneNumber, 'email': userModel.email},
+    };
+
+    try {
+      _typeModel = type;
+      _eventModel = eventModel;
+      _userModel = userModel;
+      _code = code;
+      _ctx = ctx;
+      _razorpay.open(options);
+    } catch (e) {
+      debugPrint(e);
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    RegistrationHttp().sendRegistration(
+      ctx: _ctx,
+      eventModel: _eventModel,
+      userModel: _userModel,
+      typeModel: _typeModel,
+      code: _code,
+      paid: true,
+    );
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    Fluttertoast.showToast(
+      msg: "ERROR: " + response.code.toString() + " - " + response.message,
+      timeInSecForIosWeb: 4,
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    Fluttertoast.showToast(
+      msg: "EXTERNAL_WALLET: " + response.walletName,
+      timeInSecForIosWeb: 4,
+    );
   }
 }

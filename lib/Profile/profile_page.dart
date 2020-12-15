@@ -1,3 +1,4 @@
+import 'package:GuestInMe/Profile/tickets_page.dart';
 import 'package:GuestInMe/Settings/settings_page.dart';
 import 'package:GuestInMe/models/user_model.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
@@ -14,11 +15,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   var _init = true;
-  var _loading = false;
   var size = Size(0.0, 0.0);
   var _editing = false;
   var _user = FirebaseAuth.instance.currentUser;
   UserModel _userModel;
+  UserModel _userFetch;
   String _v;
 
   String _userName = "";
@@ -45,47 +46,50 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            CustomPaint(
-              child: Container(
-                width: size.width,
-                height: size.height,
-              ),
-              painter: HeaderCurvedContainer(),
-            ),
-            Positioned(
-              top: 120.0,
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/profile.png'),
-                radius: size.width * 0.15,
-                backgroundColor: Colors.transparent,
-              ),
-            ),
-            Positioned(
-              top: 10.0,
-              right: 10.0,
-              child: Container(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.settings,
-                    color: Colors.white,
+      child: _userModel == null
+          ? Center(
+              child: CircularProgressIndicator(
+              backgroundColor: Colors.purple,
+            ))
+          : SingleChildScrollView(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CustomPaint(
+                    child: Container(
+                      width: size.width,
+                      height: size.height,
+                    ),
+                    painter: HeaderCurvedContainer(),
                   ),
-                  onPressed: () => {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => SettingsPage(),
+                  Positioned(
+                    top: 120.0,
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/profile.png'),
+                      radius: size.width * 0.15,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                  Positioned(
+                    top: 10.0,
+                    right: 10.0,
+                    child: Container(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.settings,
+                          color: Colors.white,
+                        ),
+                        onPressed: () => {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => SettingsPage(),
+                            ),
+                          ),
+                        },
                       ),
                     ),
-                  },
-                ),
-              ),
-            ),
-            _loading
-                ? Center(child: CircularProgressIndicator())
-                : Positioned(
+                  ),
+                  Positioned(
                     top: 150 + size.width * 0.3,
                     width: size.width * 0.8,
                     child: Form(
@@ -93,38 +97,74 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          //editing
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 50.0),
-                            child: CircleAvatar(
-                              child: IconButton(
-                                icon: Icon(
-                                  _editing ? Icons.check : Icons.edit,
-                                  color: Colors.white70,
+                          //editing and ticket page
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                //editing
+                                RaisedButton.icon(
+                                  icon: Icon(
+                                    _editing ? Icons.check : Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                  label: _editing
+                                      ? Text("Save Profile")
+                                      : Text("Edit Profile"),
+                                  color: Colors.purple,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      const Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  onPressed: () => {
+                                    if (_editing)
+                                      {
+                                        if (_formKey.currentState.validate())
+                                          {
+                                            setState(() {
+                                              _editing = !_editing;
+                                              print("editing: $_editing");
+                                            }),
+                                            formSave(),
+                                            _saveUserDetails(),
+                                          }
+                                      }
+                                    else
+                                      {
+                                        setState(() {
+                                          _editing = !_editing;
+                                          print("editing: $_editing");
+                                        })
+                                      }
+                                  },
                                 ),
-                                onPressed: () => {
-                                  if (_editing)
-                                    {
-                                      if (_formKey.currentState.validate())
-                                        {
-                                          setState(() {
-                                            _editing = !_editing;
-                                            print("editing: $_editing");
-                                          }),
-                                          formSave(),
-                                          _saveUserDetails(),
-                                        }
-                                    }
-                                  else
-                                    {
-                                      setState(() {
-                                        _editing = !_editing;
-                                        print("editing: $_editing");
-                                      })
-                                    }
-                                },
-                              ),
-                              backgroundColor: const Color(0xAAC97CFF),
+                                //view tickets
+                                RaisedButton.icon(
+                                  icon: Icon(
+                                    Icons.book_online,
+                                    color: Colors.white,
+                                  ),
+                                  label: Text("View Tickets"),
+                                  color: _editing
+                                      ? Colors.blueGrey
+                                      : Colors.purple,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      const Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  onPressed: _editing
+                                      ? null
+                                      : () => Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TicketsPage(),
+                                            ),
+                                          ),
+                                ),
+                              ],
                             ),
                           ),
                           //name field
@@ -299,9 +339,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                   ),
-          ],
-        ),
-      ),
+                ],
+              ),
+            ),
     );
   }
 

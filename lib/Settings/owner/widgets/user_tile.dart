@@ -46,14 +46,12 @@ class _UserTileState extends State<UserTile> {
                   ...widget._userRegistrationModels.map(
                     (e) {
                       return Container(
-                        key: ValueKey("${e.phoneNumber}"),
                         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         padding: EdgeInsets.only(bottom: 10.0),
                         color: Colors.deepPurple,
                         child: TypeTile(
                           e.typeRegistrationModels,
                           widget.date,
-                          e.name,
                           e.phoneNumber,
                           widget._eventRegistrationModel.eventName,
                         ),
