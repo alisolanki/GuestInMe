@@ -22,17 +22,27 @@ class UserProvider extends ChangeNotifier {
       print("_userModel is null");
       return http.get(_userURL).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
-        print("User: $_extractedData");
-
-        _userModel = UserModel(
-          phoneNumber: "${_user.phoneNumber}",
-          name: _extractedData['name'],
-          gender: _extractedData['gender'],
-          email: _extractedData['email'],
-          frequency: _extractedData['frequency'],
-          place: _extractedData['place'],
-          dateOfBirth: _extractedData['dob'],
-        );
+        if (value.body != "null") {
+          _userModel = UserModel(
+            phoneNumber: "${_user.phoneNumber}",
+            name: _extractedData['name'],
+            gender: _extractedData['gender'],
+            email: _extractedData['email'],
+            frequency: _extractedData['frequency'],
+            place: _extractedData['place'],
+            dateOfBirth: _extractedData['dob'],
+          );
+        } else {
+          _userModel = UserModel(
+            phoneNumber: "${_user.phoneNumber}",
+            name: "Enter name",
+            gender: "male",
+            email: "name@mail.com",
+            frequency: "null",
+            place: "Mumbai",
+            dateOfBirth: "19900101",
+          );
+        }
         notifyListeners();
       });
     }
@@ -40,6 +50,8 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<void> putUser(UserModel _putUser) {
+    _userModel = _putUser;
+    notifyListeners();
     final String _userURL =
         "${auth.url}users/${_user.phoneNumber}.json?auth=${auth.token}";
     String _encodedData = jsonEncode({
@@ -50,12 +62,10 @@ class UserProvider extends ChangeNotifier {
       'frequency': _putUser.frequency,
       'dob': _putUser.dateOfBirth,
     });
-
     return http.put(_userURL,
         body: _encodedData,
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
-      print(result.body);
     });
   }
 }

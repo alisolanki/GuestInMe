@@ -24,7 +24,7 @@ class _EntrancePageState extends State<EntrancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Entrances"),
+        title: Text("Entrance Page"),
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),

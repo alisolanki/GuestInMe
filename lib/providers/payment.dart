@@ -32,13 +32,12 @@ class RegistrationHttp {
       'paid': '$paid',
       'name': '${userModel.name}'
     });
-    print(_bookingsBody);
+
     try {
       await http.patch(_bookingsUrl,
           body: _bookingsBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
-        print(result.body);
       });
       Fluttertoast.showToast(
         msg: "Ticket will be available in Profile -> My Tickets",

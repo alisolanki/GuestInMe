@@ -195,10 +195,11 @@ class TransferData {
     @required TypeRegistrationModel typeModel,
   }) async {
     final _paidUrl =
-        "${auth.url}registrations/$date/$eventName/$userNumber/bookings/${typeModel.typeName}/paid.json?auth=${auth.token}";
-    var _encodedBody = json.encode("${typeModel.paid}");
+        "${auth.url}registrations/$date/$eventName/$userNumber/bookings/${typeModel.typeName}.json?auth=${auth.token}";
     await http.patch(_paidUrl,
-        body: _encodedBody,
+        body: json.encode({
+          'paid': '${typeModel.paid}',
+        }),
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
       print(result.body);

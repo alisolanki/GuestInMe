@@ -64,7 +64,6 @@ class EventProvider extends ChangeNotifier {
           _newEventModels.add(_eventModel);
         });
       }).then((_) {
-        print("This is final: ${_newEventModels[0].eventName}");
         notifyListeners();
       }).catchError((e) {
         print(e);
@@ -84,7 +83,6 @@ class EventProvider extends ChangeNotifier {
       print("_datewiseEvents.length: ${_datewiseEventsMap.length}");
       return http.get(datewiseEventsUrl).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
-        print("Data: $_extractedData");
 
         _extractedData.forEach((_date, _eventModel) {
           _eventModel.forEach((_event, _eventDetail) {

@@ -77,7 +77,6 @@ class PlaceProvider extends ChangeNotifier {
           _places.add(_placeModel);
         });
       }).then((_) {
-        print("This is final: ${places[0].images[0]}");
         notifyListeners();
       }).catchError((e) {
         print(e);

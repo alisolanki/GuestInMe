@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:GuestInMe/Event/ticket_generator.dart';
 import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
@@ -10,7 +9,6 @@ import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
@@ -105,14 +103,14 @@ class _EventPageState extends State<EventPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: Icon(
                             Icons.location_on,
-                            color: const Color(0xFFBC6FF1),
+                            color: Colors.purpleAccent,
                           ),
                         ),
                         Text(
                           "${widget.placeName}",
                           style: TextStyle(
                             fontSize: 18.0,
-                            color: const Color(0xFFBC6FF1),
+                            color: Colors.purpleAccent,
                           ),
                         ),
                       ],
@@ -491,7 +489,7 @@ class _EventPageState extends State<EventPage> {
                       borderRadius: BorderRadius.all(
                         Radius.circular(20.0),
                       ),
-                      color: const Color(0xFFBC6FF1),
+                      color: Colors.deepPurpleAccent,
                     ),
                     child: ListTile(
                       leading: Icon(

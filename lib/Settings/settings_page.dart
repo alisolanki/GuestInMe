@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
               onPressed: () => Share.share(
-                "GuestInMe Ticket. Download our app for getting into Guestlists, Booking tables and having your Nightlife sorted. Also book Concert tickets at extremely cheap prices. *GuestInMe PlayStore App*: https://play.google.com/store/apps/details?id=com.guestinme.guestinme",
+                "Download our app for getting into Guestlists, Booking tables and having your Nightlife sorted. Also book Concert tickets at extremely cheap prices. *GuestInMe PlayStore App*: https://play.google.com/store/apps/details?id=com.guestinme.guestinme",
               ),
             ),
           ),

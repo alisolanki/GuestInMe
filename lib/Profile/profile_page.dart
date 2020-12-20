@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../New_Events/new_events_page.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -19,13 +18,12 @@ class _ProfilePageState extends State<ProfilePage> {
   var _editing = false;
   var _user = FirebaseAuth.instance.currentUser;
   UserModel _userModel;
-  UserModel _userFetch;
   String _v;
 
-  String _userName = "";
-  String _userGender = "Gender";
-  String _userEmail = "";
-  String _userDOB = "";
+  String _userName;
+  String _userGender;
+  String _userEmail;
+  String _userDOB;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -180,8 +178,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ? const Color(0x00C97CFF)
                                       : Colors.white70,
                                   filled: true,
+                                  contentPadding: const EdgeInsets.all(8.0),
                                   focusedBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(10.0),
+                                    ),
+                                  ),
                                   enabled: _editing,
                                 ),
                                 cursorColor: Colors.white,
@@ -242,8 +245,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 fillColor: Colors.white70,
                                 filled: true,
+                                contentPadding: const EdgeInsets.all(8.0),
                                 focusedBorder: InputBorder.none,
-                                disabledBorder: InputBorder.none,
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                ),
                                 enabled: false,
                               ),
                               cursorColor: Colors.white,
@@ -267,8 +275,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ? const Color(0x00C97CFF)
                                       : Colors.white70,
                                   filled: true,
+                                  contentPadding: const EdgeInsets.all(8.0),
                                   focusedBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(10.0),
+                                    ),
+                                  ),
                                   enabled: _editing,
                                 ),
                                 cursorColor: Colors.white,
@@ -323,8 +336,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                       fillColor: Colors.white70,
                                       filled: true,
+                                      contentPadding: const EdgeInsets.all(8.0),
                                       focusedBorder: InputBorder.none,
-                                      disabledBorder: InputBorder.none,
+                                      border: OutlineInputBorder(
+                                        borderRadius: const BorderRadius.all(
+                                          const Radius.circular(10.0),
+                                        ),
+                                      ),
                                       enabled: false,
                                     ),
                                     cursorColor: Colors.white,

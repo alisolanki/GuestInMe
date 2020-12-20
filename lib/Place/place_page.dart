@@ -1,3 +1,4 @@
+import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,10 +16,23 @@ class PlacePage extends StatefulWidget {
 
 class _PlacePageState extends State<PlacePage> {
   var size = Size(0.0, 0.0);
+  var _init = true;
+  int _dateTodayISO;
+  List<EventModel> _upcomingEvents = [];
+  List<EventModel> _pastEvents = [];
 
   @override
   void didChangeDependencies() {
     size = MediaQuery.of(context).size;
+    if (_init) {
+      _dateTodayISO = int.parse(convertDate(DateTime.now()));
+      _upcomingEvents = widget.placeModel.event
+          .where((e) => int.parse(convertDatetoISO(e.date)) >= _dateTodayISO)
+          .toList();
+      _pastEvents = widget.placeModel.event
+          .where((e) => int.parse(convertDatetoISO(e.date)) < _dateTodayISO)
+          .toList();
+    }
     super.didChangeDependencies();
   }
 
@@ -76,7 +90,7 @@ class _PlacePageState extends State<PlacePage> {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              expandedHeight: size.width,
+              expandedHeight: size.width * 0.6,
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
@@ -140,11 +154,11 @@ class _PlacePageState extends State<PlacePage> {
               delegate: SliverChildBuilderDelegate(
                 (BuildContext _, int i) {
                   return EventCard(
-                    eventModel: widget.placeModel.event[i],
+                    eventModel: _upcomingEvents[i],
                     placeName: widget.placeModel.placeName,
                   );
                 },
-                childCount: widget?.placeModel?.event?.length ?? 0,
+                childCount: _upcomingEvents?.length ?? 0,
               ),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 crossAxisSpacing: 0.0,
@@ -200,11 +214,11 @@ class _PlacePageState extends State<PlacePage> {
               delegate: SliverChildBuilderDelegate(
                 (BuildContext _, int i) {
                   return EventCard(
-                    eventModel: widget.placeModel.event[i],
+                    eventModel: _pastEvents[i],
                     placeName: widget.placeModel.placeName,
                   );
                 },
-                childCount: widget?.placeModel?.event?.length ?? 0,
+                childCount: _pastEvents?.length ?? 0,
               ),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 crossAxisSpacing: 0.0,
@@ -222,5 +236,72 @@ class _PlacePageState extends State<PlacePage> {
         ),
       ),
     );
+  }
+
+  String convertDatetoISO(String value) {
+    String _month = value.split(" ")[2],
+        _day = value.split(" ")[1].split(",")[0],
+        _year = value.split(" ")[3];
+    String _monthISO;
+    switch (_month) {
+      case "Jan":
+        _monthISO = "01";
+        break;
+      case "Feb":
+        _monthISO = "02";
+        break;
+      case "Mar":
+        _monthISO = "03";
+        break;
+      case "Apr":
+        _monthISO = "04";
+        break;
+      case "May":
+        _monthISO = "05";
+        break;
+      case "Jun":
+        _monthISO = "06";
+        break;
+      case "Jul":
+        _monthISO = "07";
+        break;
+      case "Aug":
+        _monthISO = "08";
+        break;
+      case "Sep":
+        _monthISO = "09";
+        break;
+      case "Oct":
+        _monthISO = "10";
+        break;
+      case "Nov":
+        _monthISO = "11";
+        break;
+      case "Dec":
+        _monthISO = "12";
+        break;
+      default:
+        break;
+    }
+    if (int.parse(_day) < 10) {
+      _day = "0$_day";
+    }
+    print("Date: $_year$_monthISO$_day");
+    return "$_year$_monthISO$_day";
+  }
+
+  String convertDate(DateTime value) {
+    String _datePicked;
+    if (value.month < 10 && value.day < 10) {
+      _datePicked = "${value.year}0${value.month}0${value.day}";
+    } else if (value.day < 10) {
+      _datePicked = "${value.year}${value.month}0${value.day}";
+    } else if (value.month < 10) {
+      _datePicked = "${value.year}0${value.month}${value.day}";
+    } else {
+      _datePicked = "${value.year}${value.month}${value.day}";
+    }
+    print("Date: $_datePicked");
+    return _datePicked;
   }
 }

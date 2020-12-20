@@ -1,10 +1,6 @@
-import 'package:GuestInMe/providers/event_provider.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
-import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// import '../../providers/advertisement.dart';
 import '../../Home/homepage.dart';
 import '../pages/login_page.dart';
 import '../stores/login_store.dart';

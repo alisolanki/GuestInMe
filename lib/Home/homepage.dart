@@ -6,7 +6,6 @@ import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 import '../assets/guest_in_me_icons.dart';
@@ -20,7 +19,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _selected = 1;
-  var _loading = true;
 
   @override
   void didChangeDependencies() {
@@ -37,9 +35,7 @@ class _HomePageState extends State<HomePage> {
         Provider.value(value: LoginStore()),
       ],
       builder: (ctx, child) {
-        Provider.of<UserProvider>(ctx, listen: false)
-            .fetchUser()
-            ?.then((_) => setState(() => _loading = false));
+        Provider.of<UserProvider>(ctx, listen: false).fetchUser();
         Provider.of<PlaceProvider>(ctx, listen: false).fetchPlaces();
         Provider.of<EventProvider>(ctx, listen: false).fetchNewEvents();
         child = CurvedNavigationBar(
