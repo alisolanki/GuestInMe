@@ -25,7 +25,7 @@ class EventProvider extends ChangeNotifier {
       print("_newEventModels.length: ${_newEventModels.length}");
       return http.get(newEventUrl).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
-        _extractedData.forEach((_event, _eventDetail) {
+        _extractedData.forEach((_eventId, _eventDetail) {
           List<PriceModel> prices = [];
           var _price = _eventDetail['price'] as Map<String, dynamic>;
           _price != null
@@ -50,11 +50,12 @@ class EventProvider extends ChangeNotifier {
                 })
               : null;
           var _eventModel = EventModel(
+            id: _eventId,
             ageLimit: _eventDetail['agelimit'].toString(),
             date: _eventDetail['date'].toString(),
             description: _eventDetail['description'].toString(),
             dressCode: _eventDetail['dresscode'].toString(),
-            eventName: _event.toString(),
+            eventName: _eventDetail['eventName'].toString(),
             image: _eventDetail['image'].toString(),
             lineup: _eventDetail['lineup'].toString(),
             prices: prices,
@@ -85,7 +86,7 @@ class EventProvider extends ChangeNotifier {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
 
         _extractedData.forEach((_date, _eventModel) {
-          _eventModel.forEach((_event, _eventDetail) {
+          _eventModel.forEach((_eventId, _eventDetail) {
             List<PriceModel> prices = [];
             var _price = _eventDetail['price'] as Map<String, dynamic>;
             _price != null
@@ -110,11 +111,12 @@ class EventProvider extends ChangeNotifier {
                   })
                 : null;
             var _eventModel = EventModel(
+              id: _eventId,
               ageLimit: _eventDetail['agelimit'].toString(),
               date: _eventDetail['date'].toString(),
               description: _eventDetail['description'].toString(),
               dressCode: _eventDetail['dresscode'].toString(),
-              eventName: _event.toString(),
+              eventName: _eventDetail['eventName'].toString(),
               image: _eventDetail['image'].toString(),
               lineup: _eventDetail['lineup'].toString(),
               prices: prices,

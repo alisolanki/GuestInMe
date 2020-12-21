@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class TypeTile extends StatefulWidget {
-  final String _date, _eventName, _userNumber;
+  final String _date, _eventName, _userNumber, _eventId;
   final List<TypeRegistrationModel> _typeRegistrationModels;
   TypeTile(
     this._typeRegistrationModels,
     this._date,
     this._userNumber,
     this._eventName,
+    this._eventId,
   );
   @override
   _TypeTileState createState() => _TypeTileState();
@@ -76,6 +77,7 @@ class _TypeTileState extends State<TypeTile> {
                                         });
                                         TransferData()
                                             .changeEntranceState(
+                                              eventId: widget._eventId,
                                               date: widget._date,
                                               userNumber: widget._userNumber,
                                               eventName: widget._eventName,

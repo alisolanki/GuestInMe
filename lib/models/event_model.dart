@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EventModel {
-  final String eventName,
+  final String id,
+      eventName,
       description,
       image,
       date,
@@ -12,6 +13,7 @@ class EventModel {
       lineup;
   final List<PriceModel> prices;
   EventModel({
+    this.id,
     @required this.eventName,
     @required this.description,
     @required this.date,
@@ -35,7 +37,7 @@ class PriceModel {
 }
 
 class TypeModel {
-  String typeName, description, price;
+  String id, typeName, description, price;
   TypeModel({
     this.description,
     this.price,

@@ -1,3 +1,4 @@
+import 'package:GuestInMe/Place/widgets/menu_card.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:flutter/material.dart';
@@ -191,6 +192,48 @@ class _PlacePageState extends State<PlacePage> {
                       "${widget.placeModel.description}",
                     ),
                   ),
+                  //menu
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Menu:",
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  CarouselSlider.builder(
+                    itemCount: widget.placeModel.menu?.length,
+                    options: CarouselOptions(
+                      height: 400,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.8,
+                      initialPage: 0,
+                      enableInfiniteScroll: true,
+                      autoPlay: true,
+                      autoPlayInterval: Duration(seconds: 3),
+                      autoPlayAnimationDuration: Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      enlargeCenterPage: true,
+                      scrollDirection: Axis.horizontal,
+                    ),
+                    itemBuilder: (_, _i) => InkWell(
+                      child: Image(
+                        image: NetworkImage(
+                          widget.placeModel.menu[_i],
+                        ),
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => MenuCard(
+                            widget.placeModel.menu[_i],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -229,7 +272,7 @@ class _PlacePageState extends State<PlacePage> {
             ),
             SliverList(
               delegate: SliverChildListDelegate(
-                [SizedBox(height: 100)],
+                [SizedBox(height: 0)],
               ),
             ),
           ],

@@ -91,11 +91,10 @@ class TransferData {
     final String _datePicked = convertDate(date);
     //urls
     var _eventPlaceUrl =
-        "${auth.url}place/${eventModel.placeName}/events/${eventModel.eventName}.json?auth=${auth.token}";
+        "${auth.url}place/${eventModel.placeName}/events.json?auth=${auth.token}";
     var _eventDatewiseUrl =
-        "${auth.url}datewiseEvents/${eventModel.date}/${eventModel.eventName}.json?auth=${auth.token}";
-    var _eventNewUrl =
-        "${auth.url}newEvents/${eventModel.eventName}.json?auth=${auth.token}";
+        "${auth.url}datewiseEvents/${eventModel.date}.json?auth=${auth.token}";
+    var _eventNewUrl = "${auth.url}newEvents.json?auth=${auth.token}";
 
     var _priceModelList = eventModel.prices;
     //crowd
@@ -136,26 +135,27 @@ class TransferData {
       'date': _datePicked,
       'description': eventModel.description,
       'dresscode': eventModel.dressCode,
+      'eventName': eventModel.eventName,
       'image': eventModel.image,
       'lineup': eventModel.lineup,
       'placename': eventModel.placeName,
       'price': _jsonPrice,
       'time': eventModel.time,
     });
-    await http.patch(_eventPlaceUrl,
+    await http.post(_eventPlaceUrl,
         body: _encodedBody,
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
       print(result.body);
     });
-    await http.patch(_eventDatewiseUrl,
+    await http.post(_eventDatewiseUrl,
         body: _encodedBody,
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
       print(result.body);
     });
     if (newEvent) {
-      await http.patch(_eventNewUrl,
+      await http.post(_eventNewUrl,
           body: _encodedBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
@@ -192,10 +192,11 @@ class TransferData {
     @required String date,
     @required String userNumber,
     @required String eventName,
+    @required String eventId,
     @required TypeRegistrationModel typeModel,
   }) async {
     final _paidUrl =
-        "${auth.url}registrations/$date/$eventName/$userNumber/bookings/${typeModel.typeName}.json?auth=${auth.token}";
+        "${auth.url}registrations/$date/$eventId/$eventName/$userNumber/${typeModel.id}.json?auth=${auth.token}";
     await http.patch(_paidUrl,
         body: json.encode({
           'paid': '${typeModel.paid}',
@@ -219,36 +220,44 @@ class TransferData {
       var _extractedData = json.decode(res.body) as Map<String, dynamic>;
       _extractedData.forEach((_date, _details) {
         var _eventDetails = _details as Map<String, dynamic>;
-        _eventDetails.forEach((_eventName, _details1) {
-          var _userDetails = _details1 as Map<String, dynamic>;
-          _userDetails.forEach((_phoneNumber, _details2) {
-            var _type = _details2['bookings'] as Map<String, dynamic>;
-            _type.forEach((_typeName, _details3) {
-              _typeModels.add(
-                TypeRegistrationModel(
-                  typeName: _typeName,
-                  typePrice: double.parse(_details3['price'].toString()),
-                  code: int.parse(_details3['code'].toString()),
-                  paid: _details3['paid'].toString().toLowerCase() == "true",
-                  userName: _details3['name'],
+        _eventDetails.forEach((_eventId, _details1) {
+          var _eventNameDetails = _details1 as Map<String, dynamic>;
+          print(_details1.toString());
+          _eventNameDetails.forEach((_eventName, _details2) {
+            print(_details2.toString());
+            var _userDetails = _details2 as Map<String, dynamic>;
+            _userDetails.forEach((_phoneNumber, _details3) {
+              print(_details3.toString());
+              var _type = _details3 as Map<String, dynamic>;
+              _type.forEach((_typeId, _details4) {
+                _typeModels.add(
+                  TypeRegistrationModel(
+                    id: _typeId.toString(),
+                    typeName: _details4['typeName'],
+                    typePrice: double.parse(_details4['price'].toString()),
+                    code: int.parse(_details4['code'].toString()),
+                    paid: _details4['paid'].toString().toLowerCase() == "true",
+                    userName: _details4['name'],
+                  ),
+                );
+              });
+              _userModels.add(
+                UserRegistrationModel(
+                  phoneNumber: _phoneNumber,
+                  typeRegistrationModels: _typeModels,
                 ),
               );
+              _typeModels = [];
             });
-            _userModels.add(
-              UserRegistrationModel(
-                phoneNumber: _phoneNumber,
-                typeRegistrationModels: _typeModels,
+            _eventModels.add(
+              EventRegistrationModel(
+                id: _eventId.toString(),
+                eventName: _eventName,
+                userRegistrationModels: _userModels,
               ),
             );
-            _typeModels = [];
+            _userModels = [];
           });
-          _eventModels.add(
-            EventRegistrationModel(
-              eventName: _eventName,
-              userRegistrationModels: _userModels,
-            ),
-          );
-          _userModels = [];
         });
         _dateModels.add(
           DateModel(

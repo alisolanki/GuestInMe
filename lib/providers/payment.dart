@@ -19,22 +19,26 @@ class RegistrationHttp {
     @required TypeModel typeModel,
     @required int code,
     @required bool paid,
+    String referral,
   }) async {
     User _user = FirebaseAuth.instance.currentUser;
     String _date = convertDatetoISO(eventModel.date);
+    referral = referral ?? 'null';
 
     var _bookingsUrl =
-        "${auth.url}registrations/$_date/${eventModel.eventName}/${_user.phoneNumber}/bookings/${typeModel.typeName} :: $code.json?auth=${auth.token}";
+        "${auth.url}registrations/$_date/${eventModel.id}/${eventModel.eventName}/${_user.phoneNumber}.json?auth=${auth.token}";
 
     var _bookingsBody = json.encode({
+      'typeName': '${typeModel.typeName}',
       'code': '$code',
       'price': '${typeModel.price}',
       'paid': '$paid',
+      'referral': '$referral',
       'name': '${userModel.name}'
     });
 
     try {
-      await http.patch(_bookingsUrl,
+      await http.post(_bookingsUrl,
           body: _bookingsBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
@@ -56,6 +60,30 @@ class RegistrationHttp {
       );
     } catch (e) {
       throw (e);
+    }
+
+    //referral
+    if (referral != 'null') {
+      var _id = int.parse(_user.phoneNumber.substring(1)) * 373;
+      var _referralUrl =
+          "${auth.url}referrals/$referral/$_date/${eventModel.placeName}/$_id.json?auth=${auth.token}";
+
+      var _referralBody = json.encode({
+        'typeName': '${typeModel.typeName}',
+        'code': '$code',
+        'price': '${typeModel.price}',
+        'paid': '$paid'
+      });
+
+      try {
+        await http.post(_referralUrl,
+            body: _referralBody,
+            headers: {"Accept": "application/json"}).then((result) {
+          print(result.statusCode);
+        });
+      } catch (e) {
+        throw (e);
+      }
     }
   }
 
@@ -120,6 +148,7 @@ class PaymentProvider with ChangeNotifier {
   EventModel _eventModel;
   UserModel _userModel;
   int _code;
+  String _referral;
 
   @override
   void dispose() {
@@ -133,6 +162,7 @@ class PaymentProvider with ChangeNotifier {
     @required EventModel eventModel,
     @required UserModel userModel,
     @required int code,
+    String referral,
   }) async {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
@@ -142,7 +172,8 @@ class PaymentProvider with ChangeNotifier {
       'key': auth.razorpaykey,
       'amount': double.parse(type.price),
       'name': 'GuestInMe: ${type.typeName}',
-      'description': 'By paying you accept all the Terms and Conditions',
+      'description':
+          'By paying, you have read and accepted all our Terms and Conditions',
       'prefill': {'contact': _user.phoneNumber, 'email': userModel.email},
     };
 
@@ -152,6 +183,7 @@ class PaymentProvider with ChangeNotifier {
       _userModel = userModel;
       _code = code;
       _ctx = ctx;
+      _referral = referral;
       _razorpay.open(options);
     } catch (e) {
       debugPrint(e);
@@ -166,6 +198,7 @@ class PaymentProvider with ChangeNotifier {
       typeModel: _typeModel,
       code: _code,
       paid: true,
+      referral: _referral,
     );
   }
 

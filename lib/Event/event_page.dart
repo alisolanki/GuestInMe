@@ -22,7 +22,7 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   var size = Size(0.0, 0.0);
   var _init = true;
-  String _dateISO, _dateTodayISO;
+  String _dateISO, _dateTodayISO, _referral;
   PlaceProvider _placeProvider;
   PlaceModel _placeModel;
   UserModel _userModel;
@@ -260,7 +260,22 @@ class _EventPageState extends State<EventPage> {
                                 context: context,
                                 builder: (ctx) => CupertinoAlertDialog(
                                   title: Text("Booking options"),
-                                  content: Text("How do you want to pay?"),
+                                  content: Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: CupertinoTextField(
+                                      placeholder: "Referral Code (Optional)",
+                                      textCapitalization:
+                                          TextCapitalization.characters,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.blue),
+                                      placeholderStyle: const TextStyle(
+                                        color: const Color(0x772196F3),
+                                      ),
+                                      onChanged: (r) => setState(() {
+                                        _referral = r;
+                                      }),
+                                    ),
+                                  ),
                                   actions: [
                                     CupertinoDialogAction(
                                       child:
@@ -274,6 +289,7 @@ class _EventPageState extends State<EventPage> {
                                         code: Random().nextInt(9000) + 1000,
                                         eventModel: widget.eventModel,
                                         userModel: _userModel,
+                                        referral: _referral,
                                       ),
                                     ),
                                     CupertinoDialogAction(
@@ -288,6 +304,7 @@ class _EventPageState extends State<EventPage> {
                                           userModel: _userModel,
                                           code: _code,
                                           ctx: ctx,
+                                          referral: _referral,
                                         );
                                       },
                                     ),
@@ -390,12 +407,30 @@ class _EventPageState extends State<EventPage> {
                                       context: context,
                                       builder: (ctx) => CupertinoAlertDialog(
                                         title: Text("Booking options"),
-                                        content:
-                                            Text("How do you want to pay?"),
+                                        content: Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: CupertinoTextField(
+                                            placeholder:
+                                                "Referral Code (Optional)",
+                                            textCapitalization:
+                                                TextCapitalization.characters,
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                TextStyle(color: Colors.blue),
+                                            placeholderStyle: const TextStyle(
+                                              color: const Color(0x772196F3),
+                                            ),
+                                            onChanged: (r) => setState(() {
+                                              _referral = r;
+                                            }),
+                                          ),
+                                        ),
                                         actions: [
                                           CupertinoDialogAction(
                                             child: Text(
-                                                "Get ticket and pay on entry"),
+                                              "Get ticket and pay on entry",
+                                            ),
                                             onPressed: () => RegistrationHttp()
                                                 .sendRegistration(
                                               ctx: ctx,
@@ -406,6 +441,7 @@ class _EventPageState extends State<EventPage> {
                                                   Random().nextInt(9000) + 1000,
                                               eventModel: widget.eventModel,
                                               userModel: _userModel,
+                                              referral: _referral,
                                             ),
                                           ),
                                           CupertinoDialogAction(
@@ -420,6 +456,7 @@ class _EventPageState extends State<EventPage> {
                                                 userModel: _userModel,
                                                 code: _code,
                                                 ctx: ctx,
+                                                referral: _referral,
                                               );
                                             },
                                           ),

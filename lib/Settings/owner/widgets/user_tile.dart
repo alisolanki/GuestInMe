@@ -54,6 +54,7 @@ class _UserTileState extends State<UserTile> {
                           widget.date,
                           e.phoneNumber,
                           widget._eventRegistrationModel.eventName,
+                          widget._eventRegistrationModel.id,
                         ),
                       );
                     },

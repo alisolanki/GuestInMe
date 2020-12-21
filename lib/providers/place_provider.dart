@@ -23,7 +23,7 @@ class PlaceProvider extends ChangeNotifier {
           var _events = _details['events'] as Map<String, dynamic>;
           List<EventModel> events = [];
           _events != null
-              ? _events.forEach((_event, _eventDetail) {
+              ? _events.forEach((_eventId, _eventDetail) {
                   List<PriceModel> prices = [];
                   var _price = _eventDetail['price'] as Map<String, dynamic>;
                   _price != null
@@ -49,11 +49,12 @@ class PlaceProvider extends ChangeNotifier {
                         })
                       : null;
                   var _eventModel = EventModel(
+                    id: _eventId,
                     ageLimit: _eventDetail['agelimit'].toString(),
                     date: _eventDetail['date'].toString(),
                     description: _eventDetail['description'].toString(),
                     dressCode: _eventDetail['dresscode'].toString(),
-                    eventName: _event.toString(),
+                    eventName: _eventDetail['eventName'].toString(),
                     image: _eventDetail['image'].toString(),
                     lineup: _eventDetail['lineup'].toString(),
                     prices: prices,
@@ -68,7 +69,7 @@ class PlaceProvider extends ChangeNotifier {
             event: events,
             images: _details['images'],
             location: _details['location'],
-            menu: _details['menu'],
+            menu: _details['menu'] as List<dynamic>,
             placeName: _placeName,
             stars: double.parse("${_details['stars']}"),
             logo: _details['logo'],

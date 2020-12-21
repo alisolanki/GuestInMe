@@ -17,9 +17,10 @@ class DateModel {
 }
 
 class EventRegistrationModel {
-  final String eventName;
+  final String id, eventName;
   final List<UserRegistrationModel> userRegistrationModels;
   EventRegistrationModel({
+    @required this.id,
     @required this.eventName,
     @required this.userRegistrationModels,
   });
@@ -35,11 +36,12 @@ class UserRegistrationModel {
 }
 
 class TypeRegistrationModel {
-  final String typeName, userName;
+  final String id, typeName, userName;
   final double typePrice;
   final int code;
   bool paid;
   TypeRegistrationModel({
+    @required this.id,
     @required this.typeName,
     @required this.typePrice,
     @required this.code,
