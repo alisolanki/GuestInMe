@@ -44,202 +44,285 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: _userModel == null
-          ? Center(
-              child: CircularProgressIndicator(
-              backgroundColor: Colors.purple,
-            ))
-          : SingleChildScrollView(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  CustomPaint(
-                    child: Container(
-                      width: size.width,
-                      height: size.height,
-                    ),
-                    painter: HeaderCurvedContainer(),
+      child: SingleChildScrollView(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            CustomPaint(
+              child: Container(
+                width: size.width,
+                height: size.height,
+              ),
+              painter: HeaderCurvedContainer(),
+            ),
+            Positioned(
+              top: 120.0,
+              child: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/profile.png'),
+                radius: size.width * 0.15,
+                backgroundColor: Colors.transparent,
+              ),
+            ),
+            Positioned(
+              top: 10.0,
+              right: 10.0,
+              child: Container(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,
                   ),
-                  Positioned(
-                    top: 120.0,
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/profile.png'),
-                      radius: size.width * 0.15,
-                      backgroundColor: Colors.transparent,
+                  onPressed: () => {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => SettingsPage(),
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: 10.0,
-                    right: 10.0,
-                    child: Container(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.settings,
-                          color: Colors.white,
-                        ),
-                        onPressed: () => {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => SettingsPage(),
+                  },
+                ),
+              ),
+            ),
+            Positioned(
+              top: 150 + size.width * 0.3,
+              width: size.width * 0.8,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    //editing and ticket page
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          //editing
+                          RaisedButton.icon(
+                            icon: Icon(
+                              _editing ? Icons.check : Icons.edit,
+                              color: Colors.white,
                             ),
+                            label: _editing
+                                ? Text("Save Profile")
+                                : Text("Edit Profile"),
+                            color: Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            onPressed: () => {
+                              if (_editing)
+                                {
+                                  if (_formKey.currentState.validate())
+                                    {
+                                      setState(() {
+                                        _editing = !_editing;
+                                        print("editing: $_editing");
+                                      }),
+                                      formSave(),
+                                      _saveUserDetails(),
+                                    }
+                                }
+                              else
+                                {
+                                  setState(() {
+                                    _editing = !_editing;
+                                    print("editing: $_editing");
+                                  })
+                                }
+                            },
                           ),
+                          //view tickets
+                          RaisedButton.icon(
+                            icon: Icon(
+                              Icons.book_online,
+                              color: Colors.white,
+                            ),
+                            label: Text("View Tickets"),
+                            color: _editing ? Colors.blueGrey : Colors.purple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            onPressed: _editing
+                                ? null
+                                : () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => TicketsPage(),
+                                      ),
+                                    ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    //name field
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Name: ${_userModel?.name}",
+                            hintStyle: TextStyle(
+                              color: Colors.white70,
+                            ),
+                            fillColor: _editing
+                                ? const Color(0x00C97CFF)
+                                : Colors.white70,
+                            filled: true,
+                            contentPadding: const EdgeInsets.all(8.0),
+                            focusedBorder: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            enabled: _editing,
+                          ),
+                          cursorColor: Colors.white,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          keyboardType: TextInputType.name,
+                          validator: (value) => value.isEmpty
+                              ? "Enter Your Name"
+                              : (RegExp('[a-zA-Z]').hasMatch(value)
+                                  ? null
+                                  : "Enter a Valid Name"),
+                          onSaved: (_input) {
+                            setState(() {
+                              _userName = _input;
+                            });
+                          }),
+                    ),
+                    //gender field
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownButton(
+                        value: _v,
+                        items: _editing
+                            ? [
+                                DropdownMenuItem(
+                                  child: Text("  Male"),
+                                  value: "male",
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("  Female"),
+                                  value: "female",
+                                ),
+                                DropdownMenuItem(
+                                  child: Text("  Other"),
+                                  value: "other",
+                                ),
+                              ]
+                            : null,
+                        isExpanded: true,
+                        disabledHint: Text(_userModel?.gender),
+                        onChanged: (value) {
+                          setState(() {
+                            _v = value;
+                            _userGender = _v;
+                          });
                         },
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 150 + size.width * 0.3,
-                    width: size.width * 0.8,
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          //editing and ticket page
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                //editing
-                                RaisedButton.icon(
-                                  icon: Icon(
-                                    _editing ? Icons.check : Icons.edit,
-                                    color: Colors.white,
-                                  ),
-                                  label: _editing
-                                      ? Text("Save Profile")
-                                      : Text("Edit Profile"),
-                                  color: Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      const Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  onPressed: () => {
-                                    if (_editing)
-                                      {
-                                        if (_formKey.currentState.validate())
-                                          {
-                                            setState(() {
-                                              _editing = !_editing;
-                                              print("editing: $_editing");
-                                            }),
-                                            formSave(),
-                                            _saveUserDetails(),
-                                          }
-                                      }
-                                    else
-                                      {
-                                        setState(() {
-                                          _editing = !_editing;
-                                          print("editing: $_editing");
-                                        })
-                                      }
-                                  },
-                                ),
-                                //view tickets
-                                RaisedButton.icon(
-                                  icon: Icon(
-                                    Icons.book_online,
-                                    color: Colors.white,
-                                  ),
-                                  label: Text("View Tickets"),
-                                  color: _editing
-                                      ? Colors.blueGrey
-                                      : Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      const Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  onPressed: _editing
-                                      ? null
-                                      : () => Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  TicketsPage(),
-                                            ),
-                                          ),
-                                ),
-                              ],
+                    //phone number field
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          hintText: "${_user.phoneNumber}",
+                          hintStyle: TextStyle(
+                            color: Colors.white70,
+                          ),
+                          fillColor: Colors.white70,
+                          filled: true,
+                          contentPadding: const EdgeInsets.all(8.0),
+                          focusedBorder: InputBorder.none,
+                          border: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0),
                             ),
                           ),
-                          //name field
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Name: ${_userModel?.name}",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white70,
-                                  ),
-                                  fillColor: _editing
-                                      ? const Color(0x00C97CFF)
-                                      : Colors.white70,
-                                  filled: true,
-                                  contentPadding: const EdgeInsets.all(8.0),
-                                  focusedBorder: InputBorder.none,
-                                  border: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  enabled: _editing,
-                                ),
-                                cursorColor: Colors.white,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                                keyboardType: TextInputType.name,
-                                validator: (value) => value.isEmpty
-                                    ? "Enter Your Name"
-                                    : (RegExp('[a-zA-Z]').hasMatch(value)
-                                        ? null
-                                        : "Enter a Valid Name"),
-                                onSaved: (_input) {
-                                  setState(() {
-                                    _userName = _input;
-                                  });
-                                }),
+                          enabled: false,
+                        ),
+                        cursorColor: Colors.white,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        onSaved: (_input) => null,
+                      ),
+                    ),
+                    //email field
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Email: ${_userModel?.email}",
+                            hintMaxLines: 2,
+                            hintStyle: TextStyle(
+                              color: Colors.white70,
+                            ),
+                            fillColor: _editing
+                                ? const Color(0x00C97CFF)
+                                : Colors.white70,
+                            filled: true,
+                            contentPadding: const EdgeInsets.all(8.0),
+                            focusedBorder: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                            ),
+                            enabled: _editing,
                           ),
-                          //gender field
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: DropdownButton(
-                              value: _v,
-                              items: _editing
-                                  ? [
-                                      DropdownMenuItem(
-                                        child: Text("  Male"),
-                                        value: "male",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("  Female"),
-                                        value: "female",
-                                      ),
-                                      DropdownMenuItem(
-                                        child: Text("  Other"),
-                                        value: "other",
-                                      ),
-                                    ]
-                                  : null,
-                              isExpanded: true,
-                              disabledHint: Text(_userModel?.gender),
-                              onChanged: (value) {
+                          cursorColor: Colors.white,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (email) =>
+                              RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(email)
+                                  ? null
+                                  : "Enter a valid email",
+                          onSaved: (_input) {
+                            setState(() {
+                              _userEmail = _input;
+                            });
+                          }),
+                    ),
+                    _editing
+                        ? Container(
+                            margin: const EdgeInsets.all(8.0),
+                            height: 300,
+                            child: CupertinoDatePicker(
+                              onDateTimeChanged: (DateTime _selected) => {
                                 setState(() {
-                                  _v = value;
-                                  _userGender = _v;
-                                });
+                                  _userDOB = convertDate(_selected);
+                                }),
                               },
+                              mode: CupertinoDatePickerMode.date,
+                              maximumDate: DateTime.now(),
+                              minimumDate: DateTime(1920),
+                              initialDateTime: DateTime(
+                                int.parse(
+                                    _userModel.dateOfBirth.substring(0, 4)),
+                              ),
                             ),
-                          ),
-                          //phone number field
-                          Padding(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                const Radius.circular(40.0),
+                              ),
+                              color: const Color(0xAAC97CFF),
+                            ),
+                          )
+                        : Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               decoration: InputDecoration(
-                                hintText: "${_user.phoneNumber}",
+                                hintText:
+                                    "Date of Birth: ${_userModel.dateOfBirth.substring(6, 8)}/${_userModel.dateOfBirth.substring(4, 6)}/${_userModel.dateOfBirth.substring(0, 4)}",
                                 hintStyle: TextStyle(
                                   color: Colors.white70,
                                 ),
@@ -258,108 +341,17 @@ class _ProfilePageState extends State<ProfilePage> {
                               style: TextStyle(
                                 color: Colors.white,
                               ),
+                              keyboardType: TextInputType.name,
                               onSaved: (_input) => null,
                             ),
                           ),
-                          //email field
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: "Email: ${_userModel?.email}",
-                                  hintMaxLines: 2,
-                                  hintStyle: TextStyle(
-                                    color: Colors.white70,
-                                  ),
-                                  fillColor: _editing
-                                      ? const Color(0x00C97CFF)
-                                      : Colors.white70,
-                                  filled: true,
-                                  contentPadding: const EdgeInsets.all(8.0),
-                                  focusedBorder: InputBorder.none,
-                                  border: OutlineInputBorder(
-                                    borderRadius: const BorderRadius.all(
-                                      const Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  enabled: _editing,
-                                ),
-                                cursorColor: Colors.white,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (email) =>
-                                    RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                            .hasMatch(email)
-                                        ? null
-                                        : "Enter a valid email",
-                                onSaved: (_input) {
-                                  setState(() {
-                                    _userEmail = _input;
-                                  });
-                                }),
-                          ),
-                          _editing
-                              ? Container(
-                                  margin: const EdgeInsets.all(8.0),
-                                  height: 300,
-                                  child: CupertinoDatePicker(
-                                    onDateTimeChanged: (DateTime _selected) => {
-                                      setState(() {
-                                        _userDOB = convertDate(_selected);
-                                      }),
-                                    },
-                                    mode: CupertinoDatePickerMode.date,
-                                    maximumDate: DateTime.now(),
-                                    minimumDate: DateTime(1920),
-                                    initialDateTime: DateTime(
-                                      int.parse(_userModel.dateOfBirth
-                                          .substring(0, 4)),
-                                    ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      const Radius.circular(40.0),
-                                    ),
-                                    color: const Color(0xAAC97CFF),
-                                  ),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          "Date of Birth: ${_userModel.dateOfBirth.substring(6, 8)}/${_userModel.dateOfBirth.substring(4, 6)}/${_userModel.dateOfBirth.substring(0, 4)}",
-                                      hintStyle: TextStyle(
-                                        color: Colors.white70,
-                                      ),
-                                      fillColor: Colors.white70,
-                                      filled: true,
-                                      contentPadding: const EdgeInsets.all(8.0),
-                                      focusedBorder: InputBorder.none,
-                                      border: OutlineInputBorder(
-                                        borderRadius: const BorderRadius.all(
-                                          const Radius.circular(10.0),
-                                        ),
-                                      ),
-                                      enabled: false,
-                                    ),
-                                    cursorColor: Colors.white,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                    keyboardType: TextInputType.name,
-                                    onSaved: (_input) => null,
-                                  ),
-                                ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+          ],
+        ),
+      ),
     );
   }
 

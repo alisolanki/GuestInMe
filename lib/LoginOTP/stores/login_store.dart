@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Home/homepage.dart';
 import '../pages/login_page.dart';
 import '../pages/otp_page.dart';
 
 import '../../auth/auth.dart' as auth;
-import 'package:http/http.dart' as http;
 
 part 'login_store.g.dart';
 
@@ -146,44 +142,9 @@ abstract class LoginStoreBase with Store {
         .isAlreadyAuthenticated()
         .then((result) {
       if (result) {
-        // auth.geturls().then(
-        //   (_) {
-        //     AdvertisementFetcher().fetchAdvertisements().then((fetchedData) {
-        // SharedPreferences.getInstance().then(
-        //   (prefs) {
-        //     String affiliateName = prefs.getString('affiliateName');
-        //     if (affiliateName != "none") {
-        //       print("affiliate: $affiliateName");
-        //       http
-        //           .patch(
-        //         '${auth.url}/affiliate/$affiliateName/${int.parse(firebaseUser.phoneNumber.substring(1)) * 373}.json?auth=${auth.token}',
-        //         headers: {"Accept": "application/json"},
-        //         body: jsonEncode(
-        //           {'added': '${DateTime.now().toIso8601String()}'},
-        //         ),
-        //       )
-        //           .then((_response) {
-        //         print('${_response.body}');
-        //         Navigator.of(context).pushAndRemoveUntil(
-        //             MaterialPageRoute(
-        //                 builder: (_) => HomePage()),
-        //             (Route<dynamic> route) => false);
-        //       });
-        //     } else {
-        //       print("affiliate: $affiliateName");
-        //       Navigator.of(context).pushAndRemoveUntil(
-        //           MaterialPageRoute(
-        //               builder: (_) => HomePage()),
-        //           (Route<dynamic> route) => false);
-        //     }
-        //   },
-        // );
-        //     });
-        //   },
-        // );
         auth.getTk();
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => HomePage()),
+            MaterialPageRoute(builder: (_) => HomePage(selected: 2)),
             (Route<dynamic> route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
