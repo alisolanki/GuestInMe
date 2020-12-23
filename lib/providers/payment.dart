@@ -19,6 +19,7 @@ class RegistrationHttp {
     @required TypeModel typeModel,
     @required int code,
     @required bool paid,
+    @required int peopleNumber,
     String referral,
   }) async {
     User _user = FirebaseAuth.instance.currentUser;
@@ -28,10 +29,11 @@ class RegistrationHttp {
     var _bookingsUrl =
         "${auth.url}registrations/$_date/${eventModel.id}/${eventModel.eventName}/${_user.phoneNumber}.json?auth=${auth.token}";
 
+    var _finalPrice = double.parse(typeModel.price) * peopleNumber;
     var _bookingsBody = json.encode({
       'typeName': '${typeModel.typeName}',
       'code': '$code',
-      'price': '${typeModel.price}',
+      'price': '$_finalPrice',
       'paid': '$paid',
       'referral': '$referral',
       'name': '${userModel.name}'
@@ -55,6 +57,7 @@ class RegistrationHttp {
             paid: paid,
             typeModel: typeModel,
             code: code,
+            count: peopleNumber,
           ),
         ),
       );
@@ -147,7 +150,7 @@ class PaymentProvider with ChangeNotifier {
   TypeModel _typeModel;
   EventModel _eventModel;
   UserModel _userModel;
-  int _code;
+  int _code, _peopleNumber;
   String _referral;
 
   @override
@@ -162,6 +165,7 @@ class PaymentProvider with ChangeNotifier {
     @required EventModel eventModel,
     @required UserModel userModel,
     @required int code,
+    @required int peopleNumber,
     String referral,
   }) async {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -170,7 +174,7 @@ class PaymentProvider with ChangeNotifier {
 
     var options = {
       'key': auth.razorpaykey,
-      'amount': double.parse(type.price),
+      'amount': peopleNumber * double.parse(type.price) * 100,
       'name': 'GuestInMe: ${type.typeName}',
       'description':
           'By paying, you have read and accepted all our Terms and Conditions',
@@ -184,6 +188,7 @@ class PaymentProvider with ChangeNotifier {
       _code = code;
       _ctx = ctx;
       _referral = referral;
+      _peopleNumber = peopleNumber;
       _razorpay.open(options);
     } catch (e) {
       debugPrint(e);
@@ -199,6 +204,7 @@ class PaymentProvider with ChangeNotifier {
       code: _code,
       paid: true,
       referral: _referral,
+      peopleNumber: _peopleNumber,
     );
   }
 

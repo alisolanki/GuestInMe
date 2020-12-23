@@ -16,11 +16,13 @@ class TicketGenerator extends StatefulWidget {
   final bool paid;
   final TypeModel typeModel;
   final int code;
+  final int count;
   TicketGenerator({
     @required this.eventModel,
     @required this.paid,
     @required this.typeModel,
     @required this.code,
+    this.count = 1,
   });
 
   @override
@@ -54,7 +56,7 @@ class _TicketGeneratorState extends State<TicketGenerator> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => ViewTicketPage(
-                  "${_docApp.path}/tickets/${widget.eventModel.date} ${widget.typeModel.typeName} ${widget.code}.pdf",
+                  "${_docApp.path}/tickets/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf",
                 ),
               ),
             );
@@ -124,7 +126,8 @@ class _TicketGeneratorState extends State<TicketGenerator> {
                 mainAxisAlignment: pw.MainAxisAlignment.start,
                 children: [
                   pw.Paragraph(
-                    text: "1 Ticket for ${widget.typeModel.typeName}",
+                    text:
+                        "${widget.count} Ticket/s for ${widget.typeModel.typeName}",
                     style: pw.TextStyle(
                       fontSize: 25.0,
                       fontWeight: pw.FontWeight.bold,
@@ -148,8 +151,8 @@ class _TicketGeneratorState extends State<TicketGenerator> {
                         )
                       : pw.Paragraph(
                           text: widget.paid
-                              ? "Price: Rs.${widget.typeModel.price} paid."
-                              : "Price: Rs.${widget.typeModel.price} to be paid at entrance.",
+                              ? "Price: Rs.${widget.typeModel.price} x ${widget.count} paid."
+                              : "Price: Rs.${widget.typeModel.price} x ${widget.count} to be paid at entrance.",
                           style: pw.TextStyle(
                             fontSize: 20.0,
                             fontWeight: pw.FontWeight.bold,
@@ -218,16 +221,16 @@ class _TicketGeneratorState extends State<TicketGenerator> {
     if (!await _docTickets.exists()) {
       _docTickets = await _docTickets.create(recursive: true);
       File _file = File(
-        "${_docTickets.path}/${widget.eventModel.date} ${widget.typeModel.typeName} ${widget.code}.pdf",
+        "${_docTickets.path}/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf",
       );
       _file.writeAsBytesSync(pdf.save());
     } else {
       File _file = File(
-        "${_docTickets.path}/${widget.eventModel.date} ${widget.typeModel.typeName} ${widget.code}.pdf",
+        "${_docTickets.path}/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf",
       );
       _file.writeAsBytesSync(pdf.save());
       print(
-          "${_docApp.path}/tickets/${widget.eventModel.date} ${widget.typeModel.typeName} ${widget.code}.pdf");
+          "${_docApp.path}/tickets/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf");
     }
   }
 

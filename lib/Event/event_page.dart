@@ -255,63 +255,9 @@ class _EventPageState extends State<EventPage> {
                                   : "Rs.${widget.eventModel.prices[1].typeData[i].price}",
                               style: TextStyle(fontSize: 18.0),
                             ),
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (ctx) => CupertinoAlertDialog(
-                                  title: Text("Booking options"),
-                                  content: Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: CupertinoTextField(
-                                      placeholder: "Referral Code (Optional)",
-                                      textCapitalization:
-                                          TextCapitalization.characters,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(color: Colors.blue),
-                                      placeholderStyle: const TextStyle(
-                                        color: const Color(0x772196F3),
-                                      ),
-                                      onChanged: (r) => setState(() {
-                                        _referral = r;
-                                      }),
-                                    ),
-                                  ),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                      child:
-                                          Text("Get ticket and pay on entry"),
-                                      onPressed: () =>
-                                          RegistrationHttp().sendRegistration(
-                                        ctx: ctx,
-                                        paid: false,
-                                        typeModel: widget
-                                            .eventModel.prices[1].typeData[i],
-                                        code: Random().nextInt(9000) + 1000,
-                                        eventModel: widget.eventModel,
-                                        userModel: _userModel,
-                                        referral: _referral,
-                                      ),
-                                    ),
-                                    CupertinoDialogAction(
-                                      child: Text("Online payment"),
-                                      onPressed: () {
-                                        final _code =
-                                            Random().nextInt(9000) + 1000;
-                                        PaymentProvider().openCheckout(
-                                          type: widget
-                                              .eventModel.prices[1].typeData[i],
-                                          eventModel: widget.eventModel,
-                                          userModel: _userModel,
-                                          code: _code,
-                                          ctx: ctx,
-                                          referral: _referral,
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                            onTap: () => _payableAlertDialog(
+                              widget.eventModel.prices[1].typeData[i],
+                            ),
                           ),
                         );
                       },
@@ -375,93 +321,11 @@ class _EventPageState extends State<EventPage> {
                             onTap: () {
                               widget.eventModel.prices[0].typeData[i].price ==
                                       "0"
-                                  ? showDialog(
-                                      context: context,
-                                      builder: (ctx) => CupertinoAlertDialog(
-                                        title: Text("Get ticket"),
-                                        content: Text(
-                                            "Do you want to generate the ticket?"),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: Text("Yes"),
-                                            onPressed: () => RegistrationHttp()
-                                                .sendRegistration(
-                                              ctx: ctx,
-                                              paid: true,
-                                              typeModel: widget.eventModel
-                                                  .prices[0].typeData[i],
-                                              code:
-                                                  Random().nextInt(9000) + 1000,
-                                              eventModel: widget.eventModel,
-                                              userModel: _userModel,
-                                            ),
-                                          ),
-                                          CupertinoDialogAction(
-                                            child: Text("No"),
-                                            onPressed: () => Navigator.pop(ctx),
-                                          ),
-                                        ],
-                                      ),
+                                  ? _nonPayableAlertDialog(
+                                      widget.eventModel.prices[0].typeData[i],
                                     )
-                                  : showDialog(
-                                      context: context,
-                                      builder: (ctx) => CupertinoAlertDialog(
-                                        title: Text("Booking options"),
-                                        content: Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 8.0),
-                                          child: CupertinoTextField(
-                                            placeholder:
-                                                "Referral Code (Optional)",
-                                            textCapitalization:
-                                                TextCapitalization.characters,
-                                            textAlign: TextAlign.center,
-                                            style:
-                                                TextStyle(color: Colors.blue),
-                                            placeholderStyle: const TextStyle(
-                                              color: const Color(0x772196F3),
-                                            ),
-                                            onChanged: (r) => setState(() {
-                                              _referral = r;
-                                            }),
-                                          ),
-                                        ),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: Text(
-                                              "Get ticket and pay on entry",
-                                            ),
-                                            onPressed: () => RegistrationHttp()
-                                                .sendRegistration(
-                                              ctx: ctx,
-                                              paid: false,
-                                              typeModel: widget.eventModel
-                                                  .prices[0].typeData[i],
-                                              code:
-                                                  Random().nextInt(9000) + 1000,
-                                              eventModel: widget.eventModel,
-                                              userModel: _userModel,
-                                              referral: _referral,
-                                            ),
-                                          ),
-                                          CupertinoDialogAction(
-                                            child: Text("Online payment"),
-                                            onPressed: () {
-                                              final _code =
-                                                  Random().nextInt(9000) + 1000;
-                                              PaymentProvider().openCheckout(
-                                                type: widget.eventModel
-                                                    .prices[0].typeData[i],
-                                                eventModel: widget.eventModel,
-                                                userModel: _userModel,
-                                                code: _code,
-                                                ctx: ctx,
-                                                referral: _referral,
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      ),
+                                  : _payableAlertDialog(
+                                      widget.eventModel.prices[0].typeData[i],
                                     );
                             },
                           ),
@@ -566,6 +430,146 @@ class _EventPageState extends State<EventPage> {
                   SizedBox(height: 70.0)
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _payableAlertDialog(TypeModel _typeModel) {
+    int _num = 1;
+    showDialog(
+      context: context,
+      builder: (cont) => StatefulBuilder(
+        builder: (ctx, setState) => CupertinoAlertDialog(
+          title: Text("Booking options"),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CupertinoButton(
+                      child: Icon(Icons.remove),
+                      onPressed: _num <= 1
+                          ? null
+                          : () => setState(() {
+                                _num = _num - 1;
+                              }),
+                    ),
+                    Text("$_num tickets"),
+                    CupertinoButton(
+                      child: Icon(Icons.add),
+                      onPressed: _num > 15
+                          ? null
+                          : () => setState(() {
+                                _num = _num + 1;
+                              }),
+                    ),
+                  ],
+                ),
+                CupertinoTextField(
+                  placeholder: "Referral Code (Optional)",
+                  textCapitalization: TextCapitalization.characters,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.blue),
+                  placeholderStyle: const TextStyle(
+                    color: const Color(0x772196F3),
+                  ),
+                  onChanged: (r) => setState(() {
+                    _referral = r;
+                  }),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("Get ticket and pay on entry"),
+              onPressed: () => RegistrationHttp().sendRegistration(
+                ctx: ctx,
+                paid: false,
+                typeModel: _typeModel,
+                code: Random().nextInt(9000) + 1000,
+                eventModel: widget.eventModel,
+                userModel: _userModel,
+                referral: _referral,
+                peopleNumber: _num,
+              ),
+            ),
+            CupertinoDialogAction(
+              child: Text("Online payment"),
+              onPressed: () {
+                final _code = Random().nextInt(9000) + 1000;
+                PaymentProvider().openCheckout(
+                  type: _typeModel,
+                  eventModel: widget.eventModel,
+                  userModel: _userModel,
+                  code: _code,
+                  ctx: ctx,
+                  referral: _referral,
+                  peopleNumber: _num,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _nonPayableAlertDialog(TypeModel _typeModel) {
+    int _num = 1;
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setState) => CupertinoAlertDialog(
+          title: Text("Get ticket"),
+          content: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CupertinoButton(
+                    child: Icon(Icons.remove),
+                    onPressed: _num <= 1
+                        ? null
+                        : () => setState(() {
+                              _num = _num - 1;
+                            }),
+                  ),
+                  Text("$_num tickets"),
+                  CupertinoButton(
+                    child: Icon(Icons.add),
+                    onPressed: _num > 15
+                        ? null
+                        : () => setState(() {
+                              _num = _num + 1;
+                            }),
+                  ),
+                ],
+              ),
+              Text("Do you want to generate the ticket?"),
+            ],
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: Text("Yes"),
+              onPressed: () => RegistrationHttp().sendRegistration(
+                ctx: ctx,
+                paid: true,
+                typeModel: _typeModel,
+                code: Random().nextInt(9000) + 1000,
+                eventModel: widget.eventModel,
+                userModel: _userModel,
+                peopleNumber: _num,
+              ),
+            ),
+            CupertinoDialogAction(
+              child: Text("No"),
+              onPressed: () => Navigator.pop(ctx),
             ),
           ],
         ),
