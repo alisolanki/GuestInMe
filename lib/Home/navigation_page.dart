@@ -57,7 +57,11 @@ class _NavigationPageState extends State<NavigationPage> {
             size: _selected == 1 ? _size.height * 0.05 : _size.height * 0.03,
             color: _selected == 1 ? Colors.purple : Colors.black,
           ),
-          Icon(Icons.person_outline, size: 30, color: Colors.black),
+          Icon(
+            Icons.person_outline,
+            size: _size.height * 0.03,
+            color: Colors.black,
+          ),
         ],
         onTap: (_i) => setState(() {
           _selected = _i;
