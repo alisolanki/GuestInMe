@@ -13,21 +13,11 @@ class PlaceCard extends StatelessWidget {
       width: 360.0,
       height: 270.0,
       child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => PlacePage(
-                placeModel: placeModel,
-              ),
-            ),
-          );
-        },
         child: ClipRRect(
-          child: Column(
+          child: Stack(
             children: [
               Container(
-                color: Colors.red,
-                height: 180.0,
+                height: 270.0,
                 width: double.maxFinite,
                 child: Image(
                   image: NetworkImage("${placeModel.images[0]}"),
@@ -35,23 +25,41 @@ class PlaceCard extends StatelessWidget {
                 ),
               ),
               Container(
-                color: Colors.purple[900].withOpacity(0.8),
-                height: 90.0,
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    child: Image(
-                      image: NetworkImage("${placeModel.logo}"),
-                      // color: Colors.white,
-                    ),
-                    radius: 30,
-                    backgroundColor: Colors.black,
+                height: 270.0,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.black,
+                      Colors.transparent,
+                    ],
                   ),
-                  title: Text(
-                    "${placeModel.placeName}",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+                ),
+              ),
+              Positioned(
+                bottom: 0.0,
+                right: 0.0,
+                left: 0.0,
+                child: Container(
+                  height: 90.0,
+                  color: Colors.black,
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Image(
+                        image: NetworkImage("${placeModel.logo}"),
+                        // color: Colors.white,
+                      ),
+                      radius: 30,
+                      backgroundColor: Colors.black,
+                    ),
+                    title: Text(
+                      "${placeModel.placeName}",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -62,6 +70,16 @@ class PlaceCard extends StatelessWidget {
             Radius.circular(20.0),
           ),
         ),
+        highlightColor: Colors.transparent,
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => PlacePage(
+                placeModel: placeModel,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

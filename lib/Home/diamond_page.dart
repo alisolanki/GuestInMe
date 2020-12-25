@@ -111,6 +111,7 @@ class _DiamondPageState extends State<DiamondPage> {
                   children: [
                     SelectionCard("Clubs"),
                     SelectionCard("Bars"),
+                    SelectionCard("Concerts"),
                   ],
                 ),
               ),

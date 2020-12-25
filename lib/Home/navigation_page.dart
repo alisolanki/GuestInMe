@@ -19,10 +19,12 @@ class NavigationPage extends StatefulWidget {
 class _NavigationPageState extends State<NavigationPage> {
   var _isInit = true;
   int _selected;
+  Size _size = Size(0.0, 0.0);
   var _loading = true;
 
   @override
   void didChangeDependencies() {
+    _size = MediaQuery.of(context).size;
     if (_isInit) {
       _selected = widget.selected;
       Provider.of<UserProvider>(context, listen: false).fetchUser().then((_) {
@@ -45,10 +47,14 @@ class _NavigationPageState extends State<NavigationPage> {
         index: _selected,
         backgroundColor: const Color(0xFF16161D),
         items: <Widget>[
-          Icon(Icons.search, size: 30, color: Colors.black),
+          Icon(
+            Icons.search,
+            size: _size.height * 0.03,
+            color: Colors.black,
+          ),
           Icon(
             GuestInMe.diamond_2,
-            size: _selected == 1 ? 50 : 30,
+            size: _selected == 1 ? _size.height * 0.05 : _size.height * 0.03,
             color: _selected == 1 ? Colors.purple : Colors.black,
           ),
           Icon(Icons.person_outline, size: 30, color: Colors.black),
