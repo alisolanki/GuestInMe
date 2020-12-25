@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:GuestInMe/Home/widgets/place_card.dart';
@@ -9,6 +10,8 @@ import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class EventPage extends StatefulWidget {
@@ -27,6 +30,15 @@ class _EventPageState extends State<EventPage> {
   PlaceModel _placeModel;
   UserModel _userModel;
 
+  String _dirPath;
+  List<FileSystemEntity> _files = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _listofFiles();
+  }
+
   @override
   void didChangeDependencies() {
     size = MediaQuery.of(context).size;
@@ -42,6 +54,13 @@ class _EventPageState extends State<EventPage> {
     }
     _init = false;
     super.didChangeDependencies();
+  }
+
+  void _listofFiles() async {
+    _dirPath = (await getApplicationDocumentsDirectory()).path;
+    setState(() {
+      _files = Directory("$_dirPath/tickets/").listSync();
+    });
   }
 
   @override
@@ -439,142 +458,154 @@ class _EventPageState extends State<EventPage> {
 
   _payableAlertDialog(TypeModel _typeModel) {
     int _num = 1;
-    showDialog(
-      context: context,
-      builder: (cont) => StatefulBuilder(
-        builder: (ctx, setState) => CupertinoAlertDialog(
-          title: Text("Booking options"),
-          content: Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CupertinoButton(
-                      child: Icon(Icons.remove),
-                      onPressed: _num <= 1
-                          ? null
-                          : () => setState(() {
-                                _num = _num - 1;
-                              }),
-                    ),
-                    Text("$_num tickets"),
-                    CupertinoButton(
-                      child: Icon(Icons.add),
-                      onPressed: _num > 15
-                          ? null
-                          : () => setState(() {
-                                _num = _num + 1;
-                              }),
-                    ),
-                  ],
-                ),
-                CupertinoTextField(
-                  placeholder: "Referral Code (Optional)",
-                  textCapitalization: TextCapitalization.characters,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.blue),
-                  placeholderStyle: const TextStyle(
-                    color: const Color(0x772196F3),
+    _files.length > 5
+        ? Fluttertoast.showToast(
+            msg:
+                "Limit for booking tickets reached. Delete Tickets to book more.",
+            backgroundColor: Colors.red,
+          )
+        : showDialog(
+            context: context,
+            builder: (cont) => StatefulBuilder(
+              builder: (ctx, setState) => CupertinoAlertDialog(
+                title: Text("Booking options"),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CupertinoButton(
+                            child: Icon(Icons.remove),
+                            onPressed: _num <= 1
+                                ? null
+                                : () => setState(() {
+                                      _num = _num - 1;
+                                    }),
+                          ),
+                          Text("$_num tickets"),
+                          CupertinoButton(
+                            child: Icon(Icons.add),
+                            onPressed: _num > 15
+                                ? null
+                                : () => setState(() {
+                                      _num = _num + 1;
+                                    }),
+                          ),
+                        ],
+                      ),
+                      CupertinoTextField(
+                        placeholder: "Referral Code (Optional)",
+                        textCapitalization: TextCapitalization.characters,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.blue),
+                        placeholderStyle: const TextStyle(
+                          color: const Color(0x772196F3),
+                        ),
+                        onChanged: (r) => setState(() {
+                          _referral = r;
+                        }),
+                      ),
+                    ],
                   ),
-                  onChanged: (r) => setState(() {
-                    _referral = r;
-                  }),
                 ),
-              ],
-            ),
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text("Get ticket and pay on entry"),
-              onPressed: () => RegistrationHttp().sendRegistration(
-                ctx: ctx,
-                paid: false,
-                typeModel: _typeModel,
-                code: Random().nextInt(9000) + 1000,
-                eventModel: widget.eventModel,
-                userModel: _userModel,
-                referral: _referral,
-                peopleNumber: _num,
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text("Get ticket and pay on entry"),
+                    onPressed: () => RegistrationHttp().sendRegistration(
+                      ctx: ctx,
+                      paid: false,
+                      typeModel: _typeModel,
+                      code: Random().nextInt(9000) + 1000,
+                      eventModel: widget.eventModel,
+                      userModel: _userModel,
+                      referral: _referral,
+                      peopleNumber: _num,
+                    ),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text("Online payment"),
+                    onPressed: () {
+                      final _code = Random().nextInt(9000) + 1000;
+                      PaymentProvider().openCheckout(
+                        type: _typeModel,
+                        eventModel: widget.eventModel,
+                        userModel: _userModel,
+                        code: _code,
+                        ctx: ctx,
+                        referral: _referral,
+                        peopleNumber: _num,
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            CupertinoDialogAction(
-              child: Text("Online payment"),
-              onPressed: () {
-                final _code = Random().nextInt(9000) + 1000;
-                PaymentProvider().openCheckout(
-                  type: _typeModel,
-                  eventModel: widget.eventModel,
-                  userModel: _userModel,
-                  code: _code,
-                  ctx: ctx,
-                  referral: _referral,
-                  peopleNumber: _num,
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   _nonPayableAlertDialog(TypeModel _typeModel) {
     int _num = 1;
-    showDialog(
-      context: context,
-      builder: (ctx) => StatefulBuilder(
-        builder: (context, setState) => CupertinoAlertDialog(
-          title: Text("Get ticket"),
-          content: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CupertinoButton(
-                    child: Icon(Icons.remove),
-                    onPressed: _num <= 1
-                        ? null
-                        : () => setState(() {
-                              _num = _num - 1;
-                            }),
+    _files.length > 5
+        ? Fluttertoast.showToast(
+            msg:
+                "Limit for booking tickets reached. Delete Tickets to book more.",
+            backgroundColor: Colors.red,
+          )
+        : showDialog(
+            context: context,
+            builder: (ctx) => StatefulBuilder(
+              builder: (context, setState) => CupertinoAlertDialog(
+                title: Text("Get ticket"),
+                content: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CupertinoButton(
+                          child: Icon(Icons.remove),
+                          onPressed: _num <= 1
+                              ? null
+                              : () => setState(() {
+                                    _num = _num - 1;
+                                  }),
+                        ),
+                        Text("$_num tickets"),
+                        CupertinoButton(
+                          child: Icon(Icons.add),
+                          onPressed: _num > 15
+                              ? null
+                              : () => setState(() {
+                                    _num = _num + 1;
+                                  }),
+                        ),
+                      ],
+                    ),
+                    Text("Do you want to generate the ticket?"),
+                  ],
+                ),
+                actions: [
+                  CupertinoDialogAction(
+                    child: Text("Yes"),
+                    onPressed: () => RegistrationHttp().sendRegistration(
+                      ctx: ctx,
+                      paid: true,
+                      typeModel: _typeModel,
+                      code: Random().nextInt(9000) + 1000,
+                      eventModel: widget.eventModel,
+                      userModel: _userModel,
+                      peopleNumber: _num,
+                    ),
                   ),
-                  Text("$_num tickets"),
-                  CupertinoButton(
-                    child: Icon(Icons.add),
-                    onPressed: _num > 15
-                        ? null
-                        : () => setState(() {
-                              _num = _num + 1;
-                            }),
+                  CupertinoDialogAction(
+                    child: Text("No"),
+                    onPressed: () => Navigator.pop(ctx),
                   ),
                 ],
               ),
-              Text("Do you want to generate the ticket?"),
-            ],
-          ),
-          actions: [
-            CupertinoDialogAction(
-              child: Text("Yes"),
-              onPressed: () => RegistrationHttp().sendRegistration(
-                ctx: ctx,
-                paid: true,
-                typeModel: _typeModel,
-                code: Random().nextInt(9000) + 1000,
-                eventModel: widget.eventModel,
-                userModel: _userModel,
-                peopleNumber: _num,
-              ),
             ),
-            CupertinoDialogAction(
-              child: Text("No"),
-              onPressed: () => Navigator.pop(ctx),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   String convertDatetoISO(String value) {
