@@ -9,9 +9,18 @@ class RegistrationModel {
 
 class DateModel {
   final String date;
-  final List<EventRegistrationModel> eventRegistrationModels;
+  final List<PlaceRegistrationModel> placeRegistrationModels;
   DateModel({
     @required this.date,
+    @required this.placeRegistrationModels,
+  });
+}
+
+class PlaceRegistrationModel {
+  final String placeName;
+  final List<EventRegistrationModel> eventRegistrationModels;
+  PlaceRegistrationModel({
+    @required this.placeName,
     @required this.eventRegistrationModels,
   });
 }

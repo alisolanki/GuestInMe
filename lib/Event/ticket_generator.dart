@@ -1,5 +1,5 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:GuestInMe/Profile/tickets_page.dart';
 import 'package:GuestInMe/Profile/view_ticket_page.dart';
@@ -15,13 +15,16 @@ class TicketGenerator extends StatefulWidget {
   final EventModel eventModel;
   final bool paid;
   final TypeModel typeModel;
-  final int code;
-  final int count;
+  final int code, count;
+  final String name, referral, dateISO;
   TicketGenerator({
     @required this.eventModel,
     @required this.paid,
     @required this.typeModel,
     @required this.code,
+    @required this.name,
+    @required this.dateISO,
+    @required this.referral,
     this.count = 1,
   });
 
@@ -32,6 +35,7 @@ class TicketGenerator extends StatefulWidget {
 class _TicketGeneratorState extends State<TicketGenerator> {
   PdfImage _logoImage;
   Directory _docApp;
+  String _ticketData;
 
   final pw.Document pdf = pw.Document(
     author: "GuestInMe",
@@ -72,6 +76,9 @@ class _TicketGeneratorState extends State<TicketGenerator> {
       bytes:
           (await rootBundle.load('assets/logofilled.png')).buffer.asUint8List(),
     );
+    var _phoneNumber = FirebaseAuth.instance.currentUser.phoneNumber;
+    _ticketData =
+        "${widget.dateISO}::${widget.eventModel.placeName}::${widget.eventModel.id}::${widget.eventModel.eventName}::$_phoneNumber::${widget.typeModel.id}::${widget.code}::${widget.name}::${widget.paid}::${double.parse(widget.typeModel.price) * widget.count}::${widget.referral}::${widget.typeModel.typeName}";
   }
 
   void writeOnPdf() {
@@ -203,6 +210,29 @@ class _TicketGeneratorState extends State<TicketGenerator> {
                       fontSize: 12.0,
                     ),
                     textAlign: pw.TextAlign.left,
+                  ),
+                ],
+              ),
+            ),
+            pw.Center(
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.center,
+                children: <pw.Widget>[
+                  pw.Padding(
+                    padding: const pw.EdgeInsets.all(16.0),
+                    child: pw.Text(
+                      "Get the QR code scanned at the entrance.",
+                      style: pw.TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                  pw.BarcodeWidget(
+                    color: PdfColor.fromHex("#000000"),
+                    height: 200.0,
+                    width: 200.0,
+                    barcode: pw.Barcode.qrCode(),
+                    data: "ila${utf8.fuse(base64).encode('$_ticketData')}",
                   ),
                 ],
               ),

@@ -1,22 +1,21 @@
-import 'package:GuestInMe/Settings/owner/widgets/type_tile.dart';
+import 'package:GuestInMe/Settings/owner/widgets/user_tile.dart';
 import 'package:GuestInMe/models/registration_model.dart';
 import 'package:flutter/material.dart';
 
-class UserTile extends StatefulWidget {
-  final String date, placeName;
-  final EventRegistrationModel _eventRegistrationModel;
-  final List<UserRegistrationModel> _userRegistrationModels;
-  UserTile(
-    this._eventRegistrationModel,
-    this._userRegistrationModels,
+class PlaceTile extends StatefulWidget {
+  final String date;
+  final PlaceRegistrationModel _placeRegistrationModel;
+  final List<EventRegistrationModel> _eventRegistrationModels;
+  PlaceTile(
+    this._placeRegistrationModel,
+    this._eventRegistrationModels,
     this.date,
-    this.placeName,
   );
   @override
-  _UserTileState createState() => _UserTileState();
+  _PlaceTileState createState() => _PlaceTileState();
 }
 
-class _UserTileState extends State<UserTile> {
+class _PlaceTileState extends State<PlaceTile> {
   var _showUserDetails = false;
 
   @override
@@ -32,7 +31,7 @@ class _UserTileState extends State<UserTile> {
             color: Colors.deepPurple,
           ),
           child: ListTile(
-            title: Text("${widget._eventRegistrationModel.eventName}"),
+            title: Text("${widget._placeRegistrationModel.placeName}"),
             dense: true,
             onTap: () {
               setState(() {
@@ -44,19 +43,17 @@ class _UserTileState extends State<UserTile> {
         _showUserDetails
             ? Column(
                 children: [
-                  ...widget._userRegistrationModels.map(
+                  ...widget._eventRegistrationModels.map(
                     (e) {
                       return Container(
                         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         padding: EdgeInsets.only(bottom: 10.0),
                         color: Colors.deepPurple,
-                        child: TypeTile(
-                          e.typeRegistrationModels,
+                        child: UserTile(
+                          e,
+                          e.userRegistrationModels,
                           widget.date,
-                          e.phoneNumber,
-                          widget._eventRegistrationModel.eventName,
-                          widget._eventRegistrationModel.id,
-                          widget.placeName,
+                          widget._placeRegistrationModel.placeName,
                         ),
                       );
                     },

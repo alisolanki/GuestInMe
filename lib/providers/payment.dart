@@ -24,11 +24,13 @@ class RegistrationHttp {
   }) async {
     User _user = FirebaseAuth.instance.currentUser;
     String _date = convertDatetoISO(eventModel.date);
+    typeModel.id =
+        DateTime.now().toIso8601String().replaceAll(RegExp(r'\.'), ',');
     referral = referral ?? 'null';
 
     var _bookingsUrl =
-        "${auth.url}registrations/$_date/${eventModel.id}/${eventModel.eventName}/${_user.phoneNumber}.json?auth=${auth.token}";
-
+        "${auth.url}registrations/$_date/${eventModel.placeName}/${eventModel.id}/${eventModel.eventName}/${_user.phoneNumber}/${typeModel.id}.json?auth=${auth.token}";
+    print("_bookingsUrl: $_bookingsUrl");
     var _finalPrice = double.parse(typeModel.price) * peopleNumber;
     var _bookingsBody = json.encode({
       'typeName': '${typeModel.typeName}',
@@ -40,7 +42,7 @@ class RegistrationHttp {
     });
 
     try {
-      await http.post(_bookingsUrl,
+      await http.patch(_bookingsUrl,
           body: _bookingsBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
@@ -56,8 +58,11 @@ class RegistrationHttp {
             eventModel: eventModel,
             paid: paid,
             typeModel: typeModel,
+            dateISO: _date,
             code: code,
             count: peopleNumber,
+            referral: '$referral',
+            name: '${userModel.name}',
           ),
         ),
       );

@@ -191,12 +191,13 @@ class TransferData {
   Future<void> changeEntranceState({
     @required String date,
     @required String userNumber,
+    @required String placeName,
     @required String eventName,
     @required String eventId,
     @required TypeRegistrationModel typeModel,
   }) async {
     final _paidUrl =
-        "${auth.url}registrations/$date/$eventId/$eventName/$userNumber/${typeModel.id}.json?auth=${auth.token}";
+        "${auth.url}registrations/$date/$placeName/$eventId/$eventName/$userNumber/${typeModel.id}.json?auth=${auth.token}";
     await http.patch(_paidUrl,
         body: json.encode({
           'paid': '${typeModel.paid}',
@@ -211,61 +212,73 @@ class TransferData {
     final String _registrationUrl =
         "${auth.url}registrations.json?auth=${auth.token}";
     List<TypeRegistrationModel> _typeModels = [];
-    List<EventRegistrationModel> _eventModels = [];
     List<UserRegistrationModel> _userModels = [];
+    List<EventRegistrationModel> _eventModels = [];
+    List<PlaceRegistrationModel> _placeModels = [];
     List<DateModel> _dateModels = [];
     RegistrationModel _registrationModel;
 
     await http.get(_registrationUrl).then((res) {
       var _extractedData = json.decode(res.body) as Map<String, dynamic>;
       _extractedData.forEach((_date, _details) {
-        var _eventDetails = _details as Map<String, dynamic>;
-        _eventDetails.forEach((_eventId, _details1) {
-          var _eventNameDetails = _details1 as Map<String, dynamic>;
-          print(_details1.toString());
-          _eventNameDetails.forEach((_eventName, _details2) {
-            print(_details2.toString());
-            var _userDetails = _details2 as Map<String, dynamic>;
-            _userDetails.forEach((_phoneNumber, _details3) {
-              print(_details3.toString());
-              var _type = _details3 as Map<String, dynamic>;
-              _type.forEach((_typeId, _details4) {
-                _typeModels.add(
-                  TypeRegistrationModel(
-                    id: _typeId.toString(),
-                    typeName: _details4['typeName'],
-                    typePrice: double.parse(_details4['price'].toString()),
-                    code: int.parse(_details4['code'].toString()),
-                    paid: _details4['paid'].toString().toLowerCase() == "true",
-                    userName: _details4['name'],
+        var _placeDetails = _details as Map<String, dynamic>;
+        _placeDetails.forEach((_placeName, _details0) {
+          var _eventDetails = _details0 as Map<String, dynamic>;
+          _eventDetails.forEach((_eventId, _details1) {
+            var _eventNameDetails = _details1 as Map<String, dynamic>;
+            print(_details1.toString());
+            _eventNameDetails.forEach((_eventName, _details2) {
+              print(_details2.toString());
+              var _userDetails = _details2 as Map<String, dynamic>;
+              _userDetails.forEach((_phoneNumber, _details3) {
+                print(_details3.toString());
+                var _type = _details3 as Map<String, dynamic>;
+                _type.forEach((_typeId, _details4) {
+                  _typeModels.add(
+                    TypeRegistrationModel(
+                      id: _typeId.toString(),
+                      typeName: _details4['typeName'],
+                      typePrice: double.parse(_details4['price'].toString()),
+                      code: int.parse(_details4['code'].toString()),
+                      paid:
+                          _details4['paid'].toString().toLowerCase() == "true",
+                      userName: _details4['name'],
+                    ),
+                  );
+                });
+                _userModels.add(
+                  UserRegistrationModel(
+                    phoneNumber: _phoneNumber,
+                    typeRegistrationModels: _typeModels,
                   ),
                 );
+                _typeModels = [];
               });
-              _userModels.add(
-                UserRegistrationModel(
-                  phoneNumber: _phoneNumber,
-                  typeRegistrationModels: _typeModels,
+              _eventModels.add(
+                EventRegistrationModel(
+                  id: _eventId.toString(),
+                  eventName: _eventName,
+                  userRegistrationModels: _userModels,
                 ),
               );
-              _typeModels = [];
+              _userModels = [];
             });
-            _eventModels.add(
-              EventRegistrationModel(
-                id: _eventId.toString(),
-                eventName: _eventName,
-                userRegistrationModels: _userModels,
-              ),
-            );
-            _userModels = [];
           });
+          _placeModels.add(
+            PlaceRegistrationModel(
+              placeName: _placeName,
+              eventRegistrationModels: _eventModels,
+            ),
+          );
+          _eventModels = [];
         });
         _dateModels.add(
           DateModel(
             date: _date,
-            eventRegistrationModels: _eventModels,
+            placeRegistrationModels: _placeModels,
           ),
         );
-        _eventModels = [];
+        _placeModels = [];
       });
       _registrationModel = RegistrationModel(dateModels: _dateModels);
       print("Fetched Registration Model");

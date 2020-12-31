@@ -15,7 +15,7 @@ void main() {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
   });
-  runApp(MyApp());
+  // runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

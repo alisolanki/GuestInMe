@@ -63,10 +63,13 @@ class _NavigationPageState extends State<NavigationPage> {
             color: Colors.black,
           ),
         ],
-        onTap: (_i) => setState(() {
-          _selected = _i;
-        }),
         color: const Color(0xFFFFFFFF),
+        onTap: (_i) {
+          setState(() {
+            _selected = _i;
+          });
+          print(_selected);
+        },
       ),
       body: _loading
           ? Center(

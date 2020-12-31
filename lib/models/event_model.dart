@@ -39,6 +39,7 @@ class PriceModel {
 class TypeModel {
   String id, typeName, description, price;
   TypeModel({
+    this.id,
     this.description,
     this.price,
     this.typeName,

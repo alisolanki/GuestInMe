@@ -14,7 +14,7 @@ class UserProvider extends ChangeNotifier {
     return _userModel;
   }
 
-  Future<void> fetchUser() {
+  Future<void> fetchUser() async {
     final String _userURL =
         "${auth.url}users/${_user.phoneNumber}.json?auth=${auth.token}";
 

@@ -1,4 +1,4 @@
-import 'package:GuestInMe/Settings/owner/widgets/user_tile.dart';
+import 'package:GuestInMe/Settings/owner/widgets/place_tile.dart';
 import 'package:GuestInMe/models/registration_model.dart';
 import 'package:flutter/material.dart';
 
@@ -36,15 +36,15 @@ class _DateTileState extends State<DateTile> {
         _showDateDetails
             ? Column(
                 children: [
-                  ...widget._dateModel.eventRegistrationModels.map(
+                  ...widget._dateModel.placeRegistrationModels.map(
                     (e) {
                       return Container(
                         margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                         padding: EdgeInsets.only(bottom: 10.0),
                         color: Colors.purple,
-                        child: UserTile(
+                        child: PlaceTile(
                           e,
-                          e.userRegistrationModels,
+                          e.eventRegistrationModels,
                           widget._dateModel.date,
                         ),
                       );

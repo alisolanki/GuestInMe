@@ -13,7 +13,7 @@ class PlaceProvider extends ChangeNotifier {
     return _places;
   }
 
-  Future<void> fetchPlaces() {
+  Future<void> fetchPlaces() async {
     final String placeUrl = "${auth.url}place.json?auth=${auth.token}";
 
     if (_places.length == 0) {
