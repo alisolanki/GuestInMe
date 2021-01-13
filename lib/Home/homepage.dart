@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  final int selected;
-  HomePage({this.selected = 1});
+  final bool askDetails;
+  HomePage({this.askDetails = false});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData.dark(),
-          home: NavigationPage(selected: widget.selected),
+          home: NavigationPage(askDetails: widget.askDetails),
         );
       },
     );

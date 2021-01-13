@@ -53,6 +53,7 @@ class _TicketsPageState extends State<TicketsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF16161D),
       appBar: AppBar(
         title: Text("My Tickets"),
       ),

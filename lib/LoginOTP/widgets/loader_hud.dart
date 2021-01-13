@@ -5,14 +5,10 @@ class LoaderHUD extends StatelessWidget {
   final bool inAsyncCall;
   final double opacity;
   final Color color;
-  final Widget progressIndicator = Container(
-    width: 200,
-    height: 100,
-    decoration: BoxDecoration(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
-      color: MyColors.primaryColor.withOpacity(0.7),
+  final Widget progressIndicator = Center(
+    child: CircularProgressIndicator(
+      backgroundColor: Colors.purple,
     ),
-    child: const Center(child: CircularProgressIndicator()),
   );
   final bool dismissible;
   final Widget child;

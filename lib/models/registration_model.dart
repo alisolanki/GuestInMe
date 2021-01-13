@@ -46,9 +46,10 @@ class UserRegistrationModel {
 
 class TypeRegistrationModel {
   final String id, typeName, userName;
+  String takenBy;
   final double typePrice;
   final int code;
-  bool paid;
+  bool paid, entered;
   TypeRegistrationModel({
     @required this.id,
     @required this.typeName,
@@ -56,5 +57,7 @@ class TypeRegistrationModel {
     @required this.code,
     @required this.paid,
     @required this.userName,
+    this.entered,
+    this.takenBy,
   });
 }

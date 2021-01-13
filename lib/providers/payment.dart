@@ -38,7 +38,7 @@ class RegistrationHttp {
       'price': '$_finalPrice',
       'paid': '$paid',
       'referral': '$referral',
-      'name': '${userModel.name}'
+      'name': '${userModel.name}',
     });
 
     try {

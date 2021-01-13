@@ -11,6 +11,7 @@ class EventModel {
       time,
       placeName,
       lineup;
+  final bool closed;
   final List<PriceModel> prices;
   EventModel({
     this.id,
@@ -24,6 +25,7 @@ class EventModel {
     @required this.dressCode,
     @required this.time,
     @required this.placeName,
+    @required this.closed,
   });
 }
 

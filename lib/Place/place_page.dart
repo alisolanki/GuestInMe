@@ -40,51 +40,55 @@ class _PlacePageState extends State<PlacePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF16161D),
       bottomSheet: Container(
-        alignment: Alignment.center,
-        height: 80,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
-          color: const Color(0xFF52057B),
-        ),
-        child: InkWell(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              color: Colors.black12,
-            ),
-            padding: EdgeInsets.all(4.0),
-            width: 240,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: CircleAvatar(
-                    child: Icon(
-                      Icons.directions,
-                      size: 20.0,
-                      color: Colors.white,
-                    ),
-                    backgroundColor: Colors.white12,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Text(
-                    "Directions",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        color: const Color(0xFF16161D),
+        child: Container(
+          alignment: Alignment.center,
+          height: 80,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+            color: const Color(0xFF52057B),
           ),
-          onTap: () {
-            MapsLauncher.launchQuery('${widget.placeModel.location}');
-          },
+          child: InkWell(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                color: Colors.black12,
+              ),
+              padding: EdgeInsets.all(4.0),
+              width: 240,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: CircleAvatar(
+                      child: Icon(
+                        Icons.directions,
+                        size: 20.0,
+                        color: Colors.white,
+                      ),
+                      backgroundColor: Colors.white12,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      "Directions",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
+              MapsLauncher.launchQuery('${widget.placeModel.location}');
+            },
+          ),
         ),
       ),
       body: SafeArea(
@@ -272,7 +276,7 @@ class _PlacePageState extends State<PlacePage> {
             ),
             SliverList(
               delegate: SliverChildListDelegate(
-                [SizedBox(height: 0)],
+                [SizedBox(height: 200.0)],
               ),
             ),
           ],

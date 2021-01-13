@@ -144,7 +144,7 @@ abstract class LoginStoreBase with Store {
       if (result) {
         auth.getTk();
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (_) => HomePage(selected: 2)),
+            MaterialPageRoute(builder: (_) => HomePage(askDetails: true)),
             (Route<dynamic> route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(

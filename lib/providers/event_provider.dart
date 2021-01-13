@@ -61,6 +61,7 @@ class EventProvider extends ChangeNotifier {
             prices: prices,
             time: _eventDetail['time'].toString(),
             placeName: _eventDetail['placename'].toString(),
+            closed: _eventDetail['closed'].toString().toLowerCase() == "true",
           );
           _newEventModels.add(_eventModel);
         });
@@ -122,6 +123,7 @@ class EventProvider extends ChangeNotifier {
               prices: prices,
               time: _eventDetail['time'].toString(),
               placeName: _eventDetail['placename'].toString(),
+              closed: _eventDetail['closed'].toString().toLowerCase() == "true",
             );
             if (_datewiseEventsMap[_date] == null) {
               _datewiseEventsMap[_date] = [];

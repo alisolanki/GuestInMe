@@ -28,6 +28,7 @@ class _PopularPlacesPageState extends State<PopularPlacesPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: const Color(0xFF16161D),
         appBar: AppBar(
           title: Text("Places"),
           backgroundColor: const Color(0xFF892CDC),

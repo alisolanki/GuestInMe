@@ -66,6 +66,7 @@ class _EventPageState extends State<EventPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF16161D),
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -233,134 +234,121 @@ class _EventPageState extends State<EventPage> {
                 ],
               ),
             ),
-            int.parse(_dateISO) >= int.parse(_dateTodayISO)
-                ?
-                //tables
-                SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (_, i) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20.0),
-                            ),
-                            color: Colors.purple,
-                          ),
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.local_bar,
-                            ),
-                            title: Text(
-                              "${widget.eventModel.prices[1].typeData[i].typeName}",
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              "${widget.eventModel.prices[1].typeData[i].description}",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.eventModel.prices[1].typeData[i].price ==
-                                      "0"
-                                  ? "FREE"
-                                  : "Rs.${widget.eventModel.prices[1].typeData[i].price}",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            onTap: () => _payableAlertDialog(
-                              widget.eventModel.prices[1].typeData[i],
-                            ),
-                          ),
-                        );
-                      },
-                      childCount: widget.eventModel.prices[1].typeData.length,
+            //tables
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (_, i) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
                     ),
-                  )
-                : SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (_, i) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            "Cannot book for this Event",
-                            style: TextStyle(fontSize: 16.0, color: Colors.red),
-                          ),
-                        );
-                      },
-                      childCount: 1,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20.0),
+                      ),
+                      color: Colors.purple,
                     ),
-                  ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.local_bar,
+                      ),
+                      title: Text(
+                        "${widget.eventModel.prices[1].typeData[i].typeName}",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${widget.eventModel.prices[1].typeData[i].description}",
+                        style: TextStyle(
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      trailing: Text(
+                        widget.eventModel.prices[1].typeData[i].price == "0"
+                            ? "FREE"
+                            : "Rs.${widget.eventModel.prices[1].typeData[i].price}",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      onTap: () =>
+                          (int.parse(_dateISO) >= int.parse(_dateTodayISO)) &&
+                                  !(widget.eventModel.closed)
+                              ? _payableAlertDialog(
+                                  widget.eventModel.prices[1].typeData[i],
+                                )
+                              : Fluttertoast.showToast(
+                                  msg: "Cannot book for this event",
+                                  backgroundColor: Colors.red,
+                                ),
+                    ),
+                  );
+                },
+                childCount: widget.eventModel.prices[1].typeData.length,
+              ),
+            ),
             //crowd
-            int.parse(_dateISO) >= int.parse(_dateTodayISO)
-                ? SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (_, i) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20.0),
-                            ),
-                            color: Colors.purple,
-                          ),
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.person,
-                            ),
-                            title: Text(
-                              "${widget.eventModel.prices[0].typeData[i].typeName}",
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              "${widget.eventModel.prices[0].typeData[i].description}",
-                              style: TextStyle(
-                                fontSize: 12.0,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.eventModel.prices[0].typeData[i].price ==
-                                      "0"
-                                  ? "FREE"
-                                  : "Rs.${widget.eventModel.prices[0].typeData[i].price}",
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            onTap: () {
-                              widget.eventModel.prices[0].typeData[i].price ==
-                                      "0"
-                                  ? _nonPayableAlertDialog(
-                                      widget.eventModel.prices[0].typeData[i],
-                                    )
-                                  : _payableAlertDialog(
-                                      widget.eventModel.prices[0].typeData[i],
-                                    );
-                            },
-                          ),
-                        );
-                      },
-                      childCount: widget.eventModel.prices[0].typeData.length,
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (_, i) {
+                  return Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
                     ),
-                  )
-                : SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (_, i) {
-                        return SizedBox(height: 10.0);
-                      },
-                      childCount: 1,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20.0),
+                      ),
+                      color: Colors.purple,
                     ),
-                  ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.person,
+                      ),
+                      title: Text(
+                        "${widget.eventModel.prices[0].typeData[i].typeName}",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        "${widget.eventModel.prices[0].typeData[i].description}",
+                        style: TextStyle(
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      trailing: Text(
+                        widget.eventModel.prices[0].typeData[i].price == "0"
+                            ? "FREE"
+                            : "Rs.${widget.eventModel.prices[0].typeData[i].price}",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      onTap: () {
+                        if (int.parse(_dateISO) >= int.parse(_dateTodayISO) &&
+                            !widget.eventModel.closed) {
+                          widget.eventModel.prices[0].typeData[i].price == "0"
+                              ? _nonPayableAlertDialog(
+                                  widget.eventModel.prices[0].typeData[i],
+                                )
+                              : _payableAlertDialog(
+                                  widget.eventModel.prices[0].typeData[i],
+                                );
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Cannot book for this event",
+                            backgroundColor: Colors.red,
+                          );
+                        }
+                      },
+                    ),
+                  );
+                },
+                childCount: widget.eventModel.prices[0].typeData.length,
+              ),
+            ),
             //details
             SliverList(
               delegate: SliverChildListDelegate(
@@ -487,7 +475,7 @@ class _EventPageState extends State<EventPage> {
                           Text("$_num tickets"),
                           CupertinoButton(
                             child: Icon(Icons.add),
-                            onPressed: _num > 15
+                            onPressed: _num > 4
                                 ? null
                                 : () => setState(() {
                                       _num = _num + 1;
@@ -574,7 +562,7 @@ class _EventPageState extends State<EventPage> {
                         Text("$_num tickets"),
                         CupertinoButton(
                           child: Icon(Icons.add),
-                          onPressed: _num > 15
+                          onPressed: _num > 4
                               ? null
                               : () => setState(() {
                                     _num = _num + 1;

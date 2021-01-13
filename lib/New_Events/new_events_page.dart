@@ -41,6 +41,7 @@ class _NewEventsPageState extends State<NewEventsPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: const Color(0xFF16161D),
         appBar: AppBar(
           actions: [
             InkWell(
@@ -85,7 +86,10 @@ class _NewEventsPageState extends State<NewEventsPage> {
           backgroundColor: const Color(0xFF892CDC),
         ),
         body: _loadingEvents
-            ? Center(child: CircularProgressIndicator())
+            ? Center(
+                child: CircularProgressIndicator(
+                backgroundColor: Colors.purple,
+              ))
             : _noEventSelected
                 ? Center(
                     child: Text(

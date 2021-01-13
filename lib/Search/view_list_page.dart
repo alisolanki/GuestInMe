@@ -11,7 +11,10 @@ class ViewListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        backgroundColor: const Color(0xFF16161D),
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+        ),
         body: items is List<PlaceModel>
             ? ListView.builder(
                 itemCount: items.length,

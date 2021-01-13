@@ -118,7 +118,9 @@ class _DiamondPageState extends State<DiamondPage> {
               heading("New events"),
               _loadingNewEvents
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.purple,
+                      ),
                     )
                   : Container(
                       height: 270.0,

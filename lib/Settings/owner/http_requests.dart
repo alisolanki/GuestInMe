@@ -243,6 +243,11 @@ class TransferData {
                       paid:
                           _details4['paid'].toString().toLowerCase() == "true",
                       userName: _details4['name'],
+                      entered: _details4['entered'] != null
+                          ? _details4['entered'].toString().toLowerCase() ==
+                              "true"
+                          : false,
+                      takenBy: _details4['takenBy'].toString(),
                     ),
                   );
                 });
@@ -284,5 +289,12 @@ class TransferData {
       print("Fetched Registration Model");
     });
     return _registrationModel;
+  }
+
+  Future<void> changeEventState({
+    @required EventModel eventModel,
+  }) async {
+    final String _url =
+        "${auth.url}place/${eventModel.placeName}/events/${eventModel.id}.json?auth=${auth.token}";
   }
 }

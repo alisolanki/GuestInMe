@@ -14,17 +14,17 @@ class UserProvider extends ChangeNotifier {
     return _userModel;
   }
 
-  Future<void> fetchUser() async {
+  Future<void> fetchUser({bool forced = false}) async {
     final String _userURL =
         "${auth.url}users/${_user.phoneNumber}.json?auth=${auth.token}";
 
-    if (_userModel == null) {
-      print("_userModel is null");
+    if (_userModel == null || forced) {
       return http.get(_userURL).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
+        print("Fetching user");
         if (value.body != "null") {
           _userModel = UserModel(
-            phoneNumber: "${_user.phoneNumber}",
+            phoneNumber: _user.phoneNumber,
             name: _extractedData['name'],
             gender: _extractedData['gender'],
             email: _extractedData['email'],
@@ -45,8 +45,9 @@ class UserProvider extends ChangeNotifier {
         }
         notifyListeners();
       });
+    } else {
+      print("User Fetched");
     }
-    notifyListeners();
   }
 
   Future<void> putUser(UserModel _putUser) {

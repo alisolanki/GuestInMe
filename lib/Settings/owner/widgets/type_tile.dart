@@ -36,6 +36,7 @@ class _TypeTileState extends State<TypeTile> {
           ),
           child: ListTile(
             title: Text("${widget._userNumber}"),
+            trailing: Text("Paid?"),
             dense: true,
             onTap: () {
               setState(() {
