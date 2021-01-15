@@ -18,12 +18,12 @@ class EventProvider extends ChangeNotifier {
     return _datewiseEventsMap;
   }
 
-  Future<void> fetchNewEvents() {
+  Future<void> fetchNewEvents() async {
     final String newEventUrl = "${auth.url}newEvents.json?auth=${auth.token}";
 
     if (_newEventModels.length == 0) {
       print("_newEventModels.length: ${_newEventModels.length}");
-      return http.get(newEventUrl).then((value) {
+      await http.get(newEventUrl).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
         _extractedData.forEach((_eventId, _eventDetail) {
           List<PriceModel> prices = [];
@@ -77,13 +77,13 @@ class EventProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchDatewiseEvents() {
+  Future<void> fetchDatewiseEvents() async {
     final String datewiseEventsUrl =
         "${auth.url}datewiseEvents.json?auth=${auth.token}";
 
     if (_datewiseEventsMap.length == 0) {
       print("_datewiseEvents.length: ${_datewiseEventsMap.length}");
-      return http.get(datewiseEventsUrl).then((value) {
+      await http.get(datewiseEventsUrl).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
 
         _extractedData.forEach((_date, _eventModel) {

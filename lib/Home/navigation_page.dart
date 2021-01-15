@@ -47,6 +47,7 @@ class _NavigationPageState extends State<NavigationPage> {
     if (widget.askDetails) {
       await _userForm(context);
     }
+    await Provider.of<UserProvider>(context, listen: false).fetchUser();
   }
 
   int _calculateAge(DateTime birthDate) {
