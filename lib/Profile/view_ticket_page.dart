@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_full_pdf_viewer/flutter_full_pdf_viewer.dart';
+import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:share/share.dart';
 
 class ViewTicketPage extends StatelessWidget {
@@ -8,8 +8,8 @@ class ViewTicketPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PDFViewerScaffold(
-      path: _path,
+    print("_path: $_path");
+    return Scaffold(
       appBar: AppBar(
         title: Text("Your Ticket"),
         actions: [
@@ -23,6 +23,7 @@ class ViewTicketPage extends StatelessWidget {
           )
         ],
       ),
+      body: PDF().fromPath(_path),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:GuestInMe/Place/place_page.dart';
 import 'package:GuestInMe/models/place_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PlaceCard extends StatelessWidget {
@@ -43,22 +44,20 @@ class PlaceCard extends StatelessWidget {
                 left: 0.0,
                 child: Container(
                   height: 90.0,
-                  color: Colors.black,
                   padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     leading: CircleAvatar(
-                      child: Image(
-                        image: NetworkImage("${placeModel.logo}"),
-                        // color: Colors.white,
-                      ),
                       radius: 30,
                       backgroundColor: Colors.black,
+                      child: Image(
+                        image: NetworkImage("${placeModel.logo}"),
+                      ),
                     ),
                     title: Text(
                       "${placeModel.placeName}",
                       style: TextStyle(
                         fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -73,7 +72,7 @@ class PlaceCard extends StatelessWidget {
         highlightColor: Colors.transparent,
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
+            CupertinoPageRoute(
               builder: (_) => PlacePage(
                 placeModel: placeModel,
               ),

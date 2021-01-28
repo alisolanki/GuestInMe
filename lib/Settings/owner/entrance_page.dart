@@ -40,7 +40,8 @@ class _EntrancePageState extends State<EntrancePage> {
                 child: _registrationModel == null
                     ? SizedBox(height: 0.0)
                     : DateTile(
-                        _registrationModel.dateModels[_i],
+                        _registrationModel.dateModels[
+                            _registrationModel.dateModels.length - _i - 1],
                       ),
               ),
               itemCount: _registrationModel == null

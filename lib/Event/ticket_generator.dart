@@ -5,6 +5,7 @@ import 'package:GuestInMe/Profile/tickets_page.dart';
 import 'package:GuestInMe/Profile/view_ticket_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -53,12 +54,12 @@ class _TicketGeneratorState extends State<TicketGenerator> {
             Navigator.pop(context);
             Navigator.pop(context);
             Navigator.of(context).push(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (context) => TicketsPage(),
               ),
             );
             Navigator.of(context).push(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (context) => ViewTicketPage(
                   "${_docApp.path}/tickets/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf",
                 ),

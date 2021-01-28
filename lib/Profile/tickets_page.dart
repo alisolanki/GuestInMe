@@ -89,7 +89,7 @@ class _TicketsPageState extends State<TicketsPage> {
                   ),
                   onTap: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (context) =>
                             ViewTicketPage("${_files[_i].path}"),
                       ),

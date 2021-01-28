@@ -1,6 +1,7 @@
 import 'package:GuestInMe/LoginOTP/pages/login_page.dart';
 import 'package:GuestInMe/Settings/owner/entrance_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,8 +40,10 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: const Color(0xFF16161D),
       appBar: AppBar(
-        title: Text("Settings"),
-        backgroundColor: const Color(0xFF892CDC),
+        title: Text(
+          "Settings",
+          style: TextStyle(fontWeight: FontWeight.w300),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         padding: const EdgeInsets.only(top: 30.0, left: 8.0),
                         child: FlatButton.icon(
                           onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (_) => AddPlacePage(),
                             ),
                           ),
@@ -116,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         padding: const EdgeInsets.only(top: 30.0, left: 8.0),
                         child: FlatButton.icon(
                           onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (_) => AddEventPage(),
                             ),
                           ),
@@ -135,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         padding: const EdgeInsets.only(top: 30.0, left: 8.0),
                         child: FlatButton.icon(
                           onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (_) => EntrancePage(),
                             ),
                           ),
@@ -186,7 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () async {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const LoginPage()),
+                  CupertinoPageRoute(builder: (_) => const LoginPage()),
                   (Route<dynamic> route) => false);
             },
           ),

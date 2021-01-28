@@ -99,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         onPressed: () => {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (_) => SettingsPage(),
                             ),
                           ),
@@ -176,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   onPressed: _editing
                                       ? null
                                       : () => Navigator.of(context).push(
-                                            MaterialPageRoute(
+                                            CupertinoPageRoute(
                                               builder: (context) =>
                                                   TicketsPage(),
                                             ),

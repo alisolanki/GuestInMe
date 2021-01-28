@@ -2,6 +2,7 @@ import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import './http_requests.dart';
@@ -61,6 +62,10 @@ class _AddEventPageState extends State<AddEventPage> {
         eventModel: _eventModel,
         newEvent: _newEvent,
         date: _dateTime,
+      );
+      Fluttertoast.showToast(
+        msg: "Event added!",
+        backgroundColor: Colors.green,
       );
     }
   }

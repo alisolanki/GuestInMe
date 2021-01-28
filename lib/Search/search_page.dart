@@ -2,6 +2,7 @@ import 'package:GuestInMe/Home/widgets/event_card.dart';
 import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/Search/view_list_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../models/place_model.dart';
 import '../providers/place_provider.dart';
@@ -187,7 +188,7 @@ class _SearchPageState extends State<SearchPage> {
               color: Colors.purple,
             ),
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => ViewListPage(
                     items: _title == "Events"
                         ? _eventsList

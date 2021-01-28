@@ -39,105 +39,103 @@ class _NewEventsPageState extends State<NewEventsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0xFF16161D),
-        appBar: AppBar(
-          actions: [
-            InkWell(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      size: _datePicked != "" ? 20 : 25,
-                    ),
-                    _datePicked != ""
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 2.0),
-                            child: Text(
-                              _datePicked.substring(6),
-                              style: TextStyle(
-                                fontSize: 10,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                  ],
-                ),
-              ),
-              onTap: () => showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2019),
-                      lastDate: DateTime(2030))
-                  ?.then((value) {
-                if (value != null) {
-                  setState(() {
-                    convertDate(value);
-                  });
-                }
-              }),
-            ),
-          ],
-          title: Text("New Events"),
-          backgroundColor: const Color(0xFF892CDC),
-        ),
-        body: _loadingEvents
-            ? Center(
-                child: CircularProgressIndicator(
-                backgroundColor: Colors.purple,
-              ))
-            : _noEventSelected
-                ? Center(
-                    child: Text(
-                      "No Events on ${_datePicked.substring(6, 8)}/${_datePicked.substring(4, 6)}/${_datePicked.substring(0, 4)}",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: _datewiseExtracted.length,
-                    itemBuilder: (_, i) {
-                      String key = _datewiseExtracted.keys
-                          .elementAt(_datewiseExtracted.length - i - 1);
-                      return Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Text(
-                              "${key.substring(6, 8)}/${key.substring(4, 6)}/${key.substring(0, 4)}",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Divider(),
-                          Container(
-                            margin: const EdgeInsets.all(16.0),
-                            height: 270.0,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: _datewiseExtracted[key]?.length,
-                              itemBuilder: (_, j) {
-                                return EventCard(
-                                  eventModel: _datewiseExtracted[key][j],
-                                  placeName:
-                                      _datewiseExtracted[key][j].placeName,
-                                );
-                              },
-                            ),
-                          ),
-                          Divider(),
-                        ],
-                      );
-                    },
+    return Scaffold(
+      backgroundColor: const Color(0xFF16161D),
+      appBar: AppBar(
+        actions: [
+          InkWell(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.calendar_today,
+                    size: _datePicked != "" ? 20 : 25,
                   ),
+                  _datePicked != ""
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            _datePicked.substring(6),
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+            onTap: () => showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2019),
+                    lastDate: DateTime(2030))
+                ?.then((value) {
+              if (value != null) {
+                setState(() {
+                  convertDate(value);
+                });
+              }
+            }),
+          ),
+        ],
+        title: Text(
+          "New Events",
+          style: TextStyle(fontWeight: FontWeight.w300),
+        ),
       ),
+      body: _loadingEvents
+          ? Center(
+              child: CircularProgressIndicator(
+              backgroundColor: Colors.purple,
+            ))
+          : _noEventSelected
+              ? Center(
+                  child: Text(
+                    "No Events on ${_datePicked.substring(6, 8)}/${_datePicked.substring(4, 6)}/${_datePicked.substring(0, 4)}",
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _datewiseExtracted.length,
+                  itemBuilder: (_, i) {
+                    String key = _datewiseExtracted.keys
+                        .elementAt(_datewiseExtracted.length - i - 1);
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "${key.substring(6, 8)}/${key.substring(4, 6)}/${key.substring(0, 4)}",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Divider(),
+                        Container(
+                          margin: const EdgeInsets.all(16.0),
+                          height: 270.0,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _datewiseExtracted[key]?.length,
+                            itemBuilder: (_, j) {
+                              return EventCard(
+                                eventModel: _datewiseExtracted[key][j],
+                                placeName: _datewiseExtracted[key][j].placeName,
+                              );
+                            },
+                          ),
+                        ),
+                        Divider(),
+                      ],
+                    );
+                  },
+                ),
     );
   }
 

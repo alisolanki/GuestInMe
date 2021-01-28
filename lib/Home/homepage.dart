@@ -27,7 +27,19 @@ class _HomePageState extends State<HomePage> {
       builder: (ctx, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.dark(),
+          theme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: const Color(0xFF16161D),
+            backgroundColor: const Color(0xFF16161D),
+            // textTheme: ThemeData.dark().textTheme.apply(
+            //       fontFamily: 'Noto Sans',
+            //     ),
+            // // primaryTextTheme: ThemeData.dark().textTheme.apply(
+            // //       fontFamily: 'Noto Sans',
+            // //     ),
+            // // accentTextTheme: ThemeData.dark().textTheme.apply(
+            // //       fontFamily: 'Noto Sans',
+            // //     ),
+          ),
           home: NavigationPage(askDetails: widget.askDetails),
         );
       },

@@ -5,6 +5,7 @@ import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/providers/event_provider.dart';
 import 'package:GuestInMe/providers/place_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,25 +47,26 @@ class _DiamondPageState extends State<DiamondPage> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.0,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w500,
             ),
           ),
           IconButton(
-              icon: Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.purple,
-              ),
-              onPressed: () => _title == "New events"
-                  ? Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => NewEventsPage(),
-                      ),
-                    )
-                  : Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => PopularPlacesPage(),
-                      ),
-                    ))
+            icon: Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.purple,
+            ),
+            onPressed: () => _title == "Events"
+                ? Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => NewEventsPage(),
+                    ),
+                  )
+                : Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => PopularPlacesPage(),
+                    ),
+                  ),
+          )
         ],
       ),
     );
@@ -87,23 +89,26 @@ class _DiamondPageState extends State<DiamondPage> {
               ),
             ),
           ),
-          bottom: PreferredSize(
-            child: ClipRRect(
-              child: Container(
-                width: size.width,
-                height: 50.0,
-                color: const Color(0xFF16161D),
-              ),
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(30.0),
-              ),
-            ),
-            preferredSize: Size(size.width, 100.0),
-          ),
         ),
         SliverList(
           delegate: SliverChildListDelegate(
             [
+              PreferredSize(
+                child: Container(
+                  color: Colors.black,
+                  child: ClipRRect(
+                    child: Container(
+                      width: size.width,
+                      height: 50.0,
+                      color: const Color(0xFF16161D),
+                    ),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(40.0),
+                    ),
+                  ),
+                ),
+                preferredSize: Size(size.width, 100.0),
+              ),
               Container(
                 height: 180.0,
                 child: ListView(
@@ -115,7 +120,7 @@ class _DiamondPageState extends State<DiamondPage> {
                   ],
                 ),
               ),
-              heading("New events"),
+              heading("Events"),
               _loadingNewEvents
                   ? Center(
                       child: CircularProgressIndicator(
@@ -149,7 +154,7 @@ class _DiamondPageState extends State<DiamondPage> {
                                   color: Colors.purple,
                                 ),
                                 onPressed: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (_) => NewEventsPage(),
                                   ),
                                 ),
@@ -188,7 +193,7 @@ class _DiamondPageState extends State<DiamondPage> {
                       color: Colors.purple,
                     ),
                     onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (_) => PopularPlacesPage(),
                       ),
                     ),

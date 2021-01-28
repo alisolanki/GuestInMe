@@ -30,8 +30,10 @@ class _PopularPlacesPageState extends State<PopularPlacesPage> {
       child: Scaffold(
         backgroundColor: const Color(0xFF16161D),
         appBar: AppBar(
-          title: Text("Places"),
-          backgroundColor: const Color(0xFF892CDC),
+          title: Text(
+            "Places",
+            style: TextStyle(fontWeight: FontWeight.w300),
+          ),
         ),
         body: ListView.builder(
           itemCount: _places == null ? 0 : _places.length,

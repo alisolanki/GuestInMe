@@ -1,4 +1,5 @@
 import 'package:GuestInMe/category/category_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SelectionCard extends StatefulWidget {
@@ -69,7 +70,7 @@ class _SelectionCardState extends State<SelectionCard> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w300,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -83,7 +84,7 @@ class _SelectionCardState extends State<SelectionCard> {
         highlightColor: Colors.transparent,
         onTap: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
+            CupertinoPageRoute(
               builder: (_) => CategoryPage(widget.title),
             ),
           );

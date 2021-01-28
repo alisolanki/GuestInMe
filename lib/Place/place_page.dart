@@ -1,6 +1,7 @@
 import 'package:GuestInMe/Place/widgets/menu_card.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -142,16 +143,17 @@ class _PlacePageState extends State<PlacePage> {
                       enabled: false,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Upcoming Events:",
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w600,
+                  if (_upcomingEvents.length != 0)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Upcoming Events:",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -197,16 +199,17 @@ class _PlacePageState extends State<PlacePage> {
                     ),
                   ),
                   //menu
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Menu:",
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w600,
+                  if (widget.placeModel.menu?.length != 0)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Menu:",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
                   CarouselSlider.builder(
                     itemCount: widget.placeModel.menu?.length,
                     options: CarouselOptions(
@@ -230,7 +233,7 @@ class _PlacePageState extends State<PlacePage> {
                       ),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        CupertinoPageRoute(
                           builder: (_) => MenuCard(
                             widget.placeModel.menu[_i],
                           ),
@@ -244,16 +247,17 @@ class _PlacePageState extends State<PlacePage> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      "Past Events:",
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w600,
+                  if (_pastEvents.length != 0)
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Past Events:",
+                        style: TextStyle(
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
