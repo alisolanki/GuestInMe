@@ -515,16 +515,20 @@ class _EventPageState extends State<EventPage> {
                   CupertinoDialogAction(
                     child: Text("Online payment"),
                     onPressed: () {
-                      final _code = Random().nextInt(9000) + 1000;
-                      PaymentProvider().openCheckout(
-                        type: _typeModel,
-                        eventModel: widget.eventModel,
-                        userModel: _userModel,
-                        code: _code,
-                        ctx: ctx,
-                        referral: _referral,
-                        peopleNumber: _num,
+                      Fluttertoast.showToast(
+                        msg: 'Online payment will be available soon!',
+                        backgroundColor: Colors.amber,
                       );
+                      // final _code = Random().nextInt(9000) + 1000;
+                      // PaymentProvider().openCheckout(
+                      //   type: _typeModel,
+                      //   eventModel: widget.eventModel,
+                      //   userModel: _userModel,
+                      //   code: _code,
+                      //   ctx: ctx,
+                      //   referral: _referral,
+                      //   peopleNumber: _num,
+                      // );
                     },
                   ),
                 ],

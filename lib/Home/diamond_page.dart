@@ -177,7 +177,7 @@ class _DiamondPageState extends State<DiamondPage> {
                 child: PlaceCard(placeModel: _places[i]),
               );
             },
-            childCount: _places.length == 0 ? 0 : 2,
+            childCount: _places.length ?? 0,
           ),
         ),
         SliverList(

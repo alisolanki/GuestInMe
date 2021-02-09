@@ -88,9 +88,8 @@ class _NewEventsPageState extends State<NewEventsPage> {
       ),
       body: _loadingEvents
           ? Center(
-              child: CircularProgressIndicator(
-              backgroundColor: Colors.purple,
-            ))
+              child: CircularProgressIndicator(backgroundColor: Colors.purple),
+            )
           : _noEventSelected
               ? Center(
                   child: Text(
@@ -118,7 +117,7 @@ class _NewEventsPageState extends State<NewEventsPage> {
                         ),
                         Divider(),
                         Container(
-                          margin: const EdgeInsets.all(16.0),
+                          // margin: const EdgeInsets.all(16.0),
                           height: 270.0,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,

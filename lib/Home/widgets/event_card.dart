@@ -12,14 +12,14 @@ class EventCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       height: 270.0,
-      width: 180,
+      width: 200,
       child: InkWell(
         child: Stack(
           children: [
             Positioned.fill(
               child: Container(
                 height: 270.0,
-                width: 180.0,
+                width: 200.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   color: Colors.black,
@@ -33,7 +33,7 @@ class EventCard extends StatelessWidget {
             Positioned.fill(
               child: Container(
                 height: 270.0,
-                width: 180.0,
+                width: 200.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   color: Colors.black,
@@ -53,7 +53,7 @@ class EventCard extends StatelessWidget {
               bottom: 0.0,
               child: Container(
                 height: 90.0,
-                width: 180.0,
+                width: 200.0,
                 decoration: BoxDecoration(
                   borderRadius:
                       BorderRadius.vertical(bottom: Radius.circular(20.0)),
@@ -68,14 +68,15 @@ class EventCard extends StatelessWidget {
                         "${eventModel.date} | ${eventModel.time}",
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.8),
-                          fontSize: 8.0,
+                          fontSize: 10.0,
                         ),
                       ),
                       Text(
                         "${eventModel.eventName}",
                         style: TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
                         ),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
@@ -89,13 +90,13 @@ class EventCard extends StatelessWidget {
                           ),
                           Container(
                             width: 134.0,
-                            height: 15.0,
+                            height: 17.0,
                             child: Text(
                               "$placeName",
                               style: TextStyle(
                                 color: const Color(0xFFBC6FF1),
                                 fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
+                                fontSize: 14.0,
                               ),
                             ),
                           ),

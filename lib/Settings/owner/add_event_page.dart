@@ -58,14 +58,14 @@ class _AddEventPageState extends State<AddEventPage> {
         placeName: _placeList[_value].placeName,
         closed: false,
       );
+      Fluttertoast.showToast(
+        msg: 'Adding event!',
+        backgroundColor: Colors.amber,
+      );
       await TransferData().addEvent(
         eventModel: _eventModel,
         newEvent: _newEvent,
         date: _dateTime,
-      );
-      Fluttertoast.showToast(
-        msg: "Event added!",
-        backgroundColor: Colors.green,
       );
     }
   }
@@ -88,169 +88,172 @@ class _AddEventPageState extends State<AddEventPage> {
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _textField("Event Name"),
-              _textField("Description"),
-              //Place name
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButton(
-                  value: _placeList.length != 0 ? _value : null,
-                  items: _placeList.map((_placeModel) {
-                    return DropdownMenuItem(
-                      child: Text("   ${_placeModel?.placeName}"),
-                      value: _placeList.indexOf(_placeModel),
-                    );
-                  }).toList(),
-                  isExpanded: true,
-                  disabledHint: Text("Place Name"),
-                  onChanged: (value) {
-                    setState(() {
-                      _value = value;
-                    });
-                  },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _textField("Event Name"),
+                _textField("Description"),
+                //Place name
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButton(
+                    value: _placeList.length != 0 ? _value : null,
+                    items: _placeList.map((_placeModel) {
+                      return DropdownMenuItem(
+                        child: Text("   ${_placeModel?.placeName}"),
+                        value: _placeList.indexOf(_placeModel),
+                      );
+                    }).toList(),
+                    isExpanded: true,
+                    disabledHint: Text("Place Name"),
+                    onChanged: (value) {
+                      setState(() {
+                        _value = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              //date
-              ListTile(
-                leading: Text("Date Select:"),
-                trailing: InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: _datePicked != null ? 20 : 25,
-                        ),
-                        _datePicked != null
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child: Text(
-                                  _datePicked.substring(6),
-                                  style: TextStyle(
-                                    fontSize: 10,
+                //date
+                ListTile(
+                  leading: Text("Date Select:"),
+                  trailing: InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            size: _datePicked != null ? 20 : 25,
+                          ),
+                          _datePicked != null
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 2.0),
+                                  child: Text(
+                                    _datePicked.substring(6),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                    ),
                                   ),
+                                )
+                              : SizedBox(
+                                  height: 1.0,
+                                  width: 1.0,
                                 ),
-                              )
-                            : SizedBox(
-                                height: 1.0,
-                                width: 1.0,
-                              ),
+                        ],
+                      ),
+                    ),
+                    onTap: () => showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2019),
+                            lastDate: DateTime(2030))
+                        ?.then((value) {
+                      if (value != null) {
+                        setState(() {
+                          _dateTime = value;
+                          convertDate(value);
+                        });
+                      }
+                    }),
+                  ),
+                ),
+                _textField("Time"),
+                _textField("Age limit"),
+                _textField("Dress code"),
+                _textField("Image"),
+                _textField("Lineup"),
+                //newEvent
+                ListTile(
+                  leading: Text("Is it a new Event?"),
+                  trailing: Checkbox(
+                    value: _newEvent,
+                    onChanged: (v) => setState(() {
+                      _newEvent = v;
+                    }),
+                    activeColor: Colors.pink,
+                  ),
+                ),
+                _crowdField(),
+                //table
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "Table",
+                      style: TextStyle(fontSize: 16.0),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.remove),
+                            onPressed: () {
+                              if (_prices.length != 0) {
+                                _prices.removeLast();
+                              }
+                              if (_priceNum > 0) {
+                                setState(() {
+                                  _priceNum = _priceNum - 1;
+                                });
+                              }
+                            }),
+                        Text(
+                          "$_priceNum",
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () => setState(() {
+                            _priceNum = _priceNum + 1;
+                          }),
+                        ),
                       ],
                     ),
-                  ),
-                  onTap: () => showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2019),
-                          lastDate: DateTime(2030))
-                      ?.then((value) {
-                    if (value != null) {
-                      setState(() {
-                        _dateTime = value;
-                        convertDate(value);
-                      });
-                    }
-                  }),
+                  ],
                 ),
-              ),
-              _textField("Time"),
-              _textField("Age limit"),
-              _textField("Dress code"),
-              _textField("Image"),
-              _textField("Lineup"),
-              //newEvent
-              ListTile(
-                leading: Text("Is it a new Event?"),
-                trailing: Checkbox(
-                  value: _newEvent,
-                  onChanged: (v) => setState(() {
-                    _newEvent = v;
-                  }),
-                  activeColor: Colors.pink,
+                Divider(),
+                //table list
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _priceNum,
+                  itemBuilder: (context, _i) {
+                    return Column(
+                      children: [
+                        _tableField(_i),
+                      ],
+                    );
+                  },
                 ),
-              ),
-              _crowdField(),
-              //table
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    "Table",
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          icon: Icon(Icons.remove),
-                          onPressed: () {
-                            if (_prices.length != 0) {
-                              _prices.removeLast();
-                            }
-                            if (_priceNum > 0) {
-                              setState(() {
-                                _priceNum = _priceNum - 1;
-                              });
-                            }
-                          }),
-                      Text(
-                        "$_priceNum",
-                        style: TextStyle(fontSize: 16.0),
+                //submit
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: RaisedButton.icon(
+                      icon: Icon(
+                        Icons.check,
+                        size: 20.0,
                       ),
-                      IconButton(
-                        icon: Icon(Icons.add),
-                        onPressed: () => setState(() {
-                          _priceNum = _priceNum + 1;
-                        }),
+                      label: Text(
+                        "Submit",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-              Divider(),
-              //table list
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: _priceNum,
-                itemBuilder: (context, _i) {
-                  return Column(
-                    children: [
-                      _tableField(_i),
-                    ],
-                  );
-                },
-              ),
-              //submit
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: RaisedButton.icon(
-                    icon: Icon(
-                      Icons.check,
-                      size: 20.0,
-                    ),
-                    label: Text(
-                      "Submit",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w300,
+                      color: Colors.purple[700],
+                      shape: new RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0),
                       ),
-                    ),
-                    color: Colors.purple[700],
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0),
-                    ),
-                    onPressed: () {
-                      formSave();
-                    }),
-              ),
-            ],
+                      onPressed: () {
+                        formSave();
+                      }),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/models/registration_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/auth/auth.dart' as auth;
@@ -142,25 +143,33 @@ class TransferData {
       'price': _jsonPrice,
       'time': eventModel.time,
     });
-    await http.post(_eventPlaceUrl,
-        body: _encodedBody,
-        headers: {"Accept": "application/json"}).then((result) {
-      print(result.statusCode);
-      print(result.body);
-    });
-    await http.post(_eventDatewiseUrl,
-        body: _encodedBody,
-        headers: {"Accept": "application/json"}).then((result) {
-      print(result.statusCode);
-      print(result.body);
-    });
-    if (newEvent) {
-      await http.post(_eventNewUrl,
+    try {
+      await http.post(_eventPlaceUrl,
           body: _encodedBody,
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
         print(result.body);
       });
+      await http.post(_eventDatewiseUrl,
+          body: _encodedBody,
+          headers: {"Accept": "application/json"}).then((result) {
+        print(result.statusCode);
+        print(result.body);
+      });
+      if (newEvent) {
+        await http.post(_eventNewUrl,
+            body: _encodedBody,
+            headers: {"Accept": "application/json"}).then((result) {
+          print(result.statusCode);
+          print(result.body);
+        });
+      }
+      Fluttertoast.showToast(
+        msg: 'Event Added!',
+        backgroundColor: Colors.green,
+      );
+    } catch (e) {
+      Fluttertoast.showToast(msg: '$e', backgroundColor: Colors.red);
     }
   }
 
@@ -185,7 +194,14 @@ class TransferData {
         headers: {"Accept": "application/json"}).then((result) {
       print(result.statusCode);
       print(result.body);
-    });
+    }).catchError((e) => Fluttertoast.showToast(
+          msg: '$e',
+          backgroundColor: Colors.red,
+        ));
+    Fluttertoast.showToast(
+      msg: 'Place added!',
+      backgroundColor: Colors.green,
+    );
   }
 
   Future<void> changeEntranceState({

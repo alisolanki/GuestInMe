@@ -157,23 +157,33 @@ class _PlacePageState extends State<PlacePage> {
                 ],
               ),
             ),
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext _, int i) {
-                  return EventCard(
-                    eventModel: _upcomingEvents[i],
-                    placeName: widget.placeModel.placeName,
-                  );
-                },
-                childCount: _upcomingEvents?.length ?? 0,
+            if (_upcomingEvents?.length != 0)
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Container(
+                      height: 270.0,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _upcomingEvents.length,
+                            itemBuilder: (_, i) {
+                              return EventCard(
+                                eventModel: _upcomingEvents[i],
+                                placeName: _upcomingEvents[i].placeName,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                crossAxisSpacing: 0.0,
-                childAspectRatio: 2 / 3,
-                mainAxisSpacing: 0.0,
-                maxCrossAxisExtent: 270,
-              ),
-            ),
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -247,7 +257,7 @@ class _PlacePageState extends State<PlacePage> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  if (_pastEvents.length != 0)
+                  if (_pastEvents?.length != 0)
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
@@ -261,23 +271,33 @@ class _PlacePageState extends State<PlacePage> {
                 ],
               ),
             ),
-            SliverGrid(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext _, int i) {
-                  return EventCard(
-                    eventModel: _pastEvents[i],
-                    placeName: widget.placeModel.placeName,
-                  );
-                },
-                childCount: _pastEvents?.length ?? 0,
+            if (_pastEvents?.length != 0)
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    Container(
+                      height: 270.0,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: _pastEvents.length,
+                            itemBuilder: (_, i) {
+                              return EventCard(
+                                eventModel: _pastEvents[i],
+                                placeName: _pastEvents[i].placeName,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                crossAxisSpacing: 0.0,
-                childAspectRatio: 2 / 3,
-                mainAxisSpacing: 0.0,
-                maxCrossAxisExtent: 270,
-              ),
-            ),
             SliverList(
               delegate: SliverChildListDelegate(
                 [SizedBox(height: 200.0)],

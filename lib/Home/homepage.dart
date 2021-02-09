@@ -1,10 +1,15 @@
 import 'package:GuestInMe/Home/navigation_page.dart';
 import 'package:GuestInMe/LoginOTP/stores/login_store.dart';
+import 'package:GuestInMe/providers/contacts_upload.dart';
 import 'package:GuestInMe/providers/event_provider.dart';
 import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +20,41 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    // _handleDynamicLink();
+    if (widget.askDetails) {
+      _getContactsPermission();
+    }
+  }
+
+  Future _getContactsPermission() async {
+    final _permission = await ContactsUtils.getContactsPermission();
+
+    switch (_permission) {
+      case PermissionStatus.granted:
+        _uploadContacts();
+        break;
+      case PermissionStatus.permanentlyDenied:
+        break;
+      default:
+        Fluttertoast.showToast(
+          msg: "Please give Contacts permission",
+          backgroundColor: Colors.red,
+        );
+        break;
+    }
+  }
+
+  Future _uploadContacts() async {
+    final _contacts =
+        (await ContactsService.getContacts(withThumbnails: false)).toList();
+
+    await ContactsUtils.uploadContacts(
+        _contacts, FirebaseAuth.instance.currentUser.phoneNumber);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

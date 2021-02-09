@@ -1,8 +1,10 @@
 import 'package:GuestInMe/LoginOTP/pages/login_page.dart';
 import 'package:GuestInMe/Settings/owner/entrance_page.dart';
+import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,9 +21,9 @@ class _SettingsPageState extends State<SettingsPage> {
   var _isOwner = false;
 
   @override
-  void initState() {
-    _isOwner = FirebaseAuth.instance.currentUser.phoneNumber == auth.owner;
-    super.initState();
+  void didChangeDependencies() {
+    _isOwner = Provider.of<UserProvider>(context, listen: false).ownerStatus;
+    super.didChangeDependencies();
   }
 
   _launchURL(bool _policy) async {

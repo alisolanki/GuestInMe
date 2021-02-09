@@ -10,6 +10,10 @@ class UserProvider extends ChangeNotifier {
   UserModel _userModel;
   var _user = FirebaseAuth.instance.currentUser;
 
+  var _ownerStatus = false;
+
+  bool get ownerStatus => _ownerStatus;
+
   UserModel get userModel {
     return _userModel;
   }
@@ -17,8 +21,17 @@ class UserProvider extends ChangeNotifier {
   Future<void> fetchUser({bool forced = false}) async {
     final String _userURL =
         "${auth.url}users/${_user.phoneNumber}.json?auth=${auth.token}";
+    final String _ownersURL = "${auth.url}owners.json?auth=${auth.token}";
 
     if (_userModel == null || forced) {
+      var _r = await http.get(_ownersURL);
+      var _e = jsonDecode(_r.body) as Map<String, dynamic>;
+      print(_e['${_user.phoneNumber}']);
+      if (_e['${_user.phoneNumber}'] != null) {
+        _ownerStatus = true;
+        notifyListeners();
+      }
+
       return http.get(_userURL).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
         print("Fetching user");

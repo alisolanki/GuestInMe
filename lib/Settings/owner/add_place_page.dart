@@ -1,5 +1,6 @@
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import './http_requests.dart';
 
@@ -33,6 +34,10 @@ class _AddPlacePageState extends State<AddPlacePage> {
         stars: _stars,
         placeName: _placeName,
       );
+      Fluttertoast.showToast(
+        msg: 'Sending data...',
+        backgroundColor: Colors.amber,
+      );
       await TransferData().addPlace(
         placeModel: _placeModel,
       );
@@ -46,8 +51,11 @@ class _AddPlacePageState extends State<AddPlacePage> {
         title: Text("Add Place"),
       ),
       body: SingleChildScrollView(
+        physics: ScrollPhysics(),
         child: Form(
-            key: _formKey,
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 _textField("Place Name"),
@@ -174,7 +182,9 @@ class _AddPlacePageState extends State<AddPlacePage> {
                       }),
                 ),
               ],
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -182,15 +192,13 @@ class _AddPlacePageState extends State<AddPlacePage> {
   Widget _imageField(int _i) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Expanded(
-        child: TextFormField(
-          initialValue: "https://i.imgur.com/NhOXuQY.jpg",
-          decoration: InputDecoration(labelText: "Image Link"),
-          validator: (v) => v.isEmpty ? "Enter an image link" : null,
-          onSaved: (_i) => setState(() {
-            _images.add(_i);
-          }),
-        ),
+      child: TextFormField(
+        initialValue: "https://i.imgur.com/NhOXuQY.jpg",
+        decoration: InputDecoration(labelText: "Image Link"),
+        validator: (v) => v.isEmpty ? "Enter an image link" : null,
+        onSaved: (_i) => setState(() {
+          _images.add(_i);
+        }),
       ),
     );
   }
@@ -198,15 +206,13 @@ class _AddPlacePageState extends State<AddPlacePage> {
   Widget _menuField(int _i) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Expanded(
-        child: TextFormField(
-          initialValue: "https://i.imgur.com/NhOXuQY.jpg",
-          decoration: InputDecoration(labelText: "Menu Link"),
-          validator: (v) => v.isEmpty ? "Enter an image link" : null,
-          onSaved: (_i) => setState(() {
-            _menu.add(_i);
-          }),
-        ),
+      child: TextFormField(
+        initialValue: "https://i.imgur.com/NhOXuQY.jpg",
+        decoration: InputDecoration(labelText: "Menu Link"),
+        validator: (v) => v.isEmpty ? "Enter an image link" : null,
+        onSaved: (_i) => setState(() {
+          _menu.add(_i);
+        }),
       ),
     );
   }
@@ -229,7 +235,11 @@ class _AddPlacePageState extends State<AddPlacePage> {
         color: Colors.white,
       ),
       keyboardType: TextInputType.name,
-      validator: (value) => value.isEmpty ? "Enter $hint" : null,
+      validator: (value) => value.isEmpty
+          ? "Enter $hint"
+          : hint == "Stars" && double.tryParse(value) == null
+              ? "Enter a decimal number"
+              : null,
       onSaved: (_input) {
         hint == "Place Name"
             ? setState(() {
