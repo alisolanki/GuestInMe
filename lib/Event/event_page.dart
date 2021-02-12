@@ -58,9 +58,11 @@ class _EventPageState extends State<EventPage> {
 
   void _listofFiles() async {
     _dirPath = (await getApplicationDocumentsDirectory()).path;
-    setState(() {
-      _files = Directory("$_dirPath/tickets/").listSync();
-    });
+    await Directory("$_dirPath/tickets/").exists()
+        ? setState(() {
+            _files = Directory("$_dirPath/tickets/").listSync();
+          })
+        : _files = [];
   }
 
   @override
@@ -273,8 +275,7 @@ class _EventPageState extends State<EventPage> {
                         style: TextStyle(fontSize: 18.0),
                       ),
                       onTap: () =>
-                          (int.parse(_dateISO) >= int.parse(_dateTodayISO)) &&
-                                  !(widget.eventModel.closed)
+                          (int.parse(_dateISO) >= int.parse(_dateTodayISO))
                               ? _payableAlertDialog(
                                   widget.eventModel.prices[1].typeData[i],
                                 )
@@ -327,8 +328,7 @@ class _EventPageState extends State<EventPage> {
                         style: TextStyle(fontSize: 18.0),
                       ),
                       onTap: () {
-                        if (int.parse(_dateISO) >= int.parse(_dateTodayISO) &&
-                            !widget.eventModel.closed) {
+                        if (int.parse(_dateISO) >= int.parse(_dateTodayISO)) {
                           widget.eventModel.prices[0].typeData[i].price == "0"
                               ? _nonPayableAlertDialog(
                                   widget.eventModel.prices[0].typeData[i],
@@ -500,35 +500,48 @@ class _EventPageState extends State<EventPage> {
                 ),
                 actions: [
                   CupertinoDialogAction(
-                    child: Text("Get ticket and pay on entry"),
-                    onPressed: () => RegistrationHttp().sendRegistration(
-                      ctx: ctx,
-                      paid: false,
-                      typeModel: _typeModel,
-                      code: Random().nextInt(9000) + 1000,
-                      eventModel: widget.eventModel,
-                      userModel: _userModel,
-                      referral: _referral,
-                      peopleNumber: _num,
-                    ),
-                  ),
+                      child: Text("Get ticket and pay on entry"),
+                      onPressed: () {
+                        if (widget.eventModel.closeOffline) {
+                          Fluttertoast.showToast(
+                            msg: "Offline payment is closed for this event!",
+                            backgroundColor: Colors.amber,
+                            textColor: Colors.black,
+                          );
+                        } else {
+                          RegistrationHttp().sendRegistration(
+                            ctx: ctx,
+                            paid: false,
+                            typeModel: _typeModel,
+                            code: Random().nextInt(9000) + 1000,
+                            eventModel: widget.eventModel,
+                            userModel: _userModel,
+                            referral: _referral,
+                            peopleNumber: _num,
+                          );
+                        }
+                      }),
                   CupertinoDialogAction(
                     child: Text("Online payment"),
                     onPressed: () {
-                      Fluttertoast.showToast(
-                        msg: 'Online payment will be available soon!',
-                        backgroundColor: Colors.amber,
-                      );
-                      // final _code = Random().nextInt(9000) + 1000;
-                      // PaymentProvider().openCheckout(
-                      //   type: _typeModel,
-                      //   eventModel: widget.eventModel,
-                      //   userModel: _userModel,
-                      //   code: _code,
-                      //   ctx: ctx,
-                      //   referral: _referral,
-                      //   peopleNumber: _num,
-                      // );
+                      if (widget.eventModel.closeOnline) {
+                        Fluttertoast.showToast(
+                          msg: 'Online payment is closed for this event!',
+                          backgroundColor: Colors.amber,
+                          textColor: Colors.black,
+                        );
+                      } else {
+                        final _code = Random().nextInt(9000) + 1000;
+                        PaymentProvider().openCheckout(
+                          type: _typeModel,
+                          eventModel: widget.eventModel,
+                          userModel: _userModel,
+                          code: _code,
+                          ctx: ctx,
+                          referral: _referral,
+                          peopleNumber: _num,
+                        );
+                      }
                     },
                   ),
                 ],
@@ -579,17 +592,26 @@ class _EventPageState extends State<EventPage> {
                 ),
                 actions: [
                   CupertinoDialogAction(
-                    child: Text("Yes"),
-                    onPressed: () => RegistrationHttp().sendRegistration(
-                      ctx: ctx,
-                      paid: true,
-                      typeModel: _typeModel,
-                      code: Random().nextInt(9000) + 1000,
-                      eventModel: widget.eventModel,
-                      userModel: _userModel,
-                      peopleNumber: _num,
-                    ),
-                  ),
+                      child: Text("Yes"),
+                      onPressed: () {
+                        if (widget.eventModel.closeOffline &&
+                            widget.eventModel.closeOnline) {
+                          Fluttertoast.showToast(
+                            msg: "Event is sold out!",
+                            backgroundColor: Colors.red,
+                          );
+                        } else {
+                          RegistrationHttp().sendRegistration(
+                            ctx: ctx,
+                            paid: true,
+                            typeModel: _typeModel,
+                            code: Random().nextInt(9000) + 1000,
+                            eventModel: widget.eventModel,
+                            userModel: _userModel,
+                            peopleNumber: _num,
+                          );
+                        }
+                      }),
                   CupertinoDialogAction(
                     child: Text("No"),
                     onPressed: () => Navigator.pop(ctx),

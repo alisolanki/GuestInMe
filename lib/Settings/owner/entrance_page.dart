@@ -12,8 +12,8 @@ class EntrancePage extends StatefulWidget {
 class _EntrancePageState extends State<EntrancePage> {
   RegistrationModel _registrationModel;
 
-  void refresh() {
-    TransferData().getEntranceState().then((_data) {
+  void refresh() async {
+    await TransferData().getEntranceState().then((_data) {
       setState(() {
         _registrationModel = _data;
       });

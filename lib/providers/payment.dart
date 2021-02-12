@@ -8,24 +8,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 
 import '../auth/auth.dart' as auth;
 
 class RegistrationHttp {
-  Future _launchURL({
-    TypeModel typeModel,
-    int peopleNumber,
-    EventModel eventModel,
-  }) async {
-    final url =
-        'http://wa.me/+918850283085?text=Hey! I would like to book for $peopleNumber ${typeModel.typeName} at ${eventModel.placeName} on ${eventModel.date}';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // Future _launchURL({
+  //   TypeModel typeModel,
+  //   int peopleNumber,
+  //   EventModel eventModel,
+  // }) async {
+  //   final url =
+  //       'http://wa.me/+918850283085?text=Hey! I would like to book for $peopleNumber ${typeModel.typeName} at ${eventModel.placeName} on ${eventModel.date}';
+  //   if (await canLaunch(url)) {
+  //     await launch(url);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
   Future<void> sendRegistration({
     @required BuildContext ctx,
@@ -62,15 +62,15 @@ class RegistrationHttp {
           headers: {"Accept": "application/json"}).then((result) {
         print(result.statusCode);
       });
-      Fluttertoast.showToast(
-        msg: "Message us on +918850283085!",
-        backgroundColor: Colors.red,
-      );
-      await _launchURL(
-        eventModel: eventModel,
-        peopleNumber: peopleNumber,
-        typeModel: typeModel,
-      );
+      // Fluttertoast.showToast(
+      //   msg: "Message us on +918850283085!",
+      //   backgroundColor: Colors.red,
+      // );
+      // await _launchURL(
+      //   eventModel: eventModel,
+      //   peopleNumber: peopleNumber,
+      //   typeModel: typeModel,
+      // );
       Navigator.push(
         ctx,
         MaterialPageRoute(

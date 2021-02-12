@@ -17,6 +17,7 @@
 
 #personal
 **/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
 **/android/app/Users/Ali Solanki/key.jks
 **/lib/auth/auth.dart
 

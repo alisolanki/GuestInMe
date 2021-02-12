@@ -60,7 +60,9 @@ class PlaceProvider extends ChangeNotifier {
                     prices: prices,
                     time: _eventDetail['time'].toString(),
                     placeName: _eventDetail['placename'].toString(),
-                    closed: _eventDetail['closed'].toString().toLowerCase() ==
+                    closeOnline: _eventDetail['closeOnline'].toString().toLowerCase() ==
+                        "true",
+                    closeOffline: _eventDetail['closeOffline'].toString().toLowerCase() ==
                         "true",
                   );
                   events.add(_eventModel);

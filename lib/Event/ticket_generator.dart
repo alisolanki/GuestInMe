@@ -34,7 +34,7 @@ class TicketGenerator extends StatefulWidget {
 }
 
 class _TicketGeneratorState extends State<TicketGenerator> {
-  PdfImage _logoImage;
+  pw.MemoryImage _logoImage;
   Directory _docApp;
   String _ticketData;
 
@@ -72,11 +72,12 @@ class _TicketGeneratorState extends State<TicketGenerator> {
   }
 
   Future<void> getFiles() async {
-    _logoImage = PdfImage.file(
-      pdf.document,
-      bytes:
-          (await rootBundle.load('assets/logofilled.png')).buffer.asUint8List(),
-    );
+    // _logoImage = PdfImage.file(
+    //   pdf.document,
+    //   bytes:
+    //       (await rootBundle.load('assets/logofilled.png')).buffer.asUint8List(),
+    // );
+    _logoImage = pw.MemoryImage((await rootBundle.load('assets/logofilled.png')).buffer.asUint8List());
     var _phoneNumber = FirebaseAuth.instance.currentUser.phoneNumber;
     _ticketData =
         "${widget.dateISO}::${widget.eventModel.placeName}::${widget.eventModel.id}::${widget.eventModel.eventName}::$_phoneNumber::${widget.typeModel.id}::${widget.code}::${widget.name}::${widget.paid}::${double.parse(widget.typeModel.price) * widget.count}::${widget.referral}::${widget.typeModel.typeName}";
@@ -125,10 +126,10 @@ class _TicketGeneratorState extends State<TicketGenerator> {
               padding: pw.EdgeInsets.all(8.0),
               alignment: pw.Alignment.topLeft,
               decoration: pw.BoxDecoration(
-                border: pw.BoxBorder(
-                  color: PdfColors.black,
+                border: pw.Border.all(color: PdfColors.black),
+                borderRadius: pw.BorderRadius.all(
+                  pw.Radius.circular(3.0),
                 ),
-                borderRadius: 3.0,
               ),
               child: pw.Column(
                 mainAxisAlignment: pw.MainAxisAlignment.start,
@@ -254,12 +255,12 @@ class _TicketGeneratorState extends State<TicketGenerator> {
       File _file = File(
         "${_docTickets.path}/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf",
       );
-      _file.writeAsBytesSync(pdf.save());
+      _file.writeAsBytesSync(await pdf.save());
     } else {
       File _file = File(
         "${_docTickets.path}/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf",
       );
-      _file.writeAsBytesSync(pdf.save());
+      _file.writeAsBytesSync(await pdf.save());
       print(
           "${_docApp.path}/tickets/${widget.eventModel.date} ${widget.typeModel.typeName}x${widget.count} ${widget.code}.pdf");
     }

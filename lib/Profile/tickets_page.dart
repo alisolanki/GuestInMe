@@ -74,13 +74,32 @@ class _TicketsPageState extends State<TicketsPage> {
                 child: ListTile(
                   leading: Icon(Icons.book_online),
                   title: Text(_files[_i].path.split('/').last),
-                  trailing: IconButton(
-                    icon: Icon(Icons.share),
-                    onPressed: () {
-                      Share.shareFiles([_files[_i].path],
-                          subject:
-                              "GuestInMe Ticket. Download our app for getting into Guestlists, Booking tables and having your Nightlife sorted. Book concert tickets at extremely cheap prices.");
-                    },
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.share),
+                        onPressed: () {
+                          Share.shareFiles([_files[_i].path],
+                              subject:
+                                  "GuestInMe Ticket. Download our app for getting into Guestlists, Booking tables and having your Nightlife sorted. Book concert tickets at extremely cheap prices.");
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () async {
+                          if(await confirmDelete()){
+                            print("Deleting");
+                setState(() {
+                  _files[_i].delete();
+                  _files.removeAt(_i);
+                });
+                          }else{
+                            print("Not deleting");
+                          }
+                        },
+                      ),
+                    ],
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
@@ -113,7 +132,7 @@ class _TicketsPageState extends State<TicketsPage> {
                   size: 30.0,
                 ),
               ),
-              confirmDismiss: (_) => confirmDelete(),
+              confirmDismiss: (_) async => await confirmDelete(),
               onDismissed: (_) {
                 print("Deleting");
                 setState(() {

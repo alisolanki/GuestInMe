@@ -81,13 +81,13 @@ class _SearchPageState extends State<SearchPage> {
                     return placeModel.placeName
                             .toLowerCase()
                             .contains(_searchTerm) &&
-                        placeModel.category == "clubs";
+                        placeModel.category == "clubs" || placeModel.category == "hybrid";
                   }).toList();
                   _barsList = _places.where((placeModel) {
                     return placeModel.placeName
                             .toLowerCase()
                             .contains(_searchTerm) &&
-                        placeModel.category == "bars";
+                        placeModel.category == "bars" || placeModel.category == "hybrid";
                   }).toList();
                   _places.forEach((placeModel) {
                     placeModel.event.forEach((eventModel) => eventModel
