@@ -56,7 +56,7 @@ class _AddEventPageState extends State<AddEventPage> {
         dressCode: _dressCode,
         time: _time,
         placeName: _placeList[_value].placeName,
-        closeOnline: false,
+        closeOnline: true,
         closeOffline: false,
       );
       Fluttertoast.showToast(

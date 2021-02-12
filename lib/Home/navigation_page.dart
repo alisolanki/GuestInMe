@@ -4,6 +4,7 @@ import 'package:GuestInMe/Search/search_page.dart';
 import 'package:GuestInMe/assets/guest_in_me_icons.dart';
 import 'package:GuestInMe/models/user_model.dart';
 import 'package:GuestInMe/providers/event_provider.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -28,6 +29,8 @@ class _NavigationPageState extends State<NavigationPage> {
   final _formKey = GlobalKey<FormState>();
   DateTime _selectedDate;
 
+  List<dynamic> _locations = [];
+
   @override
   void didChangeDependencies() {
     _size = MediaQuery.of(context).size;
@@ -41,8 +44,12 @@ class _NavigationPageState extends State<NavigationPage> {
   void _fetchData() async {
     await Provider.of<PlaceProvider>(context, listen: false).fetchPlaces();
     await Provider.of<EventProvider>(context, listen: false).fetchNewEvents();
+    await Provider.of<LocationsProvider>(context, listen: false)
+        .fetchLocations();
     setState(() {
       _loading = false;
+      _locations =
+          Provider.of<LocationsProvider>(context, listen: false).locations;
     });
     if (widget.askDetails) {
       await _userForm(context);
@@ -327,7 +334,7 @@ class _NavigationPageState extends State<NavigationPage> {
             )
           : SafeArea(
               child: _selected == 1
-                  ? DiamondPage()
+                  ? DiamondPage(_locations)
                   : _selected == 0
                       ? SearchPage()
                       : ProfilePage(),

@@ -1,4 +1,5 @@
 import 'package:GuestInMe/Home/widgets/event_card.dart';
+import 'package:GuestInMe/Home/widgets/locations_dropdown.dart';
 import 'package:GuestInMe/New_Events/new_events_page.dart';
 import 'package:GuestInMe/Popular_places/popular_places_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
@@ -13,6 +14,9 @@ import './widgets/selection_card.dart';
 import './widgets/place_card.dart';
 
 class DiamondPage extends StatefulWidget {
+  final List<dynamic> _locations;
+  DiamondPage(this._locations);
+
   @override
   _DiamondPageState createState() => _DiamondPageState();
 }
@@ -101,6 +105,8 @@ class _DiamondPageState extends State<DiamondPage> {
                       width: size.width,
                       height: 50.0,
                       color: const Color(0xFF16161D),
+                      alignment: Alignment.center,
+                      child: LocationsDropDown(widget._locations),
                     ),
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(40.0),
