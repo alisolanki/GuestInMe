@@ -1,6 +1,6 @@
 import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,21 +11,20 @@ class PopularPlacesPage extends StatefulWidget {
 
 class _PopularPlacesPageState extends State<PopularPlacesPage> {
   var _init = true;
-  PlaceProvider _placeProvider;
+  LocationsProvider _locationsProvider;
   List<PlaceModel> _places;
 
   @override
   void didChangeDependencies() {
     if (_init) {
-      _placeProvider = Provider.of<PlaceProvider>(context);
-      _placeProvider.fetchPlaces();
-      _places = _placeProvider.places;
+      _locationsProvider = Provider.of<LocationsProvider>(context);
     }
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
+      _places = _locationsProvider.places;
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFF16161D),

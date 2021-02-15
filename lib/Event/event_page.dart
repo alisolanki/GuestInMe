@@ -5,8 +5,8 @@ import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/models/user_model.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:GuestInMe/providers/payment.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class _EventPageState extends State<EventPage> {
   var size = Size(0.0, 0.0);
   var _init = true;
   String _dateISO, _dateTodayISO, _referral;
-  PlaceProvider _placeProvider;
+  LocationsProvider _locationsProvider;
   PlaceModel _placeModel;
   UserModel _userModel;
 
@@ -43,10 +43,10 @@ class _EventPageState extends State<EventPage> {
   void didChangeDependencies() {
     size = MediaQuery.of(context).size;
     if (_init) {
-      _placeProvider = Provider.of<PlaceProvider>(context);
+      _locationsProvider = Provider.of<LocationsProvider>(context);
       _userModel = Provider.of<UserProvider>(context).userModel;
       setState(() {
-        _placeModel = _placeProvider.places
+        _placeModel = _locationsProvider.places
             .firstWhere((e) => e.placeName == widget.placeName);
         _dateISO = convertDatetoISO(widget.eventModel.date);
         _dateTodayISO = convertDate(DateTime.now());

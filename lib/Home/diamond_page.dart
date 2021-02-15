@@ -4,8 +4,7 @@ import 'package:GuestInMe/New_Events/new_events_page.dart';
 import 'package:GuestInMe/Popular_places/popular_places_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/providers/event_provider.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,10 +32,6 @@ class _DiamondPageState extends State<DiamondPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     size = MediaQuery.of(context).size;
-    if (_init) {
-      _places = Provider.of<PlaceProvider>(context).places;
-      _events = Provider.of<EventProvider>(context).newEventModels;
-    }
     _init = false;
   }
 
@@ -78,6 +73,8 @@ class _DiamondPageState extends State<DiamondPage> {
 
   @override
   Widget build(BuildContext context) {
+    _places = Provider.of<LocationsProvider>(context).places;
+    _events = Provider.of<LocationsProvider>(context).newEventModels;
     return CustomScrollView(
       slivers: [
         SliverAppBar(

@@ -1,8 +1,6 @@
 import 'package:GuestInMe/Home/navigation_page.dart';
 import 'package:GuestInMe/LoginOTP/stores/login_store.dart';
-import 'package:GuestInMe/providers/event_provider.dart';
 import 'package:GuestInMe/providers/locations_provider.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +53,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PlaceProvider()),
-        ChangeNotifierProvider(create: (_) => EventProvider()),
+        // ChangeNotifierProvider(create: (_) => PlaceProvider()),
+        // ChangeNotifierProvider(create: (_) => EventProvider()),
         ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => LocationsProvider()),
         Provider.value(value: LoginStore()),

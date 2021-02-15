@@ -3,9 +3,7 @@ import 'package:GuestInMe/Profile/profile_page.dart';
 import 'package:GuestInMe/Search/search_page.dart';
 import 'package:GuestInMe/assets/guest_in_me_icons.dart';
 import 'package:GuestInMe/models/user_model.dart';
-import 'package:GuestInMe/providers/event_provider.dart';
 import 'package:GuestInMe/providers/locations_provider.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
 import 'package:GuestInMe/providers/user_provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,8 +40,7 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 
   void _fetchData() async {
-    await Provider.of<PlaceProvider>(context, listen: false).fetchPlaces();
-    await Provider.of<EventProvider>(context, listen: false).fetchNewEvents();
+    // await Provider.of<LocationsProvider>(context, listen: false).fetchNewEvents();
     await Provider.of<LocationsProvider>(context, listen: false)
         .fetchLocations();
     setState(() {
@@ -51,6 +48,7 @@ class _NavigationPageState extends State<NavigationPage> {
       _locations =
           Provider.of<LocationsProvider>(context, listen: false).locations;
     });
+    // await Provider.of<PlaceProvider>(context, listen: false).fetchPlaces(location: _locations[0]);
     if (widget.askDetails) {
       await _userForm(context);
     }

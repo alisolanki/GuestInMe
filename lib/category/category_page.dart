@@ -1,6 +1,6 @@
 import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,7 @@ class _CategoryPageState extends State<CategoryPage> {
 
   @override
   void didChangeDependencies() {
-    _placeModels = Provider.of<PlaceProvider>(context)
+    _placeModels = Provider.of<LocationsProvider>(context)
         .places
         .where((_place) =>
             _place.category.toLowerCase() == widget._category.toLowerCase() ||

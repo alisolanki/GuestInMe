@@ -1,6 +1,6 @@
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/providers/place_provider.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +74,7 @@ class _AddEventPageState extends State<AddEventPage> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      _placeList = Provider.of<PlaceProvider>(context).places;
+      _placeList = Provider.of<LocationsProvider>(context).places;
       _tablePrice.typeData = [];
     }
     super.didChangeDependencies();

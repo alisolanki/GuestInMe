@@ -1,6 +1,6 @@
 import 'package:GuestInMe/Home/widgets/event_card.dart';
 import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/providers/event_provider.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class NewEventsPage extends StatefulWidget {
 class _NewEventsPageState extends State<NewEventsPage> {
   var _init = true;
   var _noEventSelected = false;
-  var _loadingEvents = true;
+  var _loadingEvents = false;
   String _datePicked = "";
   Map<String, List<EventModel>> _datewiseEvents = {};
   Map<String, List<EventModel>> _datewiseExtracted = {};
@@ -21,20 +21,11 @@ class _NewEventsPageState extends State<NewEventsPage> {
   @override
   void didChangeDependencies() {
     if (_init) {
-      _fetchData();
-      _datewiseEvents = Provider.of<EventProvider>(context).datewiseEvents;
+      _datewiseEvents = Provider.of<LocationsProvider>(context, listen: false).datewiseEvents;
       _datewiseExtracted = _datewiseEvents;
     }
     _init = false;
     super.didChangeDependencies();
-  }
-
-  void _fetchData() async {
-    await Provider.of<EventProvider>(context, listen: false)
-        .fetchDatewiseEvents();
-    setState(() {
-      _loadingEvents = false;
-    });
   }
 
   @override

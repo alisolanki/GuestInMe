@@ -2,10 +2,10 @@ import 'package:GuestInMe/Home/widgets/event_card.dart';
 import 'package:GuestInMe/Home/widgets/place_card.dart';
 import 'package:GuestInMe/Search/view_list_page.dart';
 import 'package:GuestInMe/models/event_model.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/place_model.dart';
-import '../providers/place_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +26,8 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void didChangeDependencies() {
     if (_init) {
-      var _placeProvider = Provider.of<PlaceProvider>(context);
-      _places = _placeProvider.places;
+      var _locationsProvider = Provider.of<LocationsProvider>(context);
+      _places = _locationsProvider.places;
     }
     _init = false;
     super.didChangeDependencies();
