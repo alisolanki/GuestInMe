@@ -25,7 +25,7 @@ class EventPage extends StatefulWidget {
 class _EventPageState extends State<EventPage> {
   var size = Size(0.0, 0.0);
   var _init = true;
-  String _dateISO, _dateTodayISO, _referral;
+  String _dateISO, _dateTodayISO, _referral, _selectedLocation;
   LocationsProvider _locationsProvider;
   PlaceModel _placeModel;
   UserModel _userModel;
@@ -48,6 +48,7 @@ class _EventPageState extends State<EventPage> {
       setState(() {
         _placeModel = _locationsProvider.places
             .firstWhere((e) => e.placeName == widget.placeName);
+        _selectedLocation = _locationsProvider.selectedLocation;
         _dateISO = convertDatetoISO(widget.eventModel.date);
         _dateTodayISO = convertDate(DateTime.now());
       });
@@ -518,6 +519,7 @@ class _EventPageState extends State<EventPage> {
                             userModel: _userModel,
                             referral: _referral,
                             peopleNumber: _num,
+                            location: _selectedLocation,
                           );
                         }
                       }),
@@ -540,6 +542,7 @@ class _EventPageState extends State<EventPage> {
                           ctx: ctx,
                           referral: _referral,
                           peopleNumber: _num,
+                          selectedLocation: _selectedLocation,
                         );
                       }
                     },
@@ -609,6 +612,7 @@ class _EventPageState extends State<EventPage> {
                             eventModel: widget.eventModel,
                             userModel: _userModel,
                             peopleNumber: _num,
+                            location: _selectedLocation,
                           );
                         }
                       }),

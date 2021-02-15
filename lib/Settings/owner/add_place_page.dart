@@ -1,6 +1,8 @@
 import 'package:GuestInMe/models/place_model.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 import './http_requests.dart';
 
@@ -12,13 +14,20 @@ class AddPlacePage extends StatefulWidget {
 class _AddPlacePageState extends State<AddPlacePage> {
   final _formKey = GlobalKey<FormState>();
   PlaceModel _placeModel;
+  LocationsProvider _locationsProvider;
 
-  String _placeName, _category, _description, _location, _logo;
+  String _placeName, _category, _description, _address, _location, _logo;
   List<String> _menu = [], _images = [];
   double _stars;
 
   int _imageNum = 0;
   int _menuNum = 0;
+
+  @override
+  void didChangeDependencies() {
+    _locationsProvider = Provider.of<LocationsProvider>(context);
+    super.didChangeDependencies();
+  }
 
   void formSave() async {
     if (_formKey.currentState.validate()) {
@@ -28,7 +37,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
         category: _category,
         description: _description,
         images: _images,
-        location: _location,
+        address: _location,
         logo: _logo,
         menu: _menu,
         stars: _stars,
@@ -38,7 +47,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
         msg: 'Sending data...',
         backgroundColor: Colors.amber,
       );
-      await TransferData().addPlace(
+      await TransferData(location: _location).addPlace(
         placeModel: _placeModel,
       );
     }
@@ -46,6 +55,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
 
   @override
   Widget build(BuildContext context) {
+    var _locationsList = _locationsProvider.locations;
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Place"),
@@ -58,6 +68,25 @@ class _AddPlacePageState extends State<AddPlacePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButton(
+                    value: _locationsList.length != 0 ? _location : null,
+                    items: _locationsList.map((_l) {
+                      return DropdownMenuItem(
+                        child: Text("${_l.toString()}"),
+                        value: _l,
+                      );
+                    }).toList(),
+                    isExpanded: true,
+                    disabledHint: Text("Location"),
+                    onChanged: (value) {
+                      setState(() {
+                        _location = value;
+                      });
+                    },
+                  ),
+                ),
                 _textField("Place Name"),
                 _textField("Description"),
                 _textField("Category"),
@@ -108,7 +137,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
                     return _imageField(_i);
                   },
                 ),
-                _textField("Location"),
+                _textField("Address"),
                 _textField("Logo"),
                 _textField("Stars"),
                 // Menu
@@ -253,9 +282,9 @@ class _AddPlacePageState extends State<AddPlacePage> {
                     ? setState(() {
                         _category = _input;
                       })
-                    : hint == "Location"
+                    : hint == "Address"
                         ? setState(() {
-                            _location = _input;
+                            _address = _input;
                           })
                         : hint == "Logo"
                             ? setState(() {

@@ -9,6 +9,9 @@ import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/auth/auth.dart' as auth;
 
 class TransferData {
+  String location;
+  TransferData({@required this.location});
+
   String convertDate(DateTime value) {
     String _datePicked, _month, _weekday;
 
@@ -87,15 +90,15 @@ class TransferData {
   Future<void> addEvent({
     @required EventModel eventModel,
     @required DateTime date,
-    @required bool newEvent,
+    @required bool newEvent
   }) async {
     final String _datePicked = convertDate(date);
     //urls
     var _eventPlaceUrl =
-        "${auth.url}place/${eventModel.placeName}/events.json?auth=${auth.token}";
+        "${auth.url}$location/place/${eventModel.placeName}/events.json?auth=${auth.token}";
     var _eventDatewiseUrl =
-        "${auth.url}datewiseEvents/${eventModel.date}.json?auth=${auth.token}";
-    var _eventNewUrl = "${auth.url}newEvents.json?auth=${auth.token}";
+        "${auth.url}$location/datewiseEvents/${eventModel.date}.json?auth=${auth.token}";
+    var _eventNewUrl = "${auth.url}$location/newEvents.json?auth=${auth.token}";
 
     var _priceModelList = eventModel.prices;
     //crowd
@@ -178,13 +181,13 @@ class TransferData {
   }) async {
     //urls
     var _placeUrl =
-        "${auth.url}place/${placeModel.placeName}.json?auth=${auth.token}";
+        "${auth.url}$location/place/${placeModel.placeName}.json?auth=${auth.token}";
 
     var _encodedBody = jsonEncode({
       'category': placeModel.category,
       'description': placeModel.description,
       'images': placeModel.images as List<String>,
-      'location': placeModel.location,
+      'address': placeModel.address,
       'logo': placeModel.logo,
       'menu': placeModel.menu as List<String>,
       'stars': placeModel.stars,
@@ -213,7 +216,7 @@ class TransferData {
     @required TypeRegistrationModel typeModel,
   }) async {
     final _paidUrl =
-        "${auth.url}registrations/$date/$placeName/$eventId/$eventName/$userNumber/${typeModel.id}.json?auth=${auth.token}";
+        "${auth.url}$location/registrations/$date/$placeName/$eventId/$eventName/$userNumber/${typeModel.id}.json?auth=${auth.token}";
     await http.patch(_paidUrl,
         body: json.encode({
           'paid': '${typeModel.paid}',
@@ -226,7 +229,7 @@ class TransferData {
 
   Future<RegistrationModel> getEntranceState() async {
     final String _registrationUrl =
-        "${auth.url}registrations.json?auth=${auth.token}";
+        "${auth.url}$location/registrations.json?auth=${auth.token}";
     List<TypeRegistrationModel> _typeModels = [];
     List<UserRegistrationModel> _userModels = [];
     List<EventRegistrationModel> _eventModels = [];
@@ -264,6 +267,7 @@ class TransferData {
                               "true"
                           : false,
                       takenBy: _details4['takenBy'].toString(),
+                      quantity: _details4['quantity'] != null?int.parse(_details4['quantity'].toString()): 0,
                     ),
                   );
                 });
@@ -311,6 +315,6 @@ class TransferData {
     @required EventModel eventModel,
   }) async {
     final String _url =
-        "${auth.url}place/${eventModel.placeName}/events/${eventModel.id}.json?auth=${auth.token}";
+        "${auth.url}$location/place/${eventModel.placeName}/events/${eventModel.id}.json?auth=${auth.token}";
   }
 }

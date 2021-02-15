@@ -87,7 +87,7 @@ class _PlacePageState extends State<PlacePage> {
               ),
             ),
             onTap: () {
-              MapsLauncher.launchQuery('${widget.placeModel.location}');
+              MapsLauncher.launchQuery('${widget.placeModel.address}');
             },
           ),
         ),

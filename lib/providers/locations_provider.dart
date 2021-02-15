@@ -49,7 +49,7 @@ class LocationsProvider with ChangeNotifier {
       print("fetching places");
       return http.get(placeUrl).then((value) {
         var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
-        _extractedData.forEach((_placeName, _details) {
+        _extractedData?.forEach((_placeName, _details) {
           var _events = _details['events'] as Map<String, dynamic>;
           List<EventModel> events = [];
           _events != null
@@ -104,7 +104,7 @@ class LocationsProvider with ChangeNotifier {
             description: _details['description'],
             event: events,
             images: _details['images'],
-            location: _details['location'],
+            address: _details['address'],
             menu: _details['menu'] as List<dynamic>,
             placeName: _placeName,
             stars: double.parse("${_details['stars']}"),
@@ -133,7 +133,7 @@ class LocationsProvider with ChangeNotifier {
     print("_newEventModels.length: ${_newEventModels.length}");
     await http.get(newEventUrl).then((value) {
       var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
-      _extractedData.forEach((_eventId, _eventDetail) {
+      _extractedData?.forEach((_eventId, _eventDetail) {
         List<PriceModel> prices = [];
         var _price = _eventDetail['price'] as Map<String, dynamic>;
         _price != null
@@ -188,7 +188,7 @@ class LocationsProvider with ChangeNotifier {
     await http.get(datewiseEventsUrl).then((value) {
       var _extractedData = jsonDecode(value.body) as Map<String, dynamic>;
 
-      _extractedData.forEach((_date, _eventModel) {
+      _extractedData?.forEach((_date, _eventModel) {
         _eventModel.forEach((_eventId, _eventDetail) {
           List<PriceModel> prices = [];
           var _price = _eventDetail['price'] as Map<String, dynamic>;

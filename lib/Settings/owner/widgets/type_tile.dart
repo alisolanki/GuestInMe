@@ -1,8 +1,10 @@
 import 'package:GuestInMe/Settings/owner/http_requests.dart';
 import 'package:GuestInMe/models/registration_model.dart';
+import 'package:GuestInMe/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class TypeTile extends StatefulWidget {
   final String _date, _eventName, _userNumber, _eventId, _placeName;
@@ -21,6 +23,13 @@ class TypeTile extends StatefulWidget {
 
 class _TypeTileState extends State<TypeTile> {
   var _showTypeDetails = false;
+  String _selectedLocation;
+
+  @override
+  void didChangeDependencies() {
+    _selectedLocation = Provider.of<LocationsProvider>(context, listen: false).selectedLocation;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +63,7 @@ class _TypeTileState extends State<TypeTile> {
                   children: widget._typeRegistrationModels
                       .map(
                         (_t) => ListTile(
-                          leading: Text("${_t.typeName}"),
+                          leading: Text("${_t.typeName} x ${_t.quantity}"),
                           subtitle:
                               Text("Code: ${_t.code} Name:${_t.userName}"),
                           title: Text("Rs. ${_t.typePrice}"),
@@ -77,7 +86,7 @@ class _TypeTileState extends State<TypeTile> {
                                         setState(() {
                                           _t.paid = !_t.paid;
                                         });
-                                        TransferData()
+                                        TransferData(location: _selectedLocation)
                                             .changeEntranceState(
                                               eventId: widget._eventId,
                                               date: widget._date,

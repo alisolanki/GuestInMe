@@ -35,6 +35,7 @@ class RegistrationHttp {
     @required int code,
     @required bool paid,
     @required int peopleNumber,
+    @required String location,
     String referral,
   }) async {
     User _user = FirebaseAuth.instance.currentUser;
@@ -44,7 +45,7 @@ class RegistrationHttp {
     referral = referral ?? 'null';
 
     var _bookingsUrl =
-        "${auth.url}registrations/$_date/${eventModel.placeName}/${eventModel.id}/${eventModel.eventName}/${_user.phoneNumber}/${typeModel.id}.json?auth=${auth.token}";
+        "${auth.url}$location/registrations/$_date/${eventModel.placeName}/${eventModel.id}/${eventModel.eventName}/${_user.phoneNumber}/${typeModel.id}.json?auth=${auth.token}";
     print("_bookingsUrl: $_bookingsUrl");
     var _finalPrice = double.parse(typeModel.price) * peopleNumber;
     var _bookingsBody = json.encode({
@@ -54,6 +55,7 @@ class RegistrationHttp {
       'paid': '$paid',
       'referral': '$referral',
       'name': '${userModel.name}',
+      'quantity': '$peopleNumber'
     });
 
     try {
@@ -176,7 +178,7 @@ class PaymentProvider with ChangeNotifier {
   EventModel _eventModel;
   UserModel _userModel;
   int _code, _peopleNumber;
-  String _referral;
+  String _referral, _selectedLocation;
 
   @override
   void dispose() {
@@ -191,6 +193,7 @@ class PaymentProvider with ChangeNotifier {
     @required UserModel userModel,
     @required int code,
     @required int peopleNumber,
+    @required String selectedLocation,
     String referral,
   }) async {
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -214,6 +217,7 @@ class PaymentProvider with ChangeNotifier {
       _ctx = ctx;
       _referral = referral;
       _peopleNumber = peopleNumber;
+      _selectedLocation = selectedLocation;
       _razorpay.open(options);
     } catch (e) {
       debugPrint(e);
@@ -230,6 +234,7 @@ class PaymentProvider with ChangeNotifier {
       paid: true,
       referral: _referral,
       peopleNumber: _peopleNumber,
+      location: _selectedLocation,
     );
   }
 

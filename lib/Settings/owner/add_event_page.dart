@@ -19,7 +19,7 @@ class _AddEventPageState extends State<AddEventPage> {
   var _isInit = true;
   var _newEvent = false;
 
-  String _eventName;
+  String _eventName, _location;
   String _description;
   String _datePicked;
   DateTime _dateTime;
@@ -63,7 +63,7 @@ class _AddEventPageState extends State<AddEventPage> {
         msg: 'Adding event!',
         backgroundColor: Colors.amber,
       );
-      await TransferData().addEvent(
+      await TransferData(location: _location).addEvent(
         eventModel: _eventModel,
         newEvent: _newEvent,
         date: _dateTime,
@@ -75,6 +75,7 @@ class _AddEventPageState extends State<AddEventPage> {
   void didChangeDependencies() {
     if (_isInit) {
       _placeList = Provider.of<LocationsProvider>(context).places;
+      _location = Provider.of<LocationsProvider>(context).selectedLocation;
       _tablePrice.typeData = [];
     }
     super.didChangeDependencies();
