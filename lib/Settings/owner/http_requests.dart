@@ -87,11 +87,10 @@ class TransferData {
     return _datePicked;
   }
 
-  Future<void> addEvent({
-    @required EventModel eventModel,
-    @required DateTime date,
-    @required bool newEvent
-  }) async {
+  Future<void> addEvent(
+      {@required EventModel eventModel,
+      @required DateTime date,
+      @required bool newEvent}) async {
     final String _datePicked = convertDate(date);
     //urls
     var _eventPlaceUrl =
@@ -241,18 +240,18 @@ class TransferData {
       var _extractedData = json.decode(res.body) as Map<String, dynamic>;
       _extractedData.forEach((_date, _details) {
         var _placeDetails = _details as Map<String, dynamic>;
-        _placeDetails.forEach((_placeName, _details0) {
+        _placeDetails?.forEach((_placeName, _details0) {
           var _eventDetails = _details0 as Map<String, dynamic>;
-          _eventDetails.forEach((_eventId, _details1) {
+          _eventDetails?.forEach((_eventId, _details1) {
             var _eventNameDetails = _details1 as Map<String, dynamic>;
             print(_details1.toString());
-            _eventNameDetails.forEach((_eventName, _details2) {
+            _eventNameDetails?.forEach((_eventName, _details2) {
               print(_details2.toString());
               var _userDetails = _details2 as Map<String, dynamic>;
-              _userDetails.forEach((_phoneNumber, _details3) {
+              _userDetails?.forEach((_phoneNumber, _details3) {
                 print(_details3.toString());
                 var _type = _details3 as Map<String, dynamic>;
-                _type.forEach((_typeId, _details4) {
+                _type?.forEach((_typeId, _details4) {
                   _typeModels.add(
                     TypeRegistrationModel(
                       id: _typeId.toString(),
@@ -267,7 +266,9 @@ class TransferData {
                               "true"
                           : false,
                       takenBy: _details4['takenBy'].toString(),
-                      quantity: _details4['quantity'] != null?int.parse(_details4['quantity'].toString()): 0,
+                      quantity: _details4['quantity'] != null
+                          ? int.parse(_details4['quantity'].toString())
+                          : 0,
                     ),
                   );
                 });

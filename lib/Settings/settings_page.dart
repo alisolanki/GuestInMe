@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../auth/auth.dart' as auth;
 import 'owner/add_event_page.dart';
 import 'owner/add_place_page.dart';
 
