@@ -532,6 +532,13 @@ class _EventPageState extends State<EventPage> {
                           backgroundColor: Colors.amber,
                           textColor: Colors.black,
                         );
+                      } else if (Platform.isIOS) {
+                        Fluttertoast.showToast(
+                          msg:
+                              'Online payments are not available on IOS devices',
+                          backgroundColor: Colors.amber,
+                          textColor: Colors.black,
+                        );
                       } else {
                         final _code = Random().nextInt(9000) + 1000;
                         PaymentProvider().openCheckout(
