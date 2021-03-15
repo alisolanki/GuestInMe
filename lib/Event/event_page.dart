@@ -590,34 +590,49 @@ class _EventPageState extends State<EventPage> {
                         ),
                       ],
                     ),
-                    Text("Do you want to generate the ticket?"),
+                    CupertinoTextField(
+                      placeholder: "Referral Code (Optional)",
+                      textCapitalization: TextCapitalization.characters,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blue),
+                      placeholderStyle: const TextStyle(
+                        color: const Color(0x772196F3),
+                      ),
+                      onChanged: (r) => setState(() {
+                        _referral = r;
+                      }),
+                    ),
                   ],
                 ),
                 actions: [
                   CupertinoDialogAction(
-                      child: Text("Yes"),
-                      onPressed: () {
-                        if (widget.eventModel.closeOffline &&
-                            widget.eventModel.closeOnline) {
-                          Fluttertoast.showToast(
-                            msg: "Event is sold out!",
-                            backgroundColor: Colors.red,
-                          );
-                        } else {
-                          RegistrationHttp().sendRegistration(
-                            ctx: ctx,
-                            paid: true,
-                            typeModel: _typeModel,
-                            code: Random().nextInt(9000) + 1000,
-                            eventModel: widget.eventModel,
-                            userModel: _userModel,
-                            peopleNumber: _num,
-                            location: _selectedLocation,
-                          );
-                        }
-                      }),
+                    child: Text("Generate ticket"),
+                    isDefaultAction: true,
+                    onPressed: () {
+                      if (widget.eventModel.closeOffline &&
+                          widget.eventModel.closeOnline) {
+                        Fluttertoast.showToast(
+                          msg: "Event is sold out!",
+                          backgroundColor: Colors.red,
+                        );
+                      } else {
+                        RegistrationHttp().sendRegistration(
+                          ctx: ctx,
+                          paid: true,
+                          typeModel: _typeModel,
+                          code: Random().nextInt(9000) + 1000,
+                          eventModel: widget.eventModel,
+                          userModel: _userModel,
+                          peopleNumber: _num,
+                          location: _selectedLocation,
+                          referral: _referral,
+                        );
+                      }
+                    },
+                  ),
                   CupertinoDialogAction(
-                    child: Text("No"),
+                    child: Text("Cancel"),
+                    isDestructiveAction: true,
                     onPressed: () => Navigator.pop(ctx),
                   ),
                 ],
