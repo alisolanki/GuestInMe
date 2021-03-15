@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventPage extends StatefulWidget {
   final EventModel eventModel;
@@ -134,6 +136,13 @@ class _EventPageState extends State<EventPage> {
                           style: TextStyle(
                             fontSize: 18.0,
                             color: Colors.purpleAccent,
+                          ),
+                        ),
+                        Spacer(),
+                        IconButton(
+                          icon: Icon(Icons.share),
+                          onPressed: () => Share.share(
+                            "Are you coming to ${widget.eventModel.placeName} tonight for ${widget.eventModel.eventName}? Download GuestInMe Nightlife App to access and book for the most exclusive Clubs in Mumbai, Delhi, Goa, Bangalore and other cities in India. Download now: https://onelink.to/guestinme",
                           ),
                         ),
                       ],
@@ -529,6 +538,13 @@ class _EventPageState extends State<EventPage> {
                       if (widget.eventModel.closeOnline) {
                         Fluttertoast.showToast(
                           msg: 'Online payment is closed for this event!',
+                          backgroundColor: Colors.amber,
+                          textColor: Colors.black,
+                        );
+                      } else if (Platform.isIOS) {
+                        Fluttertoast.showToast(
+                          msg:
+                              'Online payments are not available on IOS devices',
                           backgroundColor: Colors.amber,
                           textColor: Colors.black,
                         );
