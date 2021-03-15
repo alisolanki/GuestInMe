@@ -8,6 +8,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 
 import 'package:GuestInMe/Event/widgets/star_widget.dart';
 import 'package:GuestInMe/Home/widgets/event_card.dart';
+import 'package:share/share.dart';
 
 class PlacePage extends StatefulWidget {
   final PlaceModel placeModel;
@@ -140,6 +141,12 @@ class _PlacePageState extends State<PlacePage> {
                         ),
                       ),
                       subtitle: StarWidget(stars: widget.placeModel.stars),
+                      trailing: IconButton(
+                        icon: Icon(Icons.share),
+                        onPressed: () => Share.share(
+                          "Are you coming to ${widget.placeModel.placeName}? Download GuestInMe Nightlife App to access and book for the most exclusive Clubs in Mumbai, Delhi, Goa, Bangalore and other cities in India. Download now: https://onelink.to/guestinme",
+                        ),
+                      ),
                       enabled: false,
                     ),
                   ),
