@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -27,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.159810667431-o6osdfvvvkcnagh4hfp92v9rpvkqnp55</string>
+				<string>com.googleusercontent.apps.159810667431-5s138ilfsvmovpo8eqhm6ln3eq533vl6</string>
 			</array>
 		</dict>
 	</array>
