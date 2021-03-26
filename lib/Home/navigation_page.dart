@@ -23,7 +23,7 @@ class _NavigationPageState extends State<NavigationPage> {
   Size _size = Size(0.0, 0.0);
   var _loading = true;
   String _name, _email, _city;
-  int _selected = 1, _gender;
+  int _selected = 1, _gender, _value;
   final _formKey = GlobalKey<FormState>();
   DateTime _selectedDate;
 
@@ -219,21 +219,25 @@ class _NavigationPageState extends State<NavigationPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "City",
-                          labelStyle: TextStyle(
-                            color: Colors.white70,
-                          ),
-                        ),
-                        validator: (_c) {
-                          if (_c.isEmpty) {
-                            return 'Please choose a city';
-                          }
-                          return null;
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownButton(
+                        value: _value,
+                        items: _locations.map((_loc) {
+                          return DropdownMenuItem(
+                            child: Text(
+                              "$_loc",
+                            ),
+                            value: _locations.indexOf(_loc),
+                          );
+                        }).toList(),
+                        hint: Text("City"),
+                        isExpanded: true,
+                        onChanged: (v) {
+                          setInnerState(() {
+                            _value = v;
+                            _city = _locations[v];
+                          });
                         },
-                        onSaved: (_c) => _city = _c,
                       ),
                     ),
                     ListTile(

@@ -23,6 +23,7 @@ class LocationsProvider with ChangeNotifier {
   Future fetchLocations() async {
     final _locationsUrl = "${auth.url}locations.json?auth=${auth.token}";
     final _response = await http.get(_locationsUrl);
+    print("_response:${_response.body}");
     final _decodedData = jsonDecode(_response.body) as List<dynamic>;
     print("locations: $_decodedData");
     _locations = _decodedData;

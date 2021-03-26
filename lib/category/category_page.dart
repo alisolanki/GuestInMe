@@ -20,8 +20,7 @@ class _CategoryPageState extends State<CategoryPage> {
     _placeModels = Provider.of<LocationsProvider>(context)
         .places
         .where((_place) =>
-            _place.category.toLowerCase() == widget._category.toLowerCase() ||
-            _place.category.toLowerCase() == "hybrid")
+            _place.category.toLowerCase() == widget._category.toLowerCase())
         .toList();
     super.didChangeDependencies();
   }

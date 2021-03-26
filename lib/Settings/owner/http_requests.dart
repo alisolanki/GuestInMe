@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:GuestInMe/Settings/owner/model/addEventModel.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/models/registration_model.dart';
 import 'package:flutter/material.dart';
@@ -87,10 +88,11 @@ class TransferData {
     return _datePicked;
   }
 
-  Future<void> addEvent(
-      {@required EventModel eventModel,
-      @required DateTime date,
-      @required bool newEvent}) async {
+  Future<void> addEvent({
+    @required EventModel eventModel,
+    @required DateTime date,
+    @required bool newEvent,
+  }) async {
     final String _datePicked = convertDate(date);
     //urls
     var _eventPlaceUrl =
@@ -312,10 +314,46 @@ class TransferData {
     return _registrationModel;
   }
 
-  Future<void> changeEventState({
-    @required EventModel eventModel,
+  Future<AddEventModel> getEventTemplate({
+    @required String placeName,
   }) async {
     final String _url =
-        "${auth.url}$location/place/${eventModel.placeName}/events/${eventModel.id}.json?auth=${auth.token}";
+        "${auth.url}$location/place/$placeName/template.json?auth=${auth.token}";
+    var res = await http.get(_url);
+    var data = jsonDecode(res.body) as Map<String, dynamic>;
+    var crowd = data['crowd'] as List;
+    var table = data['table'] as List;
+    List<TypeModel> _crowdList = [];
+    List<TypeModel> _tableList = [];
+    crowd.forEach((c) {
+      _crowdList.add(
+        TypeModel(
+          description: c['description'],
+          typeName: c['name'],
+          price: c['price'],
+        ),
+      );
+    });
+    table.forEach((t) {
+      _tableList.add(
+        TypeModel(
+          description: t['description'],
+          typeName: t['name'],
+          price: t['price'],
+        ),
+      );
+    });
+    return AddEventModel(
+      eventTemplate: {
+        "ageLimit": data['ageLimit'],
+        "description": data['description'],
+        "dressCode": data['dressCode'],
+        "lineUp": data['lineUp'],
+        "time": data['time'],
+        "newEvent": data['newEvent'].toString().toLowerCase() == "true",
+      },
+      crowdTemplate: _crowdList,
+      tableTemplate: _tableList,
+    );
   }
 }

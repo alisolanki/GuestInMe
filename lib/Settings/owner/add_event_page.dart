@@ -1,3 +1,4 @@
+import 'package:GuestInMe/Settings/owner/model/addEventModel.dart';
 import 'package:GuestInMe/models/event_model.dart';
 import 'package:GuestInMe/models/place_model.dart';
 import 'package:GuestInMe/providers/locations_provider.dart';
@@ -14,21 +15,14 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
   final _formKey = GlobalKey<FormState>();
-  int _value = 0;
-  int _priceNum = 0;
-  var _isInit = true;
-  var _newEvent = false;
+  int _value = 0, _priceNum = 0;
+  var _isInit = true, _newEvent = false;
 
-  String _eventName, _location;
-  String _description;
-  String _datePicked;
+  String _eventName, _location, _description, _datePicked, _image;
+  String _lineup, _ageLimit, _dressCode, _time;
   DateTime _dateTime;
   List<PriceModel> _prices = [];
-  String _image;
-  String _lineup;
-  String _ageLimit;
-  String _dressCode;
-  String _time;
+  AddEventModel _addEventModel;
 
   EventModel _eventModel;
   List<PlaceModel> _placeList = [];
@@ -37,6 +31,21 @@ class _AddEventPageState extends State<AddEventPage> {
   var _coupleType = TypeModel(typeName: "Couple");
   var _femaleType = TypeModel(typeName: "Female");
   var _malestagsType = TypeModel(typeName: "Male Stags");
+  var timeCont = TextEditingController(),
+      ageLimitCont = TextEditingController(),
+      descriptionCont = TextEditingController(),
+      dressCodeCont = TextEditingController(),
+      lineUpCont = TextEditingController(),
+      coupleDesCont = TextEditingController(),
+      couplePriceCont = TextEditingController(),
+      femaleDesCont = TextEditingController(),
+      femalePriceCont = TextEditingController(),
+      maleDesCont = TextEditingController(),
+      malePriceCont = TextEditingController(),
+      tableNameCont = TextEditingController(),
+      tableDesCont = TextEditingController(),
+      tablePriceCont = TextEditingController();
+  List<TypeContModel> tableConts = [];
 
   void formSave() async {
     if (_formKey.currentState.validate()) {
@@ -71,6 +80,47 @@ class _AddEventPageState extends State<AddEventPage> {
     }
   }
 
+  void getEventTemplate() async {
+    await TransferData(location: _location)
+        .getEventTemplate(
+          placeName: _placeList[_value].placeName,
+        )
+        .then(
+          (v) => setState(() {
+            _addEventModel = v;
+            _newEvent = v.eventTemplate['newEvent'];
+          }),
+        );
+    timeCont.text = _addEventModel.eventTemplate['time'].toString();
+    ageLimitCont.text = _addEventModel.eventTemplate['ageLimit'];
+    descriptionCont.text = _addEventModel.eventTemplate['description'];
+    lineUpCont.text = _addEventModel.eventTemplate['lineUp'];
+    dressCodeCont.text = _addEventModel.eventTemplate['dressCode'];
+    _addEventModel.crowdTemplate.forEach((c) {
+      if (c.typeName == "couple") {
+        coupleDesCont.text = c.description;
+        couplePriceCont.text = c.price;
+      } else if (c.typeName == "female") {
+        femaleDesCont.text = c.description;
+        femalePriceCont.text = c.price;
+      } else {
+        maleDesCont.text = c.description;
+        malePriceCont.text = c.price;
+      }
+    });
+    tableConts = [];
+    _addEventModel.tableTemplate.forEach(
+      (t) => tableConts.add(
+        TypeContModel(
+          typeName: TextEditingController(text: t.typeName),
+          description: TextEditingController(text: t.description),
+          price: TextEditingController(text: t.price),
+        ),
+      ),
+    );
+    _priceNum = tableConts.length;
+  }
+
   @override
   void didChangeDependencies() {
     if (_isInit) {
@@ -86,6 +136,16 @@ class _AddEventPageState extends State<AddEventPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Event"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.download_rounded),
+            onPressed: () {
+              setState(() {
+                getEventTemplate();
+              });
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -95,8 +155,8 @@ class _AddEventPageState extends State<AddEventPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _textField("Event Name"),
-                _textField("Description"),
+                _textField("Event Name", "eventName"),
+                _textField("Description", "description"),
                 //Place name
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -163,11 +223,11 @@ class _AddEventPageState extends State<AddEventPage> {
                     }),
                   ),
                 ),
-                _textField("Time"),
-                _textField("Age limit"),
-                _textField("Dress code"),
-                _textField("Image"),
-                _textField("Lineup"),
+                _textField("Time", "time"),
+                _textField("Age limit", "ageLimit"),
+                _textField("Dress code", "dressCode"),
+                _textField("Image", "image"),
+                _textField("Lineup", "lineUp"),
                 //newEvent
                 ListTile(
                   leading: Text("Is it a new Event?"),
@@ -224,11 +284,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   shrinkWrap: true,
                   itemCount: _priceNum,
                   itemBuilder: (context, _i) {
-                    return Column(
-                      children: [
-                        _tableField(_i),
-                      ],
-                    );
+                    return _tableField(_i);
                   },
                 ),
                 //submit
@@ -251,6 +307,11 @@ class _AddEventPageState extends State<AddEventPage> {
                         borderRadius: new BorderRadius.circular(30.0),
                       ),
                       onPressed: () {
+                        if (_location != null) {
+                          TransferData(location: _location).getEventTemplate(
+                            placeName: _placeList[_value ?? 0].placeName,
+                          );
+                        }
                         formSave();
                       }),
                 ),
@@ -262,10 +323,20 @@ class _AddEventPageState extends State<AddEventPage> {
     );
   }
 
-  Widget _textField(String hint) {
+  Widget _textField(String hint, String identifier) {
     return TextFormField(
-      key: ValueKey("$hint"),
-      initialValue: "$hint",
+      key: ValueKey("$identifier"),
+      controller: hint == "Description"
+          ? descriptionCont
+          : hint == "Age limit"
+              ? ageLimitCont
+              : hint == "Dress code"
+                  ? dressCodeCont
+                  : hint == "Lineup"
+                      ? lineUpCont
+                      : hint == "Time"
+                          ? timeCont
+                          : null,
       decoration: InputDecoration(
         labelText: "$hint",
         labelStyle: TextStyle(
@@ -339,7 +410,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
-                initialValue: "Guestlist closes at 23:00",
+                controller: coupleDesCont,
                 decoration: InputDecoration(
                   hintText: "Description",
                 ),
@@ -353,6 +424,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 1,
               child: TextFormField(
+                controller: couplePriceCont,
                 decoration: InputDecoration(
                   hintText: "Price",
                 ),
@@ -374,7 +446,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
-                initialValue: "Guestlist closes at 23:00",
+                controller: femaleDesCont,
                 decoration: InputDecoration(
                   hintText: "Description",
                 ),
@@ -388,6 +460,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 1,
               child: TextFormField(
+                controller: femalePriceCont,
                 decoration: InputDecoration(
                   hintText: "Price",
                 ),
@@ -409,7 +482,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 2,
               child: TextFormField(
-                initialValue: "Guestlist closes at 23:00",
+                controller: maleDesCont,
                 decoration: InputDecoration(
                   hintText: "Description",
                 ),
@@ -423,6 +496,7 @@ class _AddEventPageState extends State<AddEventPage> {
             Expanded(
               flex: 1,
               child: TextFormField(
+                controller: malePriceCont,
                 decoration: InputDecoration(
                   hintText: "Price",
                 ),
@@ -446,6 +520,8 @@ class _AddEventPageState extends State<AddEventPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: TextFormField(
+            controller:
+                _i >= tableConts.length ? null : tableConts[_i].typeName,
             decoration: InputDecoration(
               hintText: "Table Name",
             ),
@@ -461,7 +537,9 @@ class _AddEventPageState extends State<AddEventPage> {
               Expanded(
                 flex: 3,
                 child: TextFormField(
-                  initialValue: "Exclusive table provided for _ people",
+                  controller: _i >= tableConts.length
+                      ? null
+                      : tableConts[_i].description,
                   decoration: InputDecoration(
                     hintText: "Description",
                   ),
@@ -474,6 +552,8 @@ class _AddEventPageState extends State<AddEventPage> {
               Expanded(
                 flex: 2,
                 child: TextFormField(
+                  controller:
+                      _i >= tableConts.length ? null : tableConts[_i].price,
                   decoration: InputDecoration(
                     hintText: "Price",
                   ),

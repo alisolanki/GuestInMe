@@ -14,6 +14,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class EventPage extends StatefulWidget {
   final EventModel eventModel;
@@ -52,6 +53,13 @@ class _EventPageState extends State<EventPage> {
         _selectedLocation = _locationsProvider.selectedLocation;
         _dateISO = convertDatetoISO(widget.eventModel.date);
         _dateTodayISO = convertDate(DateTime.now());
+      });
+      //In App Review
+      var inApp = InAppReview.instance;
+      inApp.isAvailable().then((b) async {
+        if (b) {
+          await inApp.requestReview();
+        }
       });
     }
     _init = false;
