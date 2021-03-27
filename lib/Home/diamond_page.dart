@@ -1,10 +1,10 @@
-import 'package:GuestInMe/Home/widgets/event_card.dart';
-import 'package:GuestInMe/Home/widgets/locations_dropdown.dart';
-import 'package:GuestInMe/New_Events/new_events_page.dart';
-import 'package:GuestInMe/Popular_places/popular_places_page.dart';
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
+import 'package:guestinme/Home/widgets/event_card.dart';
+import 'package:guestinme/Home/widgets/locations_dropdown.dart';
+import 'package:guestinme/New_Events/new_events_page.dart';
+import 'package:guestinme/Popular_places/popular_places_page.dart';
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/models/place_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

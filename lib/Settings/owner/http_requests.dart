@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:GuestInMe/Settings/owner/model/addEventModel.dart';
-import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/models/registration_model.dart';
+import 'package:guestinme/Settings/owner/model/addEventModel.dart';
+import 'package:guestinme/models/place_model.dart';
+import 'package:guestinme/models/registration_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/auth/auth.dart' as auth;
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/auth/auth.dart' as auth;
 
 class TransferData {
   String location;

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../Home/homepage.dart';
 import '../pages/login_page.dart';
 import '../stores/login_store.dart';
-import '../theme.dart';
 import '../../auth/auth.dart' as auth;
 
 class SplashPage extends StatefulWidget {

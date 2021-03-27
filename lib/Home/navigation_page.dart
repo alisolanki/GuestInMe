@@ -1,10 +1,10 @@
-import 'package:GuestInMe/Home/diamond_page.dart';
-import 'package:GuestInMe/Profile/profile_page.dart';
-import 'package:GuestInMe/Search/search_page.dart';
-import 'package:GuestInMe/assets/guest_in_me_icons.dart';
-import 'package:GuestInMe/models/user_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
-import 'package:GuestInMe/providers/user_provider.dart';
+import 'package:guestinme/Home/diamond_page.dart';
+import 'package:guestinme/Profile/profile_page.dart';
+import 'package:guestinme/Search/search_page.dart';
+import 'package:guestinme/assets/guest_in_me_icons.dart';
+import 'package:guestinme/models/user_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
+import 'package:guestinme/providers/user_provider.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

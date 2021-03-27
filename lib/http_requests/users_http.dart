@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:GuestInMe/models/user_model.dart';
+import 'package:guestinme/models/user_model.dart';
 
 import '../auth/auth.dart' as auth;
 import 'package:http/http.dart' as http;

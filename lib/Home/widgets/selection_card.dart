@@ -1,4 +1,4 @@
-import 'package:GuestInMe/category/category_page.dart';
+import 'package:guestinme/category/category_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

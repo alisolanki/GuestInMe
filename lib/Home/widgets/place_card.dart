@@ -1,5 +1,5 @@
-import 'package:GuestInMe/Place/place_page.dart';
-import 'package:GuestInMe/models/place_model.dart';
+import 'package:guestinme/Place/place_page.dart';
+import 'package:guestinme/models/place_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:GuestInMe/Event/ticket_generator.dart';
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/models/user_model.dart';
+import 'package:guestinme/Event/ticket_generator.dart';
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

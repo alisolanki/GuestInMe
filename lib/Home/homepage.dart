@@ -1,7 +1,7 @@
-import 'package:GuestInMe/Home/navigation_page.dart';
-import 'package:GuestInMe/LoginOTP/stores/login_store.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
-import 'package:GuestInMe/providers/user_provider.dart';
+import 'package:guestinme/Home/navigation_page.dart';
+import 'package:guestinme/LoginOTP/stores/login_store.dart';
+import 'package:guestinme/providers/locations_provider.dart';
+import 'package:guestinme/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

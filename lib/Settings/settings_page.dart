@@ -1,6 +1,6 @@
-import 'package:GuestInMe/LoginOTP/pages/login_page.dart';
-import 'package:GuestInMe/Settings/owner/entrance_page.dart';
-import 'package:GuestInMe/providers/user_provider.dart';
+import 'package:guestinme/LoginOTP/pages/login_page.dart';
+import 'package:guestinme/Settings/owner/entrance_page.dart';
+import 'package:guestinme/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

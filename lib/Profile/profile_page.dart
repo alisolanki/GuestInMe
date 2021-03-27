@@ -1,7 +1,7 @@
-import 'package:GuestInMe/Profile/tickets_page.dart';
-import 'package:GuestInMe/Settings/settings_page.dart';
-import 'package:GuestInMe/models/user_model.dart';
-import 'package:GuestInMe/providers/user_provider.dart';
+import 'package:guestinme/Profile/tickets_page.dart';
+import 'package:guestinme/Settings/settings_page.dart';
+import 'package:guestinme/models/user_model.dart';
+import 'package:guestinme/providers/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

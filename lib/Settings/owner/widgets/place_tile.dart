@@ -1,5 +1,5 @@
-import 'package:GuestInMe/Settings/owner/widgets/user_tile.dart';
-import 'package:GuestInMe/models/registration_model.dart';
+import 'package:guestinme/Settings/owner/widgets/user_tile.dart';
+import 'package:guestinme/models/registration_model.dart';
 import 'package:flutter/material.dart';
 
 class PlaceTile extends StatefulWidget {

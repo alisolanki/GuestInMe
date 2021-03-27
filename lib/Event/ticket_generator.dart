@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:GuestInMe/Profile/tickets_page.dart';
-import 'package:GuestInMe/Profile/view_ticket_page.dart';
-import 'package:GuestInMe/models/event_model.dart';
+import 'package:guestinme/Profile/tickets_page.dart';
+import 'package:guestinme/Profile/view_ticket_page.dart';
+import 'package:guestinme/models/event_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

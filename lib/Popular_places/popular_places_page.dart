@@ -1,6 +1,6 @@
-import 'package:GuestInMe/Home/widgets/place_card.dart';
-import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
+import 'package:guestinme/Home/widgets/place_card.dart';
+import 'package:guestinme/models/place_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

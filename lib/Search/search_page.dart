@@ -1,8 +1,8 @@
-import 'package:GuestInMe/Home/widgets/event_card.dart';
-import 'package:GuestInMe/Home/widgets/place_card.dart';
-import 'package:GuestInMe/Search/view_list_page.dart';
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
+import 'package:guestinme/Home/widgets/event_card.dart';
+import 'package:guestinme/Home/widgets/place_card.dart';
+import 'package:guestinme/Search/view_list_page.dart';
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/place_model.dart';

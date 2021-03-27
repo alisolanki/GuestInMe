@@ -1,6 +1,6 @@
-import 'package:GuestInMe/Home/widgets/event_card.dart';
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
+import 'package:guestinme/Home/widgets/event_card.dart';
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,8 @@ class _NewEventsPageState extends State<NewEventsPage> {
   @override
   void didChangeDependencies() {
     if (_init) {
-      _datewiseEvents = Provider.of<LocationsProvider>(context, listen: false).datewiseEvents;
+      _datewiseEvents =
+          Provider.of<LocationsProvider>(context, listen: false).datewiseEvents;
       _datewiseExtracted = _datewiseEvents;
     }
     _init = false;

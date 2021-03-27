@@ -1,6 +1,6 @@
-import 'package:GuestInMe/Settings/owner/http_requests.dart';
-import 'package:GuestInMe/models/registration_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
+import 'package:guestinme/Settings/owner/http_requests.dart';
+import 'package:guestinme/models/registration_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

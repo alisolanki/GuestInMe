@@ -1,4 +1,4 @@
-import 'package:GuestInMe/providers/locations_provider.dart';
+import 'package:guestinme/providers/locations_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

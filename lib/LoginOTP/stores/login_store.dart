@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -58,41 +59,24 @@ abstract class LoginStoreBase with Store {
               print('Authentication successful');
               onAuthenticationSuccessful(context, value);
             } else {
-              loginScaffoldKey.currentState.showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  backgroundColor: Colors.red,
-                  content: Text(
-                    'Invalid code/invalid authentication',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+              Fluttertoast.showToast(
+                msg: 'Invalid code/invalid authentication',
+                backgroundColor: Colors.red,
               );
             }
           }).catchError((_) {
-            loginScaffoldKey.currentState.showSnackBar(
-              SnackBar(
-                behavior: SnackBarBehavior.floating,
-                backgroundColor: Colors.red,
-                content: Text(
-                  'Something has gone wrong, please try later',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+            Fluttertoast.showToast(
+              msg: 'Something has gone wrong, please try later',
+              backgroundColor: Colors.red,
             );
           });
         },
         verificationFailed: (FirebaseAuthException authException) {
           print('Error message: ' + authException.message);
-          loginScaffoldKey.currentState.showSnackBar(
-            SnackBar(
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.red,
-              content: Text(
+          Fluttertoast.showToast(
+            msg:
                 'The phone number format is incorrect. Please enter your number in this format. [+][country code][number] eg.+919876543210',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            backgroundColor: Colors.red,
           );
           isLoginLoading = false;
         },
@@ -111,19 +95,15 @@ abstract class LoginStoreBase with Store {
   Future<void> validateOtpAndLogin(BuildContext context, String smsCode) async {
     isOtpLoading = true;
     final AuthCredential _authCredential = PhoneAuthProvider.credential(
-        verificationId: actualCode, smsCode: smsCode);
+      verificationId: actualCode,
+      smsCode: smsCode,
+    );
 
     await _auth.signInWithCredential(_authCredential).catchError((error) {
       isOtpLoading = false;
-      otpScaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.red,
-          content: Text(
-            'Wrong code ! Please enter the last code received.',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: 'Wrong code ! Please enter the last code received.',
+        backgroundColor: Colors.red,
       );
     }).then((UserCredential authResult) {
       if (authResult != null && authResult.user != null) {

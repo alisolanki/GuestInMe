@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:GuestInMe/Profile/view_ticket_page.dart';
+import 'package:guestinme/Profile/view_ticket_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';

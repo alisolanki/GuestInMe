@@ -1,4 +1,4 @@
-import 'package:GuestInMe/models/event_model.dart';
+import 'package:guestinme/models/event_model.dart';
 import 'package:flutter/material.dart';
 
 class AddEventModel {

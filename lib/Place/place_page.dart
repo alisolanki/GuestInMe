@@ -1,13 +1,13 @@
-import 'package:GuestInMe/Place/widgets/menu_card.dart';
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/models/place_model.dart';
+import 'package:guestinme/Place/widgets/menu_card.dart';
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/models/place_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 
-import 'package:GuestInMe/Event/widgets/star_widget.dart';
-import 'package:GuestInMe/Home/widgets/event_card.dart';
+import 'package:guestinme/Event/widgets/star_widget.dart';
+import 'package:guestinme/Home/widgets/event_card.dart';
 import 'package:share/share.dart';
 
 class PlacePage extends StatefulWidget {

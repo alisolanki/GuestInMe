@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:GuestInMe/Home/widgets/place_card.dart';
-import 'package:GuestInMe/models/event_model.dart';
-import 'package:GuestInMe/models/place_model.dart';
-import 'package:GuestInMe/models/user_model.dart';
-import 'package:GuestInMe/providers/locations_provider.dart';
-import 'package:GuestInMe/providers/payment.dart';
-import 'package:GuestInMe/providers/user_provider.dart';
+import 'package:guestinme/Home/widgets/place_card.dart';
+import 'package:guestinme/models/event_model.dart';
+import 'package:guestinme/models/place_model.dart';
+import 'package:guestinme/models/user_model.dart';
+import 'package:guestinme/providers/locations_provider.dart';
+import 'package:guestinme/providers/payment.dart';
+import 'package:guestinme/providers/user_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
